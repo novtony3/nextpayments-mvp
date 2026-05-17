@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "merchant-app",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev:merchant"],
+      "port": 5001
+    }
+  ]
+}

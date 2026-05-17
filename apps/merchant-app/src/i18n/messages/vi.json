@@ -1,0 +1,151 @@
+{
+  "common": {
+    "appName": "Nextpayments",
+    "tagline": "Cổng thanh toán crypto cho doanh nghiệp",
+    "loading": "Đang tải...",
+    "comingSoon": "Sẽ ra mắt sớm"
+  },
+  "nav": {
+    "features": "Tính năng",
+    "pricing": "Bảng giá",
+    "docs": "Tài liệu",
+    "coins": "Đồng tiền",
+    "login": "Đăng nhập",
+    "getStarted": "Bắt đầu",
+    "themeLight": "Chế độ sáng",
+    "themeDark": "Chế độ tối",
+    "language": "Ngôn ngữ"
+  },
+  "landing": {
+    "hero": {
+      "headlineLead": "Thanh toán Crypto,",
+      "headlineTrail": "đơn giản như một dòng chat.",
+      "subhead": "Tích hợp cổng thanh toán crypto vào website chỉ trong vài phút. Không KYC, không phí ẩn, tự động quy đổi sang stablecoin.",
+      "ctaPrimary": "Bắt đầu miễn phí",
+      "ctaSecondary": "Xem demo"
+    },
+    "trustBar": {
+      "title": "Được tin dùng bởi 200,000+ doanh nghiệp toàn cầu"
+    },
+    "features": {
+      "kicker": "Tính năng",
+      "title": "Mọi thứ bạn cần để bắt đầu",
+      "subtitle": "Một bộ công cụ thanh toán crypto đầy đủ — đơn giản như nhúng một widget.",
+      "items": {
+        "noKyc": {
+          "title": "Không cần KYC",
+          "description": "Tạo tài khoản và bắt đầu nhận thanh toán ngay, không cần giấy tờ phức tạp."
+        },
+        "coins": {
+          "title": "Hỗ trợ 300+ Crypto",
+          "description": "BTC, ETH, USDT, SOL, BNB và hàng trăm đồng tiền khác trên đa mạng lưới."
+        },
+        "autoConvert": {
+          "title": "Tự động quy đổi",
+          "description": "Tự động chuyển sang stablecoin (USDT/USDC) để chốt giá trị, tránh biến động."
+        },
+        "lowFee": {
+          "title": "Phí cực thấp",
+          "description": "Chỉ 0.5% mỗi giao dịch — không phí cài đặt, không phí hàng tháng."
+        }
+      }
+    },
+    "coins": {
+      "kicker": "Đa mạng lưới",
+      "title": "Hỗ trợ các đồng tiền phổ biến nhất",
+      "subtitle": "Tất cả các đồng tiền lớn trên những blockchain hàng đầu — Bitcoin, Ethereum, Tron, BNB Chain, Solana và nhiều hơn nữa.",
+      "viewAll": "Xem tất cả 300+ đồng tiền"
+    },
+    "howItWorks": {
+      "kicker": "Quy trình",
+      "title": "Bắt đầu trong 3 bước",
+      "subtitle": "Từ đăng ký tới nhận thanh toán đầu tiên — chỉ mất vài phút.",
+      "steps": {
+        "signup": {
+          "title": "Đăng ký & tạo API Key",
+          "description": "Tạo tài khoản, xác minh email và sinh API Key chỉ trong 30 giây."
+        },
+        "integrate": {
+          "title": "Tích hợp Widget hoặc API",
+          "description": "Nhúng nút thanh toán vào website hoặc gọi REST API trực tiếp."
+        },
+        "receive": {
+          "title": "Nhận crypto, tự động quyết toán",
+          "description": "Khách hàng thanh toán xong, tiền tự động về ví của bạn."
+        }
+      }
+    },
+    "pricing": {
+      "kicker": "Bảng giá",
+      "title": "Một mức giá. Không phụ phí.",
+      "subtitle": "Trả tiền cho những gì bạn thực sự dùng. Không hợp đồng dài hạn.",
+      "fee": "0.5%",
+      "feeDescription": "mỗi giao dịch thành công",
+      "bullets": {
+        "noSetup": "Không phí cài đặt",
+        "noMonthly": "Không phí hàng tháng",
+        "noKyc": "Không yêu cầu KYC"
+      },
+      "cta": "Bắt đầu nhận Crypto"
+    },
+    "cta": {
+      "title": "Sẵn sàng nhận thanh toán crypto?",
+      "subtitle": "Tham gia cùng hàng trăm nghìn merchant đang tăng trưởng cùng Nextpayments.",
+      "button": "Tạo tài khoản miễn phí"
+    },
+    "footer": {
+      "tagline": "Cổng thanh toán crypto thế hệ mới cho doanh nghiệp toàn cầu.",
+      "columns": {
+        "product": {
+          "title": "Sản phẩm",
+          "items": {
+            "features": "Tính năng",
+            "pricing": "Bảng giá",
+            "coins": "Đồng tiền",
+            "widget": "Checkout Widget"
+          }
+        },
+        "developers": {
+          "title": "Nhà phát triển",
+          "items": {
+            "docs": "Tài liệu",
+            "api": "API Reference",
+            "sdk": "SDK",
+            "status": "System Status"
+          }
+        },
+        "company": {
+          "title": "Công ty",
+          "items": {
+            "about": "Về chúng tôi",
+            "blog": "Blog",
+            "careers": "Tuyển dụng",
+            "contact": "Liên hệ"
+          }
+        },
+        "legal": {
+          "title": "Pháp lý",
+          "items": {
+            "terms": "Điều khoản",
+            "privacy": "Bảo mật",
+            "cookies": "Cookies"
+          }
+        }
+      },
+      "copyright": "© 2026 Nextpayments. Mọi quyền được bảo lưu."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Chào mừng trở lại",
+      "subtitle": "Đăng nhập để tiếp tục",
+      "email": "Email",
+      "password": "Mật khẩu",
+      "submit": "Tiếp tục",
+      "continueWithGoogle": "Tiếp tục với Google",
+      "forgotPassword": "Quên mật khẩu?",
+      "noAccount": "Chưa có tài khoản?",
+      "signUp": "Đăng ký"
+    }
+  }
+}

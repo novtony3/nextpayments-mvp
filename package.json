@@ -1,0 +1,28 @@
+{
+  "name": "nextpayments",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Crypto Payment Gateway — Frontend Monorepo (UI/UX only)",
+  "scripts": {
+    "dev": "pnpm dev:merchant",
+    "dev:merchant": "pnpm --filter merchant-app dev",
+    "dev:admin": "pnpm --filter admin-dashboard dev",
+    "dev:all": "pnpm -r --parallel --stream --aggregate-output dev",
+    "build": "pnpm -r build",
+    "build:merchant": "pnpm --filter merchant-app build",
+    "build:admin": "pnpm --filter admin-dashboard build",
+    "lint": "pnpm -r lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "clean": "pnpm -r exec rm -rf node_modules .next .turbo dist && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.8",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@11.1.2"
+}

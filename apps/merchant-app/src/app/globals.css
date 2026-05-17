@@ -1,0 +1,53 @@
+@import 'tailwindcss';
+@import '@nextpayments/tailwind-config/theme.css';
+
+/* Tailwind v4 skips node_modules by default; the workspace UI kit lives there
+ * via a pnpm symlink, so scan its source for class names explicitly. */
+@source '../../../../packages/ui/src/**/*.{ts,tsx}';
+
+/* Dark mode driven by the `.dark` class set by next-themes. */
+@variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  html {
+    color-scheme: dark light;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    position: relative;
+  }
+
+  /*
+   * The signature Gemini Desktop ambient — a quiet blue glow rising from the
+   * bottom edge of the viewport. Fixed-position so it stays anchored while
+   * the page scrolls, like the chat surface in the real app.
+   */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: radial-gradient(
+      ellipse 90% 55% at 50% 115%,
+      color-mix(in oklab, var(--color-brand-blue) 32%, transparent) 0%,
+      color-mix(in oklab, var(--color-brand-blue) 10%, transparent) 35%,
+      transparent 70%
+    );
+  }
+
+  body > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-brand-blue) 35%, transparent);
+    color: var(--color-text);
+  }
+}

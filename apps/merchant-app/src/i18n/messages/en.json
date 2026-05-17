@@ -1,0 +1,151 @@
+{
+  "common": {
+    "appName": "Nextpayments",
+    "tagline": "Crypto payment gateway for businesses",
+    "loading": "Loading...",
+    "comingSoon": "Coming soon"
+  },
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "docs": "Docs",
+    "coins": "Coins",
+    "login": "Log in",
+    "getStarted": "Get started",
+    "themeLight": "Light mode",
+    "themeDark": "Dark mode",
+    "language": "Language"
+  },
+  "landing": {
+    "hero": {
+      "headlineLead": "Crypto payments,",
+      "headlineTrail": "as simple as a chat.",
+      "subhead": "Integrate the crypto payment gateway into your website in minutes. No KYC, no hidden fees, auto-convert to stablecoins.",
+      "ctaPrimary": "Get started free",
+      "ctaSecondary": "View demo"
+    },
+    "trustBar": {
+      "title": "Trusted by 200,000+ businesses worldwide"
+    },
+    "features": {
+      "kicker": "Features",
+      "title": "Everything you need to get started",
+      "subtitle": "A complete crypto payments toolkit — as simple as dropping in a widget.",
+      "items": {
+        "noKyc": {
+          "title": "No KYC required",
+          "description": "Sign up and start receiving payments instantly — no paperwork needed."
+        },
+        "coins": {
+          "title": "300+ cryptocurrencies",
+          "description": "BTC, ETH, USDT, SOL, BNB and hundreds more across major chains."
+        },
+        "autoConvert": {
+          "title": "Auto-conversion",
+          "description": "Auto-convert to stablecoins (USDT/USDC) to lock in value and avoid volatility."
+        },
+        "lowFee": {
+          "title": "Lowest fees",
+          "description": "Just 0.5% per transaction — no setup fee, no monthly fee."
+        }
+      }
+    },
+    "coins": {
+      "kicker": "Multi-chain",
+      "title": "Support for all major coins",
+      "subtitle": "Every major asset on the leading blockchains — Bitcoin, Ethereum, Tron, BNB Chain, Solana and more.",
+      "viewAll": "View all 300+ coins"
+    },
+    "howItWorks": {
+      "kicker": "How it works",
+      "title": "Get started in 3 steps",
+      "subtitle": "From sign-up to your first received payment — only takes minutes.",
+      "steps": {
+        "signup": {
+          "title": "Sign up & create API key",
+          "description": "Create an account, verify your email, and generate an API key in 30 seconds."
+        },
+        "integrate": {
+          "title": "Integrate widget or API",
+          "description": "Drop the checkout widget into your site or call the REST API directly."
+        },
+        "receive": {
+          "title": "Receive crypto, auto-settle",
+          "description": "Customer pays, funds settle to your wallet automatically."
+        }
+      }
+    },
+    "pricing": {
+      "kicker": "Pricing",
+      "title": "One price. No surprises.",
+      "subtitle": "Pay only for what you actually use. No long-term contracts.",
+      "fee": "0.5%",
+      "feeDescription": "per successful transaction",
+      "bullets": {
+        "noSetup": "No setup fees",
+        "noMonthly": "No monthly fees",
+        "noKyc": "No KYC required"
+      },
+      "cta": "Start accepting crypto"
+    },
+    "cta": {
+      "title": "Ready to accept crypto?",
+      "subtitle": "Join hundreds of thousands of merchants growing with Nextpayments.",
+      "button": "Create your free account"
+    },
+    "footer": {
+      "tagline": "Next-generation crypto payment gateway for businesses worldwide.",
+      "columns": {
+        "product": {
+          "title": "Product",
+          "items": {
+            "features": "Features",
+            "pricing": "Pricing",
+            "coins": "Coins",
+            "widget": "Checkout Widget"
+          }
+        },
+        "developers": {
+          "title": "Developers",
+          "items": {
+            "docs": "Documentation",
+            "api": "API Reference",
+            "sdk": "SDK",
+            "status": "System Status"
+          }
+        },
+        "company": {
+          "title": "Company",
+          "items": {
+            "about": "About",
+            "blog": "Blog",
+            "careers": "Careers",
+            "contact": "Contact"
+          }
+        },
+        "legal": {
+          "title": "Legal",
+          "items": {
+            "terms": "Terms",
+            "privacy": "Privacy",
+            "cookies": "Cookies"
+          }
+        }
+      },
+      "copyright": "© 2026 Nextpayments. All rights reserved."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to continue",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Continue",
+      "continueWithGoogle": "Continue with Google",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up"
+    }
+  }
+}
