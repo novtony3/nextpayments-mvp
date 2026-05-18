@@ -1,0 +1,51 @@
+@import 'tailwindcss';
+@import '@nextpayments/tailwind-config/theme.css';
+
+/* Tailwind v4 skips node_modules; scan the workspace UI kit source for the
+ * class names it uses (pnpm-symlinked). Mirrors merchant-app's setup. */
+@source '../../../packages/ui/src/**/*.{ts,tsx}';
+
+/* Dark mode driven by the `.dark` class on <html> (set in index.html). */
+@variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  html {
+    color-scheme: dark light;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    position: relative;
+    min-height: 100vh;
+  }
+
+  /* Signature Gemini ambient — quiet deep-blue glow rising from the bottom,
+   * matching the merchant app's concept. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: radial-gradient(
+      ellipse 90% 55% at 50% 115%,
+      color-mix(in oklab, var(--color-aurora) 30%, transparent) 0%,
+      color-mix(in oklab, var(--color-aurora) 9%, transparent) 35%,
+      transparent 70%
+    );
+  }
+
+  #root {
+    position: relative;
+    z-index: 1;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-brand-blue) 35%, transparent);
+    color: var(--color-text);
+  }
+}

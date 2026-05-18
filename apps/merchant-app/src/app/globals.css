@@ -13,6 +13,18 @@
     color-scheme: dark light;
   }
 
+  /* Smooth in-page anchor scrolling — disabled for reduced-motion users. */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* Keep anchored sections clear of the fixed 56px header. */
+  section[id] {
+    scroll-margin-top: 6rem;
+  }
+
   body {
     background-color: var(--color-bg);
     color: var(--color-text);

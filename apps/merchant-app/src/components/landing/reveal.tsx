@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, type MotionProps } from 'framer-motion';
+import { motion, useReducedMotion, type MotionProps } from 'framer-motion';
 import type { ReactNode } from 'react';
 
 type RevealProps = MotionProps & {
@@ -10,9 +10,13 @@ type RevealProps = MotionProps & {
   as?: 'div' | 'section' | 'span';
 };
 
+/** Shared luxury easing — a long, settled ease-out (no overshoot). */
+const EASE = [0.16, 1, 0.3, 1] as const;
+
 /**
- * Lightweight wrapper for scroll-triggered fade-in + slide-up.
- * Use sparingly — wrap whole sections or section headers, not every leaf node.
+ * Scroll-triggered entrance: a soft fade + slight rise + gentle de-blur.
+ * Entry-only and `once`, so it never animates `filter` on interaction.
+ * Honors `prefers-reduced-motion` (renders instantly, no transform).
  */
 export function Reveal({
   children,
@@ -21,13 +25,23 @@ export function Reveal({
   as = 'div',
   ...rest
 }: RevealProps) {
+  const reduce = useReducedMotion();
   const Tag = motion[as];
+
+  if (reduce) {
+    return (
+      <Tag className={className} {...rest}>
+        {children}
+      </Tag>
+    );
+  }
+
   return (
     <Tag
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '0px 0px -10% 0px' }}
-      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ opacity: 0, y: 22, filter: 'blur(6px)' }}
+      whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+      viewport={{ once: true, margin: '0px 0px -12% 0px' }}
+      transition={{ duration: 0.7, delay, ease: EASE }}
       className={className}
       {...rest}
     >

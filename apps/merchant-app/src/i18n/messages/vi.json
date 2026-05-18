@@ -22,7 +22,11 @@
       "headlineTrail": "đơn giản như một dòng chat.",
       "subhead": "Tích hợp cổng thanh toán crypto vào website chỉ trong vài phút. Không KYC, không phí ẩn, tự động quy đổi sang stablecoin.",
       "ctaPrimary": "Bắt đầu miễn phí",
-      "ctaSecondary": "Xem demo"
+      "ctaSecondary": "Xem demo",
+      "demo": {
+        "received": "Đã nhận thanh toán",
+        "confirmed": "Đã xác nhận on-chain"
+      }
     },
     "trustBar": {
       "title": "Được tin dùng bởi 200,000+ doanh nghiệp toàn cầu"

@@ -1,0 +1,40 @@
+{
+  "common": {
+    "appName": "Nextpayments",
+    "appSuffix": "Admin",
+    "search": "Search transactions, merchants…",
+    "viewAll": "View all"
+  },
+  "nav": {
+    "overview": "Overview",
+    "transactions": "Transactions",
+    "merchants": "Merchants",
+    "payouts": "Payouts",
+    "settings": "Settings"
+  },
+  "home": {
+    "title": "Overview",
+    "subtitle": "Platform activity at a glance",
+    "stats": {
+      "volume": "Total volume (30d)",
+      "transactions": "Transactions (30d)",
+      "merchants": "Active merchants",
+      "payouts": "Pending payouts"
+    },
+    "trend": {
+      "up": "vs. previous 30 days",
+      "down": "vs. previous 30 days"
+    },
+    "recent": {
+      "title": "Recent transactions",
+      "merchant": "Merchant",
+      "amount": "Amount",
+      "status": "Status",
+      "time": "Time"
+    },
+    "status": {
+      "confirmed": "Confirmed",
+      "pending": "Pending"
+    }
+  }
+}

@@ -22,7 +22,11 @@
       "headlineTrail": "as simple as a chat.",
       "subhead": "Integrate the crypto payment gateway into your website in minutes. No KYC, no hidden fees, auto-convert to stablecoins.",
       "ctaPrimary": "Get started free",
-      "ctaSecondary": "View demo"
+      "ctaSecondary": "View demo",
+      "demo": {
+        "received": "Payment received",
+        "confirmed": "Confirmed on-chain"
+      }
     },
     "trustBar": {
       "title": "Trusted by 200,000+ businesses worldwide"
