@@ -8,6 +8,18 @@
 /* Dark mode driven by the `.dark` class set by next-themes. */
 @variant dark (&:where(.dark, .dark *));
 
+/* Merchant font override — Vercel Geist (set on <html> by next/font in
+ * layout.tsx). Maps onto the shared --font-* tokens here so ONLY this app
+ * changes; the shared theme + admin keep their own defaults. */
+:root {
+  --font-sans:
+    var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --font-mono:
+    var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+}
+
 @layer base {
   html {
     color-scheme: dark light;

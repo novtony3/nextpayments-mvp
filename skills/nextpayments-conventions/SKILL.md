@@ -28,7 +28,7 @@ placeholder text, magic numbers.
 
 ## 3. i18n
 
-- Every user-facing string goes through `next-intl` (`useTranslations`). Add the key to **both** `src/i18n/messages/en.json` and `vi.json` in the same change. Keep keys namespaced (`auth.login.*`).
+- Every user-facing string goes through `next-intl` (`useTranslations`). Merchant locales are **`en` (default) and `fr`** — add the key to **every** `src/i18n/messages/*.json` (`en.json` + `fr.json`) in the same change; no missing keys. Vietnamese was removed — do not reintroduce it. Keep keys namespaced (`auth.login.*`). Admin (`react-i18next`) is **English only** by decision.
 
 ## 4. Routing
 

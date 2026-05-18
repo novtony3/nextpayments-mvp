@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
 import { NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { getMessages, setRequestLocale } from 'next-intl/server';
@@ -9,17 +10,10 @@ import '../globals.css';
 import { Providers } from '@/components/shared/providers';
 import { routing, type Locale } from '@/i18n/routing';
 
-const inter = Inter({
-  subsets: ['latin', 'vietnamese'],
-  variable: '--font-sans',
-  display: 'swap',
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-mono',
-  display: 'swap',
-});
+// Vercel's Geist — self-hosted via next/font (no network at build). Geist Sans
+// for the UI, Geist Mono for crypto data (addresses, hashes, amounts). The
+// `.variable` classes expose --font-geist-sans / --font-geist-mono, which
+// globals.css maps onto the --font-sans / --font-mono design tokens.
 
 export const metadata: Metadata = {
   title: {
@@ -53,7 +47,11 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
   const messages = await getMessages();
 
   return (
-    <html lang={locale} suppressHydrationWarning className={`${inter.variable} ${jetbrainsMono.variable}`}>
+    <html
+      lang={locale}
+      suppressHydrationWarning
+      className={`${GeistSans.variable} ${GeistMono.variable}`}
+    >
       <body className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] antialiased">
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Providers>{children}</Providers>

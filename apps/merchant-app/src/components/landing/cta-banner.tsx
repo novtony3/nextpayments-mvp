@@ -13,7 +13,7 @@ export function CtaBanner() {
   return (
     <section id="cta" className="px-5 pb-32 sm:px-6 sm:pb-40">
       <Reveal className="mx-auto max-w-4xl">
-        <div className="relative overflow-hidden rounded-[2rem] border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-6 py-20 text-center shadow-[0_40px_100px_-50px_rgba(0,0,0,0.7)] sm:px-16">
+        <div className="relative overflow-hidden rounded-[2.5rem] bg-[var(--color-surface-elevated)] px-6 py-20 text-center shadow-[0_44px_110px_-52px_rgba(0,0,0,0.75)] sm:px-16">
           {/* Restrained accent: a soft top-edge glow, no full aurora here. */}
           <div
             aria-hidden

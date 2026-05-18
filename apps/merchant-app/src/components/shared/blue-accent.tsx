@@ -18,11 +18,24 @@ type BlueAccentProps = {
    * another hue.
    */
   color?: string;
+  /**
+   * Feather the layer's top & bottom edges to transparent so the glow never
+   * shows a hard seam where its container/section is clipped. On by default;
+   * pass `false` for full-bleed canvases that fill the whole viewport.
+   */
+  feather?: boolean;
 };
 
+/**
+ * Vertical fade mask — keeps the glow off both edges so a clipped section
+ * boundary can't cut it into a hard line. Heavier feather at the bottom
+ * (where the aurora is brightest) for the smoothest taper.
+ */
+const FEATHER_MASK =
+  'linear-gradient(to bottom, transparent 0%, #000 12%, #000 64%, transparent 99%)';
+
 /** `color` mixed with transparent at `pct`% — the effect's single color knob. */
-const tint = (color: string, pct: number) =>
-  `color-mix(in oklab, ${color} ${pct}%, transparent)`;
+const tint = (color: string, pct: number) => `color-mix(in oklab, ${color} ${pct}%, transparent)`;
 
 const STOPS: Record<Intensity, { hot: number; mid: number; halo: number; wave: number }> = {
   subtle: { hot: 44, mid: 18, halo: 12, wave: 30 },
@@ -43,14 +56,19 @@ export function BlueAccent({
   className,
   intensity = 'bold',
   color = 'var(--color-aurora)',
+  feather = true,
 }: BlueAccentProps) {
   const reduce = useReducedMotion();
   const s = STOPS[intensity];
   const c = (pct: number) => tint(color, pct);
+  const maskStyle = feather
+    ? { maskImage: FEATHER_MASK, WebkitMaskImage: FEATHER_MASK }
+    : undefined;
 
   return (
     <div
       aria-hidden
+      style={maskStyle}
       className={cn('pointer-events-none absolute inset-0 overflow-hidden', className)}
     >
       {/* Wide soft halo — outer falloff that keeps the top pure black. */}

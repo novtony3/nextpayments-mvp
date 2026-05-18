@@ -16,18 +16,14 @@ export function Pricing() {
   return (
     <section id="pricing" className="py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
-        <SectionHeading
-          kicker={t('kicker')}
-          title={t('title')}
-          subtitle={t('subtitle')}
-        />
+        <SectionHeading kicker={t('kicker')} title={t('title')} subtitle={t('subtitle')} />
 
         <Reveal className="mx-auto mt-16 max-w-md">
-          <div className="relative overflow-hidden rounded-3xl border border-[var(--color-border-strong)] bg-[var(--color-surface)] p-10 text-center shadow-[0_30px_80px_-40px_rgba(0,0,0,0.6)]">
-            {/* Hairline accent glow along the top edge — premium, restrained. */}
+          <div className="relative overflow-hidden rounded-[2rem] bg-[var(--color-surface-elevated)] p-10 text-center shadow-[0_36px_90px_-44px_rgba(0,0,0,0.7)]">
+            {/* Soft accent bloom at the top — glow, not an edge. */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--color-accent)] to-transparent opacity-60"
+              className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-[radial-gradient(ellipse_55%_100%_at_50%_0%,var(--color-accent-soft)_0%,transparent_72%)]"
             />
             <div className="flex items-baseline justify-center gap-2">
               <span className="text-7xl font-normal leading-none tracking-tight text-[var(--color-text)]">
@@ -40,10 +36,7 @@ export function Pricing() {
               {BULLETS.map((b) => (
                 <li key={b} className="flex items-center gap-3">
                   <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-soft)]">
-                    <Check
-                      className="h-3 w-3 text-[var(--color-accent)]"
-                      strokeWidth={2.5}
-                    />
+                    <Check className="h-3 w-3 text-[var(--color-accent)]" strokeWidth={2.5} />
                   </span>
                   <span className="text-sm text-[var(--color-text)]">{t(`bullets.${b}`)}</span>
                 </li>

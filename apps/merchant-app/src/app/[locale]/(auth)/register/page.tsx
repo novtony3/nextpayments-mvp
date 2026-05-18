@@ -13,7 +13,7 @@ export default function RegisterPage() {
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[var(--color-bg)] px-6 py-16">
       {/* Gemini Desktop signature: deep blue aurora rising from the floor. */}
-      <BlueAccent intensity="subtle" />
+      <BlueAccent intensity="subtle" feather={false} />
 
       <div className="relative z-10 w-full max-w-[400px]">
         <div className="mb-10 flex flex-col items-center text-center">
@@ -23,9 +23,7 @@ export default function RegisterPage() {
           <h1 className="text-4xl font-normal tracking-tight text-[var(--color-text)]">
             {t('title')}
           </h1>
-          <p className="mt-3 text-sm text-[var(--color-text-muted)]">
-            {t('subtitle')}
-          </p>
+          <p className="mt-3 text-sm text-[var(--color-text-muted)]">{t('subtitle')}</p>
         </div>
 
         <RegisterForm />

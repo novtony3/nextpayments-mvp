@@ -14,7 +14,7 @@ export function Footer() {
   const t = useTranslations('landing.footer');
 
   return (
-    <footer className="border-t border-[var(--color-border)]">
+    <footer>
       <div className="mx-auto max-w-6xl px-5 py-16 sm:px-6">
         <div className="grid gap-12 lg:grid-cols-[1.5fr_repeat(4,minmax(0,1fr))]">
           <div className="space-y-4">
@@ -59,7 +59,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-16 flex flex-col items-start justify-between gap-3 border-t border-[var(--color-border)] pt-6 text-xs text-[var(--color-text-subtle)] sm:flex-row sm:items-center">
+        <div className="mt-16 flex flex-col items-start justify-between gap-3 text-xs text-[var(--color-text-subtle)] sm:flex-row sm:items-center">
           <p>{t('copyright')}</p>
         </div>
       </div>

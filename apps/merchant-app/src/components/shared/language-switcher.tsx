@@ -7,8 +7,8 @@ import { useTransition } from 'react';
 import { usePathname, useRouter, type Locale } from '@/i18n/routing';
 
 const LOCALES: ReadonlyArray<{ code: Locale; label: string }> = [
-  { code: 'vi', label: 'VI' },
   { code: 'en', label: 'EN' },
+  { code: 'fr', label: 'FR' },
 ];
 
 export function LanguageSwitcher() {

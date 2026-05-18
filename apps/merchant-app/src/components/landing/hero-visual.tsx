@@ -25,16 +25,14 @@ export function HeroVisual() {
       <motion.div
         animate={reduce ? undefined : { y: [0, -10, 0] }}
         transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-        className="rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-fill-strong)] p-5 text-left shadow-[0_24px_60px_-20px_rgba(0,0,0,0.55)] backdrop-blur-xl"
+        className="rounded-2xl bg-[var(--color-surface-elevated)] p-5 text-left shadow-[0_30px_80px_-28px_rgba(0,0,0,0.7)] backdrop-blur-xl"
       >
         <div className="flex items-center gap-3">
           <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-accent-soft)] text-[var(--color-accent)]">
             <ArrowDownLeft className="h-5 w-5" strokeWidth={1.75} />
           </span>
           <div className="min-w-0">
-            <p className="text-sm font-medium text-[var(--color-text)]">
-              {t('received')}
-            </p>
+            <p className="text-sm font-medium text-[var(--color-text)]">{t('received')}</p>
             <p className="truncate font-mono text-xs text-[var(--color-text-subtle)]">
               {DEMO_TX.ADDRESS}
             </p>
@@ -43,13 +41,11 @@ export function HeroVisual() {
             <p className="font-mono text-sm font-semibold text-[var(--color-text)]">
               {DEMO_TX.AMOUNT} {DEMO_TX.TICKER}
             </p>
-            <p className="font-mono text-xs text-[var(--color-text-subtle)]">
-              {DEMO_TX.FIAT}
-            </p>
+            <p className="font-mono text-xs text-[var(--color-text-subtle)]">{DEMO_TX.FIAT}</p>
           </div>
         </div>
 
-        <div className="mt-4 flex items-center gap-2 border-t border-[var(--glass-border)] pt-3">
+        <div className="mt-5 flex items-center gap-2">
           <Check className="h-3.5 w-3.5 text-[var(--color-success)]" strokeWidth={2.25} />
           <span className="text-xs text-[var(--color-text-muted)]">{t('confirmed')}</span>
         </div>

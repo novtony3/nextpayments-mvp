@@ -11,21 +11,17 @@ export function Coins() {
   return (
     <section id="coins" className="py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
-        <SectionHeading
-          kicker={t('kicker')}
-          title={t('title')}
-          subtitle={t('subtitle')}
-        />
+        <SectionHeading kicker={t('kicker')} title={t('title')} subtitle={t('subtitle')} />
 
         <Reveal className="mt-14">
           <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
             {COIN_TILES.map((coin) => (
               <li
                 key={coin.ticker}
-                className="group flex flex-col items-center gap-2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-accent-strong)] hover:bg-[var(--color-surface-elevated)]"
+                className="group flex flex-col items-center gap-2 rounded-2xl bg-[var(--color-surface)] p-4 transition-all duration-300 hover:-translate-y-1 hover:bg-[var(--color-surface-elevated)]"
               >
                 <span
-                  className="flex h-12 w-12 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-bg)] font-mono text-[11px] font-semibold tracking-tight text-[var(--color-text)] transition-colors duration-300 group-hover:border-[var(--color-accent)] group-hover:text-[var(--color-accent)]"
+                  className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-accent-soft)] font-mono text-[11px] font-semibold tracking-tight text-[var(--color-text-muted)] transition-colors duration-300 group-hover:text-[var(--color-accent)]"
                   aria-hidden
                 >
                   {coin.ticker}

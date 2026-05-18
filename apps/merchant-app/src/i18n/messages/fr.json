@@ -1,0 +1,195 @@
+{
+  "common": {
+    "appName": "Nextpayments",
+    "tagline": "Passerelle de paiement crypto pour les entreprises",
+    "loading": "Chargement...",
+    "comingSoon": "Bientôt disponible"
+  },
+  "nav": {
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "docs": "Docs",
+    "coins": "Cryptos",
+    "login": "Se connecter",
+    "getStarted": "Commencer",
+    "themeLight": "Mode clair",
+    "themeDark": "Mode sombre",
+    "language": "Langue"
+  },
+  "landing": {
+    "hero": {
+      "headlineLead": "Les paiements crypto,",
+      "headlineTrail": "aussi simples qu'un chat.",
+      "subhead": "Intégrez la passerelle de paiement crypto à votre site en quelques minutes. Sans KYC, sans frais cachés, conversion automatique en stablecoins.",
+      "ctaPrimary": "Commencer gratuitement",
+      "ctaSecondary": "Voir la démo",
+      "demo": {
+        "received": "Paiement reçu",
+        "confirmed": "Confirmé on-chain"
+      }
+    },
+    "trustBar": {
+      "title": "Adopté par plus de 200 000 entreprises dans le monde"
+    },
+    "features": {
+      "kicker": "Fonctionnalités",
+      "title": "Tout ce qu'il vous faut pour démarrer",
+      "subtitle": "Une boîte à outils de paiement crypto complète — aussi simple qu'un widget à intégrer.",
+      "items": {
+        "noKyc": {
+          "title": "Aucun KYC requis",
+          "description": "Inscrivez-vous et recevez des paiements instantanément — sans aucune paperasse."
+        },
+        "coins": {
+          "title": "Plus de 300 cryptomonnaies",
+          "description": "BTC, ETH, USDT, SOL, BNB et des centaines d'autres sur les principales chaînes."
+        },
+        "autoConvert": {
+          "title": "Conversion automatique",
+          "description": "Conversion automatique en stablecoins (USDT/USDC) pour figer la valeur et éviter la volatilité."
+        },
+        "lowFee": {
+          "title": "Frais les plus bas",
+          "description": "Seulement 0,5 % par transaction — sans frais d'installation, sans frais mensuels."
+        }
+      }
+    },
+    "coins": {
+      "kicker": "Multi-chaîne",
+      "title": "Prise en charge de toutes les principales cryptos",
+      "subtitle": "Tous les actifs majeurs sur les principales blockchains — Bitcoin, Ethereum, Tron, BNB Chain, Solana et plus encore.",
+      "viewAll": "Voir les 300+ cryptos"
+    },
+    "howItWorks": {
+      "kicker": "Comment ça marche",
+      "title": "Démarrez en 3 étapes",
+      "subtitle": "De l'inscription à votre premier paiement reçu — en quelques minutes seulement.",
+      "steps": {
+        "signup": {
+          "title": "Inscription & création de clé API",
+          "description": "Créez un compte, vérifiez votre e-mail et générez une clé API en 30 secondes."
+        },
+        "integrate": {
+          "title": "Intégrez le widget ou l'API",
+          "description": "Ajoutez le widget de paiement à votre site ou appelez l'API REST directement."
+        },
+        "receive": {
+          "title": "Recevez la crypto, règlement automatique",
+          "description": "Le client paie, les fonds arrivent automatiquement sur votre portefeuille."
+        }
+      }
+    },
+    "pricing": {
+      "kicker": "Tarifs",
+      "title": "Un seul prix. Aucune surprise.",
+      "subtitle": "Ne payez que ce que vous utilisez réellement. Aucun engagement de longue durée.",
+      "fee": "0,5 %",
+      "feeDescription": "par transaction réussie",
+      "bullets": {
+        "noSetup": "Aucuns frais d'installation",
+        "noMonthly": "Aucuns frais mensuels",
+        "noKyc": "Aucun KYC requis"
+      },
+      "cta": "Commencer à accepter la crypto"
+    },
+    "cta": {
+      "title": "Prêt à accepter la crypto ?",
+      "subtitle": "Rejoignez les centaines de milliers de marchands qui grandissent avec Nextpayments.",
+      "button": "Créer votre compte gratuit"
+    },
+    "footer": {
+      "tagline": "Passerelle de paiement crypto nouvelle génération pour les entreprises du monde entier.",
+      "columns": {
+        "product": {
+          "title": "Produit",
+          "items": {
+            "features": "Fonctionnalités",
+            "pricing": "Tarifs",
+            "coins": "Cryptos",
+            "widget": "Widget de paiement"
+          }
+        },
+        "developers": {
+          "title": "Développeurs",
+          "items": {
+            "docs": "Documentation",
+            "api": "Référence API",
+            "sdk": "SDK",
+            "status": "État du système"
+          }
+        },
+        "company": {
+          "title": "Entreprise",
+          "items": {
+            "about": "À propos",
+            "blog": "Blog",
+            "careers": "Carrières",
+            "contact": "Contact"
+          }
+        },
+        "legal": {
+          "title": "Légal",
+          "items": {
+            "terms": "Conditions",
+            "privacy": "Confidentialité",
+            "cookies": "Cookies"
+          }
+        }
+      },
+      "copyright": "© 2026 Nextpayments. Tous droits réservés."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Bon retour",
+      "subtitle": "Connectez-vous pour continuer",
+      "email": "E-mail",
+      "password": "Mot de passe",
+      "submit": "Continuer",
+      "submitting": "Connexion en cours...",
+      "or": "OU",
+      "continueWithGoogle": "Continuer avec Google",
+      "forgotPassword": "Mot de passe oublié ?",
+      "noAccount": "Vous n'avez pas de compte ?",
+      "signUp": "S'inscrire",
+      "showPassword": "Afficher le mot de passe",
+      "hidePassword": "Masquer le mot de passe",
+      "brandingTagline": "Boostez votre activité avec les paiements crypto",
+      "successWelcome": "Bon retour, {name} !",
+      "errors": {
+        "emailRequired": "L'e-mail est requis",
+        "emailInvalid": "Saisissez une adresse e-mail valide",
+        "passwordRequired": "Le mot de passe est requis",
+        "passwordTooShort": "Le mot de passe doit comporter au moins 6 caractères",
+        "invalidCredentials": "E-mail ou mot de passe invalide"
+      }
+    },
+    "register": {
+      "title": "Créez votre compte",
+      "subtitle": "Commencez à accepter la crypto en quelques minutes",
+      "name": "Nom complet",
+      "email": "E-mail",
+      "password": "Mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "submit": "Créer un compte",
+      "submitting": "Création du compte...",
+      "or": "OU",
+      "continueWithGoogle": "Continuer avec Google",
+      "showPassword": "Afficher le mot de passe",
+      "hidePassword": "Masquer le mot de passe",
+      "haveAccount": "Vous avez déjà un compte ?",
+      "signIn": "Se connecter",
+      "success": "Compte créé. Bienvenue, {name} !",
+      "errors": {
+        "nameRequired": "Le nom complet est requis",
+        "emailRequired": "L'e-mail est requis",
+        "emailInvalid": "Saisissez une adresse e-mail valide",
+        "emailTaken": "Un compte avec cet e-mail existe déjà",
+        "passwordRequired": "Le mot de passe est requis",
+        "passwordTooShort": "Le mot de passe doit comporter au moins 6 caractères",
+        "confirmRequired": "Veuillez confirmer votre mot de passe",
+        "passwordMismatch": "Les mots de passe ne correspondent pas"
+      }
+    }
+  }
+}

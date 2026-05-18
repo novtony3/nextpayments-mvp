@@ -1,41 +1,42 @@
 # Nextpayments
 
-Cổng thanh toán crypto cho doanh nghiệp — Frontend Monorepo (UI/UX-only, dummy data).
-Cảm hứng thiết kế: Gemini Desktop. Cảm hứng nghiệp vụ: nowpayments.io.
+Crypto payment gateway for businesses — frontend monorepo (UI/UX only, dummy data).
+Design inspiration: Gemini Desktop. Product inspiration: nowpayments.io.
 
-Toàn bộ spec & quyết định kiến trúc xem ở [PLAN.md](./PLAN.md).
+Full spec & architecture decisions: see [PLAN.md](./PLAN.md).
 
 ---
 
-## Yêu cầu môi trường
+## Environment requirements
 
-| Tool | Phiên bản | Ghi chú |
-| --- | --- | --- |
-| Node.js | ≥ 20 LTS | Khuyến nghị `20.x` hoặc `22.x` |
-| pnpm | ≥ 9 (project pin `11.1.2`) | Bắt buộc — không dùng npm/yarn |
-| Git | bất kỳ | |
+| Tool    | Version                  | Notes                          |
+| ------- | ------------------------ | ------------------------------ |
+| Node.js | ≥ 20 LTS                 | `20.x` or `22.x` recommended   |
+| pnpm    | ≥ 9 (repo pins `11.1.2`) | Required — do not use npm/yarn |
+| Git     | any                      |                                |
 
-Kiểm tra nhanh:
+Quick check:
 
 ```bash
-node --version    # v20.x.x trở lên
-pnpm --version    # 9.x.x trở lên
+node --version    # v20.x.x or newer
+pnpm --version    # 9.x.x or newer
 ```
 
-Nếu chưa có `pnpm`, cài qua npm (yêu cầu quyền user-level) hoặc dùng [corepack](https://nodejs.org/api/corepack.html):
+If you don't have `pnpm`, install it via [corepack](https://nodejs.org/api/corepack.html)
+(bundled with Node 16+) or npm:
 
 ```bash
-# Cách A — corepack (đi kèm Node 16+)
+# Option A — corepack (recommended)
 corepack enable
 corepack prepare pnpm@latest --activate
 
-# Cách B — npm
+# Option B — npm
 npm install -g pnpm@latest
 ```
 
 ---
 
-## Cài đặt
+## Install
 
 ```bash
 git clone <repo-url> nextpayments
@@ -43,122 +44,245 @@ cd nextpayments
 pnpm install
 ```
 
-Lần install đầu sẽ download ~350 packages (~1-2 phút tuỳ mạng). Sau khi xong:
+The first install downloads ~550 packages (~1–2 min depending on network). After it finishes:
 
-- `node_modules/` ở root + mỗi workspace
-- `pnpm-lock.yaml` ở root (commit vào git)
-- Build scripts của `sharp` và `unrs-resolver` đã được whitelist sẵn trong `pnpm-workspace.yaml`
+- `node_modules/` at the root and in each workspace
+- `pnpm-lock.yaml` at the root (committed to git)
+- Build scripts for `esbuild`, `sharp`, and `unrs-resolver` are pre-allowlisted
+  in `pnpm-workspace.yaml`
 
 ---
 
-## Chạy dev
+## Development
 
-Quy ước port của project:
+Project port convention:
 
-| App | Port | Trạng thái |
-| --- | --- | --- |
-| `merchant-app` (Next.js) | **5001** | Đã sẵn sàng |
-| `admin-dashboard` (Vite) | **5002** | Reserved — sẽ thêm sau |
+| App                      | Port     | Status |
+| ------------------------ | -------- | ------ |
+| `merchant-app` (Next.js) | **5001** | Ready  |
+| `admin-dashboard` (Vite) | **5002** | Ready  |
 
-Chạy merchant-app:
+Run merchant-app:
 
 ```bash
 pnpm dev
-# hoặc tường minh:
+# or explicitly:
 pnpm dev:merchant
 ```
 
-Mở trình duyệt:
+Open in the browser:
 
-- `http://localhost:5001` → tự redirect về `http://localhost:5001/vi` (locale mặc định)
-- `http://localhost:5001/vi` — Landing tiếng Việt
-- `http://localhost:5001/en` — Landing tiếng Anh
-- `http://localhost:5001/vi/login` — Login page (đang là skeleton)
-- `http://localhost:5001/vi/dashboard` — Placeholder
+- `http://localhost:5001` → redirects to `http://localhost:5001/en` (default locale)
+- `http://localhost:5001/en` — landing (English)
+- `http://localhost:5001/fr` — landing (French)
+- `http://localhost:5001/en/login` — login page (dummy auth)
+- `http://localhost:5001/en/register` — register page (dummy)
+- `http://localhost:5001/en/dashboard` — placeholder
 
-Dev server dùng **Turbopack** (`next dev --turbopack`) — hot reload gần như tức thì khi sửa code.
+Run admin-dashboard:
 
-### Đổi port tạm thời
+```bash
+pnpm dev:admin            # http://localhost:5002 (English only)
+```
+
+Merchant dev server uses **Turbopack** (`next dev --turbopack`) — near-instant
+hot reload. Admin uses Vite (instant HMR).
+
+### Temporary port change
 
 ```bash
 pnpm --filter merchant-app dev -- -p 5050
 ```
 
-Nếu muốn đổi cố định, sửa script `dev` và `start` trong `apps/merchant-app/package.json`.
+To change it permanently, edit the `dev`/`start` scripts in
+`apps/merchant-app/package.json` (and `vite.config.ts` for admin).
 
 ---
 
-## Build production
+## Production build
 
 ```bash
-# Build merchant-app
+# Build merchant-app only
 pnpm build:merchant
 
-# Build toàn bộ workspace (hiện tại chỉ có merchant-app cần build)
+# Build admin-dashboard only
+pnpm build:admin
+
+# Build the whole workspace (merchant-app + admin-dashboard)
 pnpm build
 ```
 
-Output ở `apps/merchant-app/.next/`. Chạy production bundle local:
+> **Important:** `pnpm build` only **compiles and exits** — it does NOT run a
+> server. After building you must `start` (not `dev`) to run the app. Do not run
+> `build` while the same app's `dev` server is running: `next build` overwrites
+> the in-use `.next` and crashes the running dev server. Never run build and dev
+> in parallel on the same app.
+
+Run the production bundles locally (after `build`):
 
 ```bash
-pnpm --filter merchant-app start
+pnpm start              # = start:merchant — merchant-app on :5001
+pnpm start:merchant     # merchant-app (next start) — :5001
+pnpm start:admin        # admin-dashboard (vite preview) — :5002
 ```
+
+Output: merchant in `apps/merchant-app/.next/`, admin in `apps/admin-dashboard/dist/`.
+If `:5001`/`:5002` is occupied (a dev server is still running):
+`lsof -ti:5001,5002 | xargs kill`.
 
 ---
 
-## Cấu trúc thư mục
+## Deployment (DevOps)
+
+This is a **pnpm workspace monorepo** with two independently deployable apps:
+
+| App               | Path                   | Type                             | Build output | Runtime                       |
+| ----------------- | ---------------------- | -------------------------------- | ------------ | ----------------------------- |
+| `merchant-app`    | `apps/merchant-app`    | Next.js 15 (App Router, SSR/SSG) | `.next/`     | Node.js server (`next start`) |
+| `admin-dashboard` | `apps/admin-dashboard` | Vite SPA (static)                | `dist/`      | Any static host / CDN         |
+
+**Baseline requirements (all targets):** Node.js `20.x` LTS, `pnpm` (pin `11.1.2`,
+enable via `corepack enable`). Always `pnpm install --frozen-lockfile` in CI.
+Deploy the two apps as **separate projects/domains** (e.g.
+`app.example.com` for merchant, `admin.example.com` for admin).
+
+### Option A — Vercel (recommended)
+
+Create **two** Vercel projects from the same repo, both with **Root Directory**
+left at the repo root (monorepo) and these overrides:
+
+**Merchant (`merchant-app`):**
+
+- Framework Preset: **Next.js**
+- Install: `pnpm install --frozen-lockfile`
+- Build: `pnpm build:merchant`
+- Output: auto-detected (`apps/merchant-app/.next`)
+- Root Directory: `apps/merchant-app` (enable "Include files outside root" so
+  workspace packages resolve), or keep repo root + the build command above.
+
+**Admin (`admin-dashboard`):**
+
+- Framework Preset: **Vite**
+- Install: `pnpm install --frozen-lockfile`
+- Build: `pnpm build:admin`
+- Output Directory: `apps/admin-dashboard/dist`
+- It is a SPA → add a catch-all rewrite to `index.html`
+  (`{ "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }`).
+
+Set the **Production Branch** to `main`; PR previews work out of the box.
+Use Vercel "Ignored Build Step" with `git diff --quiet HEAD^ HEAD ./apps/<app>`
+so each project only rebuilds when its app (or shared `packages/`) changes.
+
+### Option B — Docker
+
+**Merchant (Node server):** multi-stage build — `pnpm install --frozen-lockfile`
+→ `pnpm build:merchant` → run `pnpm --filter merchant-app start` (binds `:5001`,
+override with `-p $PORT`). Base image `node:20-alpine`, enable corepack. Expose
+the port behind your reverse proxy/load balancer; the app is stateless so scale
+horizontally freely.
+
+**Admin (static):** build with `pnpm build:admin`, then serve
+`apps/admin-dashboard/dist` from **nginx** (or any static server) with an SPA
+fallback (`try_files $uri /index.html;`). Can also go to S3 + CloudFront, GitHub
+Pages, Netlify, Cloudflare Pages, etc. — it is fully static.
+
+### CI/CD pipeline (generic)
+
+```bash
+corepack enable
+pnpm install --frozen-lockfile
+pnpm -r typecheck          # tsc --noEmit per package
+pnpm -r lint               # ESLint per package
+pnpm build                 # builds BOTH apps (pnpm -r build)
+# then deploy:
+#   merchant -> Node host running `pnpm --filter merchant-app start`
+#   admin    -> upload apps/admin-dashboard/dist to static host/CDN
+```
+
+Build the two apps in parallel jobs when possible; cache `~/.local/share/pnpm`
+(or the pnpm store) and each app's build cache (`apps/merchant-app/.next/cache`).
+
+### Environment variables
+
+UI-only phase — **no secrets or runtime env are required** to build or run
+either app. When backend integration lands, follow framework conventions:
+Next.js needs `NEXT_PUBLIC_*` for client-exposed values at **build time**; the
+Vite app needs `VITE_*` (also build-time, baked into the static bundle). Inject
+them per environment in the CI/host, never commit `.env`.
+
+### Operational notes
+
+- Geist fonts are **self-hosted** in merchant via `next/font` → no external font
+  network dependency at build/runtime. Admin still pulls Google Fonts at runtime.
+- Health check: `GET /` on merchant returns `307 → /<defaultLocale>`; treat
+  `2xx/3xx` as healthy. Admin: `GET /` returns the static `index.html` (`200`).
+- Never run `build` against an app while its `dev` server is live (it rewrites
+  `.next` and crashes the running dev process). CI/hosts are unaffected.
+- `merchant-app` is stateless (no DB/session this phase) → safe to autoscale.
+
+---
+
+## Folder structure
 
 ```text
 nextpayments/
 ├── apps/
-│   └── merchant-app/          # Next.js 15 App Router — UI chính
+│   ├── merchant-app/          # Next.js 15 App Router — main UI (landing + auth)
+│   └── admin-dashboard/       # Vite + React + Zustand — admin (English only)
 ├── packages/
-│   ├── ui/                    # Component dùng chung (framework-agnostic)
+│   ├── ui/                    # Shared components (framework-agnostic: Button, Card)
 │   └── config/
 │       ├── tsconfig/          # TypeScript base configs
 │       ├── eslint/            # ESLint shared configs
-│       └── tailwind/          # Tailwind v4 preset (theme.css với Gemini tokens)
-├── PLAN.md                    # Spec đầy đủ
-├── README.md                  # File này
+│       └── tailwind/          # Tailwind v4 preset (theme.css with Gemini tokens)
+├── skills/                    # Agent-agnostic engineering rules (see skills/README.md)
+├── .claude/skills/            # Symlinks → ../../skills (Claude Code discovery)
+├── PLAN.md                    # Full spec
+├── README.md                  # This file
 ├── package.json               # Root workspace + scripts
-├── pnpm-workspace.yaml        # Khai báo workspaces + allowBuilds
+├── pnpm-workspace.yaml         # Workspace globs + allowBuilds
 └── pnpm-lock.yaml
 ```
 
-Chi tiết kiến trúc + lý do tách từng package: xem `PLAN.md` mục 2.
+Architecture rationale + why each package is split out: see `PLAN.md` section 2.
 
 ---
 
-## Các script chính
+## Main scripts
 
-Từ root:
+From the repo root:
 
-| Lệnh | Tác dụng |
-| --- | --- |
-| `pnpm dev` | Alias cho `dev:merchant` (default — chạy merchant-app) |
-| `pnpm dev:merchant` | Chỉ chạy merchant-app dev (port 5001, Turbopack) |
-| `pnpm dev:admin` | Chỉ chạy admin-dashboard dev (port 5002) — _khi admin được init_ |
-| `pnpm dev:all` | Chạy song song **mọi app** có script `dev` trong workspace |
-| `pnpm build` | Build toàn bộ workspace |
-| `pnpm build:merchant` | Build riêng merchant-app |
-| `pnpm build:admin` | Build riêng admin-dashboard |
-| `pnpm lint` | Lint toàn bộ workspace |
-| `pnpm format` | Prettier format toàn bộ source |
-| `pnpm clean` | Xoá `node_modules`, `.next`, `dist` ở mọi package |
+| Command               | Effect                                                       |
+| --------------------- | ------------------------------------------------------------ |
+| `pnpm dev`            | Alias for `dev:merchant` (default — runs merchant-app)       |
+| `pnpm dev:merchant`   | Run merchant-app dev only (port 5001, Turbopack)             |
+| `pnpm dev:admin`      | Run admin-dashboard dev only (port 5002, Vite)               |
+| `pnpm dev:all`        | Run **every** workspace app with a `dev` script, in parallel |
+| `pnpm build`          | Build the whole workspace (both apps)                        |
+| `pnpm build:merchant` | Build merchant-app only                                      |
+| `pnpm build:admin`    | Build admin-dashboard only                                   |
+| `pnpm start`          | Alias for `start:merchant` — serve built merchant on :5001   |
+| `pnpm start:merchant` | Serve built merchant-app (`next start`) — :5001              |
+| `pnpm start:admin`    | Serve built admin-dashboard (`vite preview`) — :5002         |
+| `pnpm lint`           | Lint the whole workspace                                     |
+| `pnpm format`         | Prettier-format all source                                   |
+| `pnpm clean`          | Remove `node_modules`, `.next`, `dist` in every package      |
 
-### Chạy song song 2 app
+### Run both apps in parallel
 
 ```bash
 pnpm dev:all
 ```
 
-Lệnh này dùng `pnpm -r --parallel --stream` để khởi động đồng thời `merchant-app` (port **5001**) và `admin-dashboard` (port **5002**) trong cùng 1 terminal, output có prefix tên app để dễ phân biệt log.
+This uses `pnpm -r --parallel --stream` to start `merchant-app` (port **5001**)
+and `admin-dashboard` (port **5002**) together in one terminal, with each app's
+name prefixed on its log lines. They use different ports, so there is no
+conflict. Open two browser tabs:
 
-Vì 2 app dùng port khác nhau, không có conflict. Mở 2 tab trình duyệt:
 - `http://localhost:5001` — Merchant
 - `http://localhost:5002` — Admin
 
-Muốn 2 terminal riêng cho dễ đọc log? Mở 2 tab terminal:
+Prefer two terminals for cleaner logs? Open two tabs:
 
 ```bash
 # Terminal 1
@@ -168,66 +292,82 @@ pnpm dev:merchant
 pnpm dev:admin
 ```
 
-> **Lưu ý:** `admin-dashboard` hiện chưa được init (Sprint 4 mới làm). Đến lúc đó scripts `dev:admin` và `dev:all` sẽ hoạt động đầy đủ. Tạm thời chạy `pnpm dev:all` chỉ khởi động merchant-app.
-
-### Chạy từng app riêng
-
-Trong từng app, có thể chạy trực tiếp:
+### Run a single app's scripts
 
 ```bash
 pnpm --filter merchant-app <script>
-# ví dụ
+# e.g.
 pnpm --filter merchant-app typecheck
-pnpm --filter merchant-app lint
+pnpm --filter admin-dashboard lint
 ```
 
 ---
 
-## Tech stack tóm tắt
+## Tech stack summary
 
 **Merchant App (`apps/merchant-app`):**
+
 - Next.js 15.1.3 (App Router) + React 19
-- Tailwind CSS v4 + Shadcn UI conventions
-- next-themes (Dark mặc định) + next-intl v3 (path-based `/vi`, `/en`)
-- Framer Motion (scroll animations)
+- Tailwind CSS v4 + shadcn/ui conventions
+- next-themes (dark by default) + next-intl v3 (path-based `/en`, `/fr`)
+- Framer Motion (scroll + ambient animations)
 - react-hook-form + zod (form validation)
 - lucide-react (icons)
+- Geist Sans + Geist Mono (Vercel `geist` package, self-hosted via `next/font`)
+
+**Admin Dashboard (`apps/admin-dashboard`):**
+
+- Vite + React 19 + TypeScript
+- Zustand (UI state) + react-i18next (**English only** for now)
+- Reuses the shared Gemini design tokens + `@nextpayments/ui`
 
 **Shared (`packages/`):**
-- `@nextpayments/ui` — Button + utilities (`cn()`)
-- `@nextpayments/tailwind-config` — `theme.css` định nghĩa Gemini design tokens
+
+- `@nextpayments/ui` — Button family, `Card` (ambient hover glow), `cn()`
+- `@nextpayments/tailwind-config` — `theme.css` defining Gemini design tokens
 - `@nextpayments/tsconfig` — base / nextjs / react-library
-- `@nextpayments/eslint-config` — base + Next.js preset
+- `@nextpayments/eslint-config` — base + Next.js preset (legacy eslintrc; the
+  admin app uses its own flat `eslint.config.js`)
+
+**Engineering rules:** reusable, agent-agnostic skills live in [`/skills`](./skills/README.md)
+(no-hardcoding, design system, component reuse, clean architecture,
+React/Next best practices, git teamwork). `.claude/skills/*` symlink to them.
 
 ---
 
 ## Dummy login
 
-Trong giai đoạn này KHÔNG có backend thật. Login validate client-side bằng dummy users ở `apps/merchant-app/src/constants/dummy-users.ts`:
+There is no real backend in this phase. Login is validated client-side against
+dummy users in `apps/merchant-app/src/constants/dummy-users.ts`:
 
-| Email | Password |
-| --- | --- |
-| `demo@nextpayments.io` | `demo1234` |
+| Email                   | Password    |
+| ----------------------- | ----------- |
+| `demo@nextpayments.io`  | `demo1234`  |
 | `admin@nextpayments.io` | `admin1234` |
 
-Nút "Continue with Google" là UI giả — click sẽ redirect thẳng tới `/dashboard` sau 1s.
+On success the app navigates to the **homepage** (`/`). The "Continue with
+Google" button is fake UI — clicking it redirects to the homepage after ~1s.
 
 ---
 
-## Quy ước code
+## Code conventions
 
-- File: `kebab-case.tsx`
-- Component: `PascalCase`, mặc định Server Component, chỉ `'use client'` khi cần hook/event
-- Imports: dùng alias `@/...` (đã config trong tsconfig)
-- Không import `next/*` trong `packages/ui` (giữ framework-agnostic cho Admin Vite tương lai)
-- Chi tiết: xem `PLAN.md` mục 11
+- Files: `kebab-case.tsx`
+- Components: `PascalCase`; Server Component by default, add `'use client'`
+  only when hooks/events are needed
+- Imports: use the `@/...` alias (configured in tsconfig)
+- No `next/*` imports inside `packages/ui` (keep it framework-agnostic for the
+  Vite admin app)
+- No hardcoded literals — extract to constants/tokens (see `skills/`)
+- Details: see `PLAN.md` section 11
 
 ---
 
 ## Troubleshooting
 
-**`pnpm install` báo `ERR_PNPM_WORKSPACE_PKG_NOT_FOUND`**
-Đảm bảo `pnpm-workspace.yaml` có đủ 3 globs:
+**`pnpm install` reports `ERR_PNPM_WORKSPACE_PKG_NOT_FOUND`**
+Ensure `pnpm-workspace.yaml` has all three globs:
+
 ```yaml
 packages:
   - 'apps/*'
@@ -235,39 +375,50 @@ packages:
   - 'packages/config/*'
 ```
 
-**`Ignored build scripts: sharp, unrs-resolver`**
-Đã được whitelist sẵn trong `pnpm-workspace.yaml` (mục `allowBuilds`). Nếu vẫn báo, chạy:
+**`Ignored build scripts: esbuild, sharp, unrs-resolver`**
+Already allowlisted in `pnpm-workspace.yaml` (`allowBuilds` / `onlyBuiltDependencies`).
+If it still warns, re-run:
+
 ```bash
 pnpm install
 ```
 
-**Lỗi font Inter vietnamese subset khi build**
-`next/font/google` cần network để fetch font lần build đầu. Nếu offline, có thể tạm đổi subset chỉ còn `['latin']` trong `apps/merchant-app/src/app/[locale]/layout.tsx`.
+**Fonts at build time (merchant)**
+Merchant uses `geist` (Vercel), self-hosted via `next/font` — **no network
+needed** at build. Admin still loads Inter/JetBrains from Google Fonts in
+`apps/admin-dashboard/index.html` (needs network on first load; self-host if offline).
 
-**Port 5001 bị chiếm**
+**Port 5001 / 5002 in use**
+
 ```bash
-# Tạm thời chạy ở port khác
+# Temporarily run on another port
 pnpm --filter merchant-app dev -- -p 5050
 
-# Hoặc tìm và kill process đang chiếm port
-lsof -ti:5001 | xargs kill -9
+# Or find and kill the process holding the port
+lsof -ti:5001,5002 | xargs kill -9
 ```
 
-**Hot reload không hoạt động trên macOS**
-Tăng giới hạn file watcher: `ulimit -n 4096` trước khi chạy `pnpm dev`.
+**Hot reload not working on macOS**
+Raise the file-watcher limit: `ulimit -n 4096` before running `pnpm dev`.
 
-**Theme nhấp nháy trắng khi reload**
-Đã xử lý bằng `suppressHydrationWarning` + `next-themes`. Nếu vẫn xảy ra, kiểm tra browser extension can thiệp.
+**White flash on theme reload**
+Handled via `suppressHydrationWarning` + `next-themes`. If it still happens,
+check for an interfering browser extension.
+
+**Admin `vite preview` exits with "Port 5002 is already in use"**
+`strictPort` is intentional (deterministic admin port). Free it:
+`lsof -ti:5002 | xargs kill`.
 
 ---
 
 ## Roadmap
 
-Sprint hiện tại tập trung Landing + Login. Các sprint sau:
+The current sprint focuses on Landing + Auth (merchant) and the basic Admin
+dashboard. Next sprints:
 
-1. Merchant Dashboard (Sidebar, Hóa đơn, API Key)
-2. Checkout Widget (route `/checkout/[id]`, state machine Pending→Confirming→Success)
-3. Admin Dashboard (app riêng Vite + Zustand)
-4. MSW + TanStack Query khi có async flow thật, Vitest + Playwright
+1. Merchant Dashboard (sidebar, invoices, API keys)
+2. Checkout Widget (`/checkout/[id]`, state machine Pending → Confirming → Success)
+3. Admin Dashboard expansion (transaction ledger with virtualization, merchant mgmt)
+4. MSW + TanStack Query for real async flows, Vitest + Playwright
 
-Chi tiết roadmap: `PLAN.md` mục 10.
+Full roadmap: `PLAN.md` section 10.

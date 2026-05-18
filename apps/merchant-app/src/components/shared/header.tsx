@@ -32,8 +32,8 @@ export function Header() {
       className={cn(
         'fixed inset-x-0 top-0 z-50 transition-all duration-300',
         scrolled
-          ? 'border-b border-[var(--color-border)] bg-[color-mix(in_oklab,var(--color-bg)_70%,transparent)] backdrop-blur-2xl'
-          : 'border-b border-transparent bg-transparent',
+          ? 'bg-[color-mix(in_oklab,var(--color-bg)_60%,transparent)] backdrop-blur-2xl'
+          : 'bg-transparent',
       )}
     >
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5 sm:px-6">
@@ -79,7 +79,7 @@ export function Header() {
       </div>
 
       {mobileOpen && (
-        <div className="border-t border-[var(--color-border)] bg-[var(--color-bg)] md:hidden">
+        <div className="bg-[var(--color-bg)] md:hidden">
           <div className="mx-auto flex max-w-6xl flex-col gap-1 px-5 py-3">
             {NAV_KEYS.map((key) => (
               <a
@@ -91,7 +91,7 @@ export function Header() {
                 {t(key)}
               </a>
             ))}
-            <div className="mt-2 flex items-center gap-2 border-t border-[var(--color-border)] pt-3">
+            <div className="mt-2 flex items-center gap-2 pt-3">
               <LanguageSwitcher />
               <ThemeToggle />
               <Link

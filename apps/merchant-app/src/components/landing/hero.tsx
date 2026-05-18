@@ -46,7 +46,7 @@ export function Hero() {
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline">
+            <Button asChild size="lg" variant="ghost">
               <a href="#features">{t('ctaSecondary')}</a>
             </Button>
           </div>
