@@ -8,8 +8,11 @@ import {
   envelopeSchema,
   loginResponseSchema,
   refreshResponseSchema,
+  registerResponseSchema,
   type LoginCredentials,
   type LoginSession,
+  type RegisterCredentials,
+  type RegisterSession,
   type TokenPair,
 } from './types';
 
@@ -27,6 +30,18 @@ function parseJson(raw: string): unknown {
   }
 }
 
+/** Build an AuthError from the failure envelope, preferring the nested
+ * `error.{message,code}` the backend actually returns. */
+function rejection(
+  envelope: { message?: string; error?: { code?: string; message?: string } },
+  fallback: string,
+): AuthError {
+  return new AuthError(
+    envelope.error?.message ?? envelope.message ?? fallback,
+    envelope.error?.code,
+  );
+}
+
 export async function backendLogin(credentials: LoginCredentials): Promise<LoginSession> {
   const res = await backendFetch(API_ROUTES.USER_LOGIN, {
     method: 'POST',
@@ -41,9 +56,29 @@ export async function backendLogin(credentials: LoginCredentials): Promise<Login
   const json = parseJson(res.raw);
   const envelope = envelopeSchema.parse(json);
   if (!res.ok || !envelope.success) {
-    throw new AuthError(envelope.message ?? 'Authentication failed');
+    throw rejection(envelope, 'Authentication failed');
   }
   return loginResponseSchema.parse(json).data;
+}
+
+export async function backendRegister(credentials: RegisterCredentials): Promise<RegisterSession> {
+  const res = await backendFetch(API_ROUTES.USER_REGISTER, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    // referralId intentionally omitted — backend rejects null and "" (USER005).
+    body: JSON.stringify({
+      userName: credentials.userName,
+      email: credentials.email,
+      password: credentials.password,
+    }),
+  });
+
+  const json = parseJson(res.raw);
+  const envelope = envelopeSchema.parse(json);
+  if (!res.ok || !envelope.success) {
+    throw rejection(envelope, 'Registration failed');
+  }
+  return registerResponseSchema.parse(json).data;
 }
 
 export async function backendRefresh(refreshToken: string): Promise<TokenPair> {
@@ -56,7 +91,7 @@ export async function backendRefresh(refreshToken: string): Promise<TokenPair> {
   const json = parseJson(res.raw);
   const envelope = envelopeSchema.parse(json);
   if (!res.ok || !envelope.success) {
-    throw new AuthError(envelope.message ?? 'Session refresh failed');
+    throw rejection(envelope, 'Session refresh failed');
   }
   return refreshResponseSchema.parse(json).data;
 }

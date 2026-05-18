@@ -32,16 +32,24 @@ export async function isAuthenticated(): Promise<boolean> {
   return Boolean(await getAccessToken());
 }
 
-export async function writeSession(tokens: TokenPair): Promise<void> {
+/**
+ * Persist the session. `refreshToken` is optional because register issues
+ * only an access token — without it there is simply no silent refresh.
+ */
+export async function writeSession(
+  tokens: { accessToken: string } & Partial<Pick<TokenPair, 'refreshToken'>>,
+): Promise<void> {
   const store = await cookies();
   store.set(SESSION_COOKIE.ACCESS, tokens.accessToken, {
     ...baseCookieOptions,
     maxAge: SESSION_MAX_AGE.ACCESS,
   });
-  store.set(SESSION_COOKIE.REFRESH, tokens.refreshToken, {
-    ...baseCookieOptions,
-    maxAge: SESSION_MAX_AGE.REFRESH,
-  });
+  if (tokens.refreshToken) {
+    store.set(SESSION_COOKIE.REFRESH, tokens.refreshToken, {
+      ...baseCookieOptions,
+      maxAge: SESSION_MAX_AGE.REFRESH,
+    });
+  }
 }
 
 export async function clearSession(): Promise<void> {

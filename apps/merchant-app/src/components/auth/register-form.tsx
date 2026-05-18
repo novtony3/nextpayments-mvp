@@ -10,13 +10,9 @@ import { z } from 'zod';
 import { Button } from '@nextpayments/ui/components/button';
 
 import { useRouter } from '@/i18n/routing';
-import { DUMMY_USERS } from '@/constants/dummy-users';
 import { ROUTES } from '@/constants/routes';
-import {
-  AUTH_FIELD_PLACEHOLDERS,
-  AUTH_MOCK_DELAY_MS,
-  PASSWORD_MIN_LENGTH,
-} from '@/constants/auth';
+import { AUTH_FIELD_PLACEHOLDERS, PASSWORD_MIN_LENGTH } from '@/constants/auth';
+import { registerAction } from '@/lib/auth/actions';
 import { TextField } from '@/components/auth/text-field';
 import { PasswordToggle } from '@/components/auth/password-toggle';
 
@@ -59,19 +55,29 @@ export function RegisterForm() {
   });
 
   const onSubmit = async (values: RegisterValues) => {
-    // Simulate a network round-trip so the loading state is visible (UI-only phase).
-    await new Promise((resolve) => setTimeout(resolve, AUTH_MOCK_DELAY_MS.REGISTER));
+    const result = await registerAction({
+      userName: values.name,
+      email: values.email,
+      password: values.password,
+    });
 
-    const taken = DUMMY_USERS.some((u) => u.email === values.email);
-    if (taken) {
+    if (result.ok) {
+      // Backend signs the user in on register (sets the session cookie).
+      toast.success(t('success', { name: result.displayName }));
+      router.push(ROUTES.HOME);
+      router.refresh(); // let server components observe the new session cookie
+      return;
+    }
+
+    if (result.reason === 'emailTaken') {
       const message = t('errors.emailTaken');
       setError('email', { message });
       toast.error(message);
       return;
     }
 
-    toast.success(t('success', { name: values.name }));
-    router.push(ROUTES.HOME);
+    // Unexpected validation rejection, transport failure, or 5xx.
+    toast.error(t('errors.serverError'));
   };
 
   return (

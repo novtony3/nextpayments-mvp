@@ -1,8 +1,17 @@
 'use server';
 
-import { backendLogin, backendLogout, backendRefresh } from './backend';
+import { backendLogin, backendLogout, backendRefresh, backendRegister } from './backend';
 import { clearSession, getAccessToken, getRefreshToken, writeSession } from './session';
-import { AuthError, loginInputSchema, type LoginActionResult } from './types';
+import {
+  AuthError,
+  loginInputSchema,
+  registerInputSchema,
+  type LoginActionResult,
+  type RegisterActionResult,
+} from './types';
+
+/** Backend error code for an already-registered email. */
+const EMAIL_TAKEN_CODE = 'USER004';
 
 /**
  * Auth Server Actions — the only place tokens are handled. They call the
@@ -26,6 +35,30 @@ export async function loginAction(input: unknown): Promise<LoginActionResult> {
   } catch (err) {
     if (err instanceof AuthError) {
       return { ok: false, reason: 'invalid' };
+    }
+    // Transport failure (tunnel down), 5xx, or unexpected response shape.
+    return { ok: false, reason: 'error' };
+  }
+}
+
+export async function registerAction(input: unknown): Promise<RegisterActionResult> {
+  const parsed = registerInputSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, reason: 'invalid' };
+  }
+
+  try {
+    const session = await backendRegister(parsed.data);
+    // Backend issues an access token on register → user is signed in.
+    await writeSession(session);
+    const displayName = session.user.name ?? session.user.userName ?? parsed.data.userName;
+    return { ok: true, displayName };
+  } catch (err) {
+    if (err instanceof AuthError) {
+      return {
+        ok: false,
+        reason: err.code === EMAIL_TAKEN_CODE ? 'emailTaken' : 'invalid',
+      };
     }
     // Transport failure (tunnel down), 5xx, or unexpected response shape.
     return { ok: false, reason: 'error' };

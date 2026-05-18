@@ -4,8 +4,9 @@
  * nothing is hardcoded at the call site.
  */
 
-/** Minimum password length, shared by every auth schema. */
-export const PASSWORD_MIN_LENGTH = 6;
+/** Minimum password length, shared by every auth schema. Matches the
+ * backend rule (register rejects shorter with USER021). */
+export const PASSWORD_MIN_LENGTH = 8;
 
 /**
  * Simulated network latency (ms) for the UI-only phase, so loading states are
