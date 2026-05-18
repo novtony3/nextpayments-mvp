@@ -14,7 +14,9 @@
     "getStarted": "Get started",
     "themeLight": "Light mode",
     "themeDark": "Dark mode",
-    "language": "Language"
+    "language": "Language",
+    "account": "Account",
+    "dashboard": "Dashboard"
   },
   "landing": {
     "hero": {
@@ -160,8 +162,9 @@
         "emailRequired": "Email is required",
         "emailInvalid": "Enter a valid email address",
         "passwordRequired": "Password is required",
-        "passwordTooShort": "Password must be at least 6 characters",
-        "invalidCredentials": "Invalid email or password"
+        "passwordTooShort": "Password must be at least 8 characters",
+        "invalidCredentials": "Invalid email or password",
+        "serverError": "Something went wrong. Please try again."
       }
     },
     "register": {
@@ -186,10 +189,15 @@
         "emailInvalid": "Enter a valid email address",
         "emailTaken": "An account with this email already exists",
         "passwordRequired": "Password is required",
-        "passwordTooShort": "Password must be at least 6 characters",
+        "passwordTooShort": "Password must be at least 8 characters",
         "confirmRequired": "Please confirm your password",
-        "passwordMismatch": "Passwords do not match"
+        "passwordMismatch": "Passwords do not match",
+        "serverError": "Something went wrong. Please try again."
       }
+    },
+    "logout": {
+      "button": "Log out",
+      "success": "Signed out"
     }
   }
 }

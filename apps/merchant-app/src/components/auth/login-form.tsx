@@ -10,13 +10,9 @@ import { z } from 'zod';
 import { Button } from '@nextpayments/ui/components/button';
 
 import { Link, useRouter } from '@/i18n/routing';
-import { DUMMY_USERS } from '@/constants/dummy-users';
 import { ROUTES } from '@/constants/routes';
-import {
-  AUTH_FIELD_PLACEHOLDERS,
-  AUTH_MOCK_DELAY_MS,
-  PASSWORD_MIN_LENGTH,
-} from '@/constants/auth';
+import { AUTH_FIELD_PLACEHOLDERS, PASSWORD_MIN_LENGTH } from '@/constants/auth';
+import { loginAction } from '@/lib/auth/actions';
 import { TextField } from '@/components/auth/text-field';
 import { PasswordToggle } from '@/components/auth/password-toggle';
 
@@ -52,14 +48,16 @@ export function LoginForm() {
   });
 
   const onSubmit = async (values: LoginValues) => {
-    // Simulate a network round-trip so the loading state is visible (UI-only phase).
-    await new Promise((resolve) => setTimeout(resolve, AUTH_MOCK_DELAY_MS.CREDENTIALS));
+    const result = await loginAction(values);
 
-    const match = DUMMY_USERS.find(
-      (u) => u.email === values.email && u.password === values.password,
-    );
+    if (result.ok) {
+      toast.success(t('successWelcome', { name: result.displayName }));
+      router.push(ROUTES.HOME);
+      router.refresh(); // let server components observe the new session cookie
+      return;
+    }
 
-    if (!match) {
+    if (result.reason === 'invalid') {
       const message = t('errors.invalidCredentials');
       setError('email', { message });
       setError('password', { message });
@@ -67,8 +65,8 @@ export function LoginForm() {
       return;
     }
 
-    toast.success(t('successWelcome', { name: match.name }));
-    router.push(ROUTES.HOME);
+    // Transport failure (tunnel down), 5xx, or unexpected response shape.
+    toast.error(t('errors.serverError'));
   };
 
   return (

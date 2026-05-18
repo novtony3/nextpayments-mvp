@@ -14,7 +14,9 @@
     "getStarted": "Commencer",
     "themeLight": "Mode clair",
     "themeDark": "Mode sombre",
-    "language": "Langue"
+    "language": "Langue",
+    "account": "Compte",
+    "dashboard": "Tableau de bord"
   },
   "landing": {
     "hero": {
@@ -160,8 +162,9 @@
         "emailRequired": "L'e-mail est requis",
         "emailInvalid": "Saisissez une adresse e-mail valide",
         "passwordRequired": "Le mot de passe est requis",
-        "passwordTooShort": "Le mot de passe doit comporter au moins 6 caractères",
-        "invalidCredentials": "E-mail ou mot de passe invalide"
+        "passwordTooShort": "Le mot de passe doit comporter au moins 8 caractères",
+        "invalidCredentials": "E-mail ou mot de passe invalide",
+        "serverError": "Une erreur est survenue. Veuillez réessayer."
       }
     },
     "register": {
@@ -186,10 +189,15 @@
         "emailInvalid": "Saisissez une adresse e-mail valide",
         "emailTaken": "Un compte avec cet e-mail existe déjà",
         "passwordRequired": "Le mot de passe est requis",
-        "passwordTooShort": "Le mot de passe doit comporter au moins 6 caractères",
+        "passwordTooShort": "Le mot de passe doit comporter au moins 8 caractères",
         "confirmRequired": "Veuillez confirmer votre mot de passe",
-        "passwordMismatch": "Les mots de passe ne correspondent pas"
+        "passwordMismatch": "Les mots de passe ne correspondent pas",
+        "serverError": "Une erreur est survenue. Veuillez réessayer."
       }
+    },
+    "logout": {
+      "button": "Se déconnecter",
+      "success": "Déconnexion réussie"
     }
   }
 }
