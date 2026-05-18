@@ -15,6 +15,7 @@ export const API_BASE_URL = '/api' as const;
 /** Backend route paths (relative to {@link API_BASE_URL}). */
 export const API_ROUTES = {
   HEALTH: '/health',
+  USER_LOGIN: '/user/login',
 } as const;
 
 export type ApiRoute = (typeof API_ROUTES)[keyof typeof API_ROUTES];

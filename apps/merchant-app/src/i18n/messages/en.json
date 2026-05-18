@@ -161,7 +161,8 @@
         "emailInvalid": "Enter a valid email address",
         "passwordRequired": "Password is required",
         "passwordTooShort": "Password must be at least 6 characters",
-        "invalidCredentials": "Invalid email or password"
+        "invalidCredentials": "Invalid email or password",
+        "serverError": "Something went wrong. Please try again."
       }
     },
     "register": {
