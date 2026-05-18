@@ -45,3 +45,6 @@ coverage/
 # Cache
 .eslintcache
 .cache/
+
+# Internal planning doc — not shared to this remote
+PLAN.md
