@@ -3,6 +3,8 @@
 import { ThemeProvider } from 'next-themes';
 import type { ReactNode } from 'react';
 
+import { Toaster } from '@/components/shared/toaster';
+
 type ProvidersProps = {
   children: ReactNode;
 };
@@ -20,6 +22,7 @@ export function Providers({ children }: ProvidersProps) {
       disableTransitionOnChange
     >
       {children}
+      <Toaster />
     </ThemeProvider>
   );
 }

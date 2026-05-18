@@ -67,6 +67,14 @@
   --color-accent-soft: color-mix(in oklab, var(--color-accent) 16%, transparent);
   --color-accent-strong: color-mix(in oklab, var(--color-accent) 26%, transparent);
 
+  /*
+   * === Aurora ===
+   * The deep, saturated navy/royal blue used by the BlueAccent flowing-water
+   * effect (login/hero canvas). Sky-blue pushed toward a rich indigo so the
+   * floor glow reads deep, not pale. Reusable as `var(--color-aurora)`.
+   */
+  --color-aurora: color-mix(in oklab, var(--color-brand-blue) 58%, #0a1f63);
+
   /* === Status (kept on Google's signal palette for familiarity) === */
   --color-success: #81c995;        /* Gemini-tuned green (less neon than #34a853) */
   --color-warning: #fdd663;
@@ -105,6 +113,9 @@
     --color-success: #137333;
     --color-warning: #ea8600;
     --color-danger: #c5221f;
+
+    /* On a light canvas the aurora stays brighter so it still reads. */
+    --color-aurora: color-mix(in oklab, var(--color-brand-blue) 80%, #1746c8);
 
     /* Glass on a light canvas — frost the white, darken the hairline. */
     --glass-fill: color-mix(in oklab, white 60%, transparent);
