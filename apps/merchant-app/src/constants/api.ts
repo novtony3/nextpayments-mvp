@@ -19,6 +19,7 @@ export const API_ROUTES = {
   USER_REGISTER: '/user/register',
   USER_REFRESH: '/user/refresh-token',
   USER_LOGOUT: '/user/logout',
+  USER_ME: '/user/me',
 } as const;
 
 export type ApiRoute = (typeof API_ROUTES)[keyof typeof API_ROUTES];

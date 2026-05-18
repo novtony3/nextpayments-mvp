@@ -14,7 +14,9 @@
     "getStarted": "Commencer",
     "themeLight": "Mode clair",
     "themeDark": "Mode sombre",
-    "language": "Langue"
+    "language": "Langue",
+    "account": "Compte",
+    "dashboard": "Tableau de bord"
   },
   "landing": {
     "hero": {

@@ -7,12 +7,14 @@ import {
   AuthError,
   envelopeSchema,
   loginResponseSchema,
+  meResponseSchema,
   refreshResponseSchema,
   registerResponseSchema,
   type LoginCredentials,
   type LoginSession,
   type RegisterCredentials,
   type RegisterSession,
+  type SessionUser,
   type TokenPair,
 } from './types';
 
@@ -94,6 +96,19 @@ export async function backendRefresh(refreshToken: string): Promise<TokenPair> {
     throw rejection(envelope, 'Session refresh failed');
   }
   return refreshResponseSchema.parse(json).data;
+}
+
+export async function backendMe(accessToken: string): Promise<SessionUser> {
+  const res = await backendFetch(API_ROUTES.USER_ME, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  const json = parseJson(res.raw);
+  const envelope = envelopeSchema.parse(json);
+  if (!res.ok || !envelope.success) {
+    throw rejection(envelope, 'Failed to load the current user');
+  }
+  return meResponseSchema.parse(json).data.user;
 }
 
 /** Best-effort backend logout — failure here must not block clearing cookies. */

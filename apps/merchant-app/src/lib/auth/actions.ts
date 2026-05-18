@@ -1,11 +1,18 @@
 'use server';
 
 import { backendLogin, backendLogout, backendRefresh, backendRegister } from './backend';
-import { clearSession, getAccessToken, getRefreshToken, writeSession } from './session';
+import {
+  clearSession,
+  getAccessToken,
+  getCurrentUser,
+  getRefreshToken,
+  writeSession,
+} from './session';
 import {
   AuthError,
   loginInputSchema,
   registerInputSchema,
+  type HeaderUser,
   type LoginActionResult,
   type RegisterActionResult,
 } from './types';
@@ -90,4 +97,17 @@ export async function refreshAction(): Promise<boolean> {
     await clearSession();
     return false;
   }
+}
+
+/**
+ * Resolve the signed-in user for client chrome (header). Returns a minimal
+ * serializable identity, or null when logged out. Backend only reliably
+ * returns `email`, so `displayName` falls back through name → userName →
+ * the email local-part.
+ */
+export async function currentUserAction(): Promise<HeaderUser | null> {
+  const user = await getCurrentUser();
+  if (!user?.email) return null;
+  const displayName = user.name ?? user.userName ?? user.email.split('@')[0] ?? user.email;
+  return { email: user.email, displayName };
 }

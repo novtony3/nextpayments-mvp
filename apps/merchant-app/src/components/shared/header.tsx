@@ -4,11 +4,10 @@ import { Menu, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
-import { Button } from '@nextpayments/ui/components/button';
 import { cn } from '@nextpayments/ui/lib/utils';
 
 import { Link } from '@/i18n/routing';
-import { ROUTES } from '@/constants/routes';
+import { AuthControls } from '@/components/auth/auth-controls';
 import { LanguageSwitcher } from './language-switcher';
 import { Logo } from './logo';
 import { ThemeToggle } from './theme-toggle';
@@ -56,15 +55,7 @@ export function Header() {
         <div className="hidden items-center gap-1 md:flex">
           <LanguageSwitcher />
           <ThemeToggle />
-          <Link
-            href={ROUTES.LOGIN}
-            className="ml-1 rounded-full px-3 py-1.5 text-[13px] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text)]"
-          >
-            {t('login')}
-          </Link>
-          <Button asChild size="sm" className="ml-1">
-            <Link href={ROUTES.REGISTER}>{t('getStarted')}</Link>
-          </Button>
+          <AuthControls />
         </div>
 
         <button
@@ -94,18 +85,9 @@ export function Header() {
             <div className="mt-2 flex items-center gap-2 pt-3">
               <LanguageSwitcher />
               <ThemeToggle />
-              <Link
-                href={ROUTES.LOGIN}
-                className="ml-auto rounded-full px-3 py-2 text-sm text-[var(--color-text-muted)]"
-                onClick={() => setMobileOpen(false)}
-              >
-                {t('login')}
-              </Link>
-              <Button asChild size="sm">
-                <Link href={ROUTES.REGISTER} onClick={() => setMobileOpen(false)}>
-                  {t('getStarted')}
-                </Link>
-              </Button>
+              <div className="ml-auto">
+                <AuthControls onNavigate={() => setMobileOpen(false)} />
+              </div>
             </div>
           </div>
         </div>

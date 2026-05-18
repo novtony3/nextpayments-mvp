@@ -14,7 +14,9 @@
     "getStarted": "Get started",
     "themeLight": "Light mode",
     "themeDark": "Dark mode",
-    "language": "Language"
+    "language": "Language",
+    "account": "Account",
+    "dashboard": "Dashboard"
   },
   "landing": {
     "hero": {

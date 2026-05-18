@@ -1,10 +1,12 @@
 import 'server-only';
 
+import { cache } from 'react';
 import { cookies } from 'next/headers';
 
 import { SESSION_COOKIE, SESSION_MAX_AGE } from '@/constants/auth';
 
-import type { TokenPair } from './types';
+import { backendMe } from './backend';
+import type { SessionUser, TokenPair } from './types';
 
 /**
  * httpOnly session cookies. Reads are safe anywhere on the server (layouts,
@@ -57,3 +59,18 @@ export async function clearSession(): Promise<void> {
   store.delete(SESSION_COOKIE.ACCESS);
   store.delete(SESSION_COOKIE.REFRESH);
 }
+
+/**
+ * The signed-in user, or null when there is no (valid) session. Any failure
+ * — no cookie, expired token, tunnel down — resolves to null so callers can
+ * treat it as "logged out". `cache()` dedupes within a single server pass.
+ */
+export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
+  const accessToken = await getAccessToken();
+  if (!accessToken) return null;
+  try {
+    return await backendMe(accessToken);
+  } catch {
+    return null;
+  }
+});

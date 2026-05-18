@@ -80,6 +80,18 @@ export const loginResponseSchema = z.object({
 
 export const refreshResponseSchema = z.object({ data: tokenPairSchema });
 
+/** GET /api/user/me → { data: { user } }. */
+export const meResponseSchema = z.object({ data: z.object({ user: userSchema }) });
+
+/**
+ * Minimal, serializable identity for the header (Server Action → client).
+ * Backend only reliably returns `email`; `displayName` is derived.
+ */
+export interface HeaderUser {
+  email: string;
+  displayName: string;
+}
+
 /** Register success: backend issues an accessToken but NO refreshToken. */
 export const registerResponseSchema = z.object({
   data: z.object({
