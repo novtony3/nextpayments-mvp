@@ -12,8 +12,7 @@ import { Button } from '@nextpayments/ui/components/button';
 import { Link, useRouter } from '@/i18n/routing';
 import { ROUTES } from '@/constants/routes';
 import { AUTH_FIELD_PLACEHOLDERS, PASSWORD_MIN_LENGTH } from '@/constants/auth';
-import { ApiRequestError } from '@/lib/api';
-import { AuthError, login } from '@/lib/auth';
+import { loginAction } from '@/lib/auth/actions';
 import { TextField } from '@/components/auth/text-field';
 import { PasswordToggle } from '@/components/auth/password-toggle';
 
@@ -49,23 +48,25 @@ export function LoginForm() {
   });
 
   const onSubmit = async (values: LoginValues) => {
-    try {
-      const session = await login(values);
-      const name = session.user.name ?? session.user.userName ?? values.email;
-      toast.success(t('successWelcome', { name }));
+    const result = await loginAction(values);
+
+    if (result.ok) {
+      toast.success(t('successWelcome', { name: result.displayName }));
       router.push(ROUTES.HOME);
-    } catch (err) {
-      // Rejected credentials/2FA, or a 4xx rejection → field-level + toast.
-      if (err instanceof AuthError || (err instanceof ApiRequestError && err.status < 500)) {
-        const message = t('errors.invalidCredentials');
-        setError('email', { message });
-        setError('password', { message });
-        toast.error(message);
-        return;
-      }
-      // Transport failure, 5xx, or unexpected response shape → generic error.
-      toast.error(t('errors.serverError'));
+      router.refresh(); // let server components observe the new session cookie
+      return;
     }
+
+    if (result.reason === 'invalid') {
+      const message = t('errors.invalidCredentials');
+      setError('email', { message });
+      setError('password', { message });
+      toast.error(message);
+      return;
+    }
+
+    // Transport failure (tunnel down), 5xx, or unexpected response shape.
+    toast.error(t('errors.serverError'));
   };
 
   return (

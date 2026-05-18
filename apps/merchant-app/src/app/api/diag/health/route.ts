@@ -1,11 +1,7 @@
 import { NextResponse } from 'next/server';
 
-import {
-  API_BASE_URL,
-  API_PROXY_TARGET_ENV,
-  API_ROUTES,
-  DEFAULT_API_PROXY_TARGET,
-} from '@/constants/api';
+import { API_ROUTES } from '@/constants/api';
+import { backendFetch, getBackendTarget } from '@/lib/server/backend-fetch';
 
 /**
  * Dev diagnostic — server-side probe of the backend health endpoint through
@@ -30,15 +26,13 @@ interface HealthProbeResult {
 }
 
 export async function GET(): Promise<NextResponse<HealthProbeResult>> {
-  const target = process.env[API_PROXY_TARGET_ENV] ?? DEFAULT_API_PROXY_TARGET;
-  const url = `${target}${API_BASE_URL}${API_ROUTES.HEALTH}`;
+  const target = getBackendTarget();
 
   try {
-    const res = await fetch(url, { headers: { Accept: 'application/json' }, cache: 'no-store' });
-    const text = await res.text();
-    let body: unknown = text;
+    const res = await backendFetch(API_ROUTES.HEALTH);
+    let body: unknown = res.raw;
     try {
-      body = JSON.parse(text) as unknown;
+      body = JSON.parse(res.raw) as unknown;
     } catch {
       /* upstream returned non-JSON — keep the raw text */
     }

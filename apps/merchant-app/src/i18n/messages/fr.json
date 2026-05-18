@@ -191,6 +191,10 @@
         "confirmRequired": "Veuillez confirmer votre mot de passe",
         "passwordMismatch": "Les mots de passe ne correspondent pas"
       }
+    },
+    "logout": {
+      "button": "Se déconnecter",
+      "success": "Déconnexion réussie"
     }
   }
 }

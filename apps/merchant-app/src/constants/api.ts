@@ -16,6 +16,8 @@ export const API_BASE_URL = '/api' as const;
 export const API_ROUTES = {
   HEALTH: '/health',
   USER_LOGIN: '/user/login',
+  USER_REFRESH: '/user/refresh-token',
+  USER_LOGOUT: '/user/logout',
 } as const;
 
 export type ApiRoute = (typeof API_ROUTES)[keyof typeof API_ROUTES];

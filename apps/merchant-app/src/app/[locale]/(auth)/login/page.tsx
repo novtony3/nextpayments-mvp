@@ -1,19 +1,37 @@
-import { useTranslations } from 'next-intl';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-import { Link } from '@/i18n/routing';
 import { ROUTES } from '@/constants/routes';
+import { Link, redirect } from '@/i18n/routing';
+import { getRefreshToken, isAuthenticated } from '@/lib/auth/session';
 import { Logo } from '@/components/shared/logo';
 import { BlueAccent } from '@/components/shared/blue-accent';
 import { LoginForm } from '@/components/auth/login-form';
+import { SessionRecover } from '@/components/auth/session-recover';
 import { SocialButtons } from '@/components/auth/social-buttons';
 
-export default function LoginPage() {
-  const t = useTranslations('auth.login');
+type LoginPageProps = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function LoginPage({ params }: LoginPageProps) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  // Already signed in → don't show the login screen.
+  if (await isAuthenticated()) {
+    redirect({ href: ROUTES.HOME, locale });
+  }
+
+  // Access cookie gone but a refresh cookie remains → attempt silent recovery.
+  const canRecover = Boolean(await getRefreshToken());
+  const t = await getTranslations('auth.login');
 
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[var(--color-bg)] px-6 py-16">
       {/* Gemini Desktop signature: deep blue aurora rising from the floor. */}
       <BlueAccent intensity="bold" feather={false} />
+
+      {canRecover && <SessionRecover />}
 
       <div className="relative z-10 w-full max-w-[400px]">
         <div className="mb-10 flex flex-col items-center text-center">

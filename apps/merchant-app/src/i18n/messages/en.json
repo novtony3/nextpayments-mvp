@@ -191,6 +191,10 @@
         "confirmRequired": "Please confirm your password",
         "passwordMismatch": "Passwords do not match"
       }
+    },
+    "logout": {
+      "button": "Log out",
+      "success": "Signed out"
     }
   }
 }
