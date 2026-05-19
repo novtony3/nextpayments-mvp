@@ -37,13 +37,17 @@ export function DashboardShell({ children }: DashboardShellProps) {
   }, [mobileOpen]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--color-bg)]">
-      {SHOW_VERIFY_BANNER && <VerifyBanner />}
+    <div className="flex h-dvh flex-col overflow-hidden bg-[var(--color-bg)]">
+      {SHOW_VERIFY_BANNER && (
+        <div className="shrink-0">
+          <VerifyBanner />
+        </div>
+      )}
 
-      <div className="flex flex-1">
+      <div className="flex min-h-0 flex-1">
         <aside
           className={cn(
-            'sticky top-0 hidden h-screen shrink-0 border-r border-[var(--color-border)] bg-[var(--color-surface)] lg:block',
+            'hidden h-full shrink-0 border-r border-[var(--color-border)] bg-[var(--color-surface)] lg:block',
             SIDEBAR_WIDTH,
           )}
         >
@@ -69,9 +73,11 @@ export function DashboardShell({ children }: DashboardShellProps) {
           </div>
         )}
 
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
           <DashboardTopbar onMenuClick={() => setMobileOpen(true)} />
-          <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+          <main className="min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
+            {children}
+          </main>
         </div>
       </div>
     </div>

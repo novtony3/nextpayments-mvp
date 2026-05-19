@@ -29,11 +29,11 @@ export function DashboardSidebar({ onNavigate }: DashboardSidebarProps) {
 
   return (
     <div className="flex h-full flex-col gap-6 px-4 py-6">
-      <Link href="/" className="px-2" onClick={onNavigate}>
+      <Link href="/" className="shrink-0 px-2" onClick={onNavigate}>
         <Logo />
       </Link>
 
-      <nav className="flex-1">
+      <nav className="-mr-1 min-h-0 flex-1 overflow-y-auto pr-1">
         <ul className="flex flex-col gap-1">
           {DASHBOARD_NAV.map((item) => {
             const Icon = DASHBOARD_ICONS[item.icon];
@@ -68,7 +68,13 @@ export function DashboardSidebar({ onNavigate }: DashboardSidebarProps) {
         </div>
       </nav>
 
-      <Button variant="outline" size="md" fullWidth leftIcon={<Plus className="h-4 w-4" />}>
+      <Button
+        variant="outline"
+        size="md"
+        fullWidth
+        className="shrink-0"
+        leftIcon={<Plus className="h-4 w-4" />}
+      >
         {t('newTransaction')}
       </Button>
     </div>
