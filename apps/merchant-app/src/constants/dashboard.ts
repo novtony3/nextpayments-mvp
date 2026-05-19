@@ -38,11 +38,6 @@ export const DASHBOARD_NAV: ReadonlyArray<DashboardNavItem> = [
   { key: 'support', route: ROUTES.SUPPORT, icon: 'support', backed: true },
 ];
 
-/** Routes that are placeholders until their backend lands (UI-only phase). */
-export const COMING_SOON_ROUTES: ReadonlyArray<Route> = DASHBOARD_NAV.filter(
-  (item) => !item.backed,
-).map((item) => item.route);
-
 /** Fiat the estimated balance is displayed in (no inline "$"/"USD"). */
 export const FIAT = { code: 'USD', symbol: '$' } as const;
 

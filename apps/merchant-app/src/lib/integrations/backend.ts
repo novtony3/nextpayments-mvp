@@ -9,7 +9,6 @@ import { backendFetch } from '@/lib/server/backend-fetch';
 import {
   createApiKeyResponseSchema,
   createIntegrationResponseSchema,
-  integrationSchema,
   listIntegrationsResponseSchema,
   type CreateIntegrationInput,
   type Integration,
@@ -105,6 +104,3 @@ export async function loadIntegrationList(query: {
     return { ok: false };
   }
 }
-
-/** Re-export for the page's server fetch. */
-export { integrationSchema };
