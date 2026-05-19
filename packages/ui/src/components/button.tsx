@@ -9,18 +9,19 @@ import { cn } from '../lib/utils';
  * element so `asChild` works without pulling in @radix-ui/react-slot. Keeps
  * `packages/ui` framework-agnostic (used by both Next.js and Vite apps).
  */
-const Slot = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement> & { children?: React.ReactNode }>(
-  ({ children, className, ...props }, ref) => {
-    if (!React.isValidElement(children)) return null;
-    const child = children as React.ReactElement<Record<string, unknown>>;
-    return React.cloneElement(child, {
-      ...props,
-      ...child.props,
-      ref,
-      className: cn(className, child.props.className as string | undefined),
-    });
-  },
-);
+const Slot = React.forwardRef<
+  HTMLElement,
+  React.HTMLAttributes<HTMLElement> & { children?: React.ReactNode }
+>(({ children, className, ...props }, ref) => {
+  if (!React.isValidElement(children)) return null;
+  const child = children as React.ReactElement<Record<string, unknown>>;
+  return React.cloneElement(child, {
+    ...props,
+    ...child.props,
+    ref,
+    className: cn(className, child.props.className as string | undefined),
+  });
+});
 Slot.displayName = 'Slot';
 
 const buttonVariants = cva(
@@ -53,8 +54,7 @@ const buttonVariants = cva(
         subtle:
           'bg-[var(--glass-fill)] text-[var(--color-text)] backdrop-blur-md border border-[var(--glass-border)] hover:bg-[var(--glass-fill-strong)]',
         /** Destructive — delete / irreversible actions. */
-        destructive:
-          'bg-[var(--color-danger)] text-[var(--color-bg)] hover:opacity-90',
+        destructive: 'bg-[var(--color-danger)] text-[var(--color-bg)] hover:opacity-90',
         /** Inline text link — no padding, underline on hover. */
         link: 'h-auto rounded-none bg-transparent p-0 text-[var(--color-accent)] underline-offset-4 hover:underline',
       },
@@ -83,8 +83,7 @@ const buttonVariants = cva(
 );
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   /** Render the single child as the root element, merging button styles onto it. */
   asChild?: boolean;
   /** Show a spinner and block interaction while preserving layout width. */
@@ -132,15 +131,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         aria-busy={loading || undefined}
         {...props}
       >
-        {loading && (
-          <Loader2 className="absolute h-4 w-4 animate-spin" aria-hidden="true" />
-        )}
-        <span
-          className={cn(
-            'inline-flex items-center gap-2',
-            loading && 'opacity-0',
-          )}
-        >
+        {loading && <Loader2 className="absolute h-4 w-4 animate-spin" aria-hidden="true" />}
+        <span className={cn('inline-flex items-center gap-2', loading && 'opacity-0')}>
           {leftIcon}
           {children}
           {rightIcon}

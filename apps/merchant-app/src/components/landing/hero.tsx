@@ -6,7 +6,7 @@ import { Button } from '@nextpayments/ui/components/button';
 import { Link } from '@/i18n/routing';
 import { ROUTES } from '@/constants/routes';
 import { Logo } from '@/components/shared/logo';
-import { BlueAccent } from '@/components/shared/blue-accent';
+import { TwinAuroras } from '@/components/shared/twin-auroras';
 import { Reveal } from './reveal';
 import { HeroVisual } from './hero-visual';
 
@@ -15,9 +15,10 @@ export function Hero() {
 
   return (
     <section className="relative flex min-h-[92vh] flex-col items-center justify-center overflow-hidden px-5 py-32 text-center sm:px-6">
-      {/* Hero-only ambient — calm subtle aurora; the rest of the page stays
-          on the global body glow (kept minimal per the design system). */}
-      <BlueAccent intensity="subtle" />
+      {/* Hero-only ambient — the twin auroras, kept calm for marketing
+          (subtle + soft contrast); the rest of the page stays on the global
+          body glow per the design system. */}
+      <TwinAuroras intensity="subtle" contrast="soft" />
 
       <div className="relative z-10 flex flex-col items-center">
         <Reveal>

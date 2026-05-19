@@ -1,7 +1,6 @@
 {
   "extends": "@nextpayments/tsconfig/react-library.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },

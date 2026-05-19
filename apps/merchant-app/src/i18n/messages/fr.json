@@ -199,5 +199,169 @@
       "button": "Se déconnecter",
       "success": "Déconnexion réussie"
     }
+  },
+  "dashboard": {
+    "nav": {
+      "wallet": "Portefeuille",
+      "transactions": "Transactions",
+      "paySettings": "Paramètres de paiement",
+      "integrations": "Intégrations",
+      "invoicing": "Facturation",
+      "quickPos": "POS rapide",
+      "support": "Assistance",
+      "more": "Plus"
+    },
+    "newTransaction": "Nouvelle transaction",
+    "fiatSelector": "Devise d'affichage",
+    "openMenu": "Ouvrir le menu de navigation",
+    "closeMenu": "Fermer le menu de navigation",
+    "verify": {
+      "message": "Veuillez vérifier votre compte pour activer toutes les devises et fonctionnalités.",
+      "cta": "Terminer la vérification"
+    },
+    "balances": {
+      "title": "Soldes",
+      "searchPlaceholder": "Rechercher",
+      "filterAll": "Afficher toutes les cryptos",
+      "estimatedBalance": "Solde estimé",
+      "autoAccept": "Accepter automatiquement les dépôts incorrects sur les soldes principaux",
+      "locked": "Vérifiez votre compte pour activer {ticker}",
+      "send": "Envoyer",
+      "receive": "Recevoir",
+      "convert": "Convertir",
+      "empty": "Aucune crypto ne correspond à votre recherche."
+    },
+    "placeholder": {
+      "title": "{section} arrive bientôt",
+      "description": "Cette section n'est pas encore disponible. Elle s'activera une fois son backend connecté."
+    },
+    "integrations": {
+      "title": "Intégrations",
+      "help": "Besoin d'aide pour démarrer ? Consultez notre <docs>documentation API</docs> et notre <kb>base de connaissances</kb>.",
+      "tabActive": "Intégrations actives",
+      "tabWebhooks": "Historique des webhooks",
+      "searchPlaceholder": "Rechercher des intégrations",
+      "add": "Ajouter une intégration",
+      "emptyTitle": "Aucune intégration",
+      "emptyDescription": "Connectez votre boutique ou application pour commencer à accepter les paiements crypto.",
+      "webhooksEmptyTitle": "Aucun événement webhook",
+      "webhooksEmptyDescription": "Les tentatives de livraison apparaîtront ici une fois une intégration active.",
+      "error": "Impossible de charger les intégrations. Le service est peut-être indisponible — réessayez bientôt.",
+      "pagination": {
+        "nav": "Pages des intégrations",
+        "prev": "Préc.",
+        "next": "Suiv.",
+        "page": "Page {page}"
+      },
+      "list": {
+        "name": "Nom",
+        "site": "URL du site",
+        "status": "Statut",
+        "created": "Créée le",
+        "active": "Active",
+        "inactive": "Inactive",
+        "none": "—"
+      },
+      "sheet": {
+        "title": "Nouvelle intégration",
+        "close": "Fermer",
+        "question": "Quel type d'intégration ajoutez-vous ?",
+        "back": "Retour"
+      },
+      "types": {
+        "plugins": {
+          "title": "Plugins prêts à l'emploi",
+          "description": "Acceptez les cryptos sur les plateformes e-commerce et de facturation (Magento et autres)."
+        },
+        "api": {
+          "title": "Intégrations API",
+          "description": "Créez des intégrations crypto personnalisées pour votre entreprise."
+        },
+        "buttons": {
+          "title": "Boutons de paiement",
+          "description": "Créez de simples boutons « Acheter » et des paniers automatisés."
+        }
+      },
+      "form": {
+        "nameLabel": "Nom de l'intégration",
+        "namePlaceholder": "Ma boutique",
+        "siteUrlLabel": "URL du site (optionnel)",
+        "siteUrlPlaceholder": "https://maboutique.com",
+        "ipnUrlLabel": "URL IPN / webhook (optionnel)",
+        "ipnUrlPlaceholder": "https://maboutique.com/webhooks/crypto",
+        "submit": "Créer l'intégration",
+        "submitting": "Création…"
+      },
+      "errors": {
+        "nameRequired": "Le nom de l'intégration est requis.",
+        "nameTaken": "Ce nom est déjà pris — choisissez-en un autre.",
+        "invalidUrl": "Saisissez une URL valide (ou laissez le champ vide).",
+        "invalid": "Veuillez vérifier le formulaire et réessayer.",
+        "generic": "Une erreur s'est produite. Veuillez réessayer."
+      },
+      "success": {
+        "title": "Intégration créée",
+        "ipnSecretLabel": "Secret IPN",
+        "warning": "Copiez-le maintenant — il n'est affiché qu'une seule fois et ne pourra pas être récupéré.",
+        "copy": "Copier",
+        "copied": "Copié",
+        "done": "Terminé",
+        "next": "Créer une clé API"
+      },
+      "apiKey": {
+        "title": "Créer une clé API",
+        "description": "Générez une paire de clés pour {name}. La clé privée n'est affichée qu'une seule fois.",
+        "labelLabel": "Libellé de la clé",
+        "labelPlaceholder": "Serveur de production",
+        "submit": "Générer la clé",
+        "submitting": "Génération…",
+        "publicKeyLabel": "Clé publique",
+        "privateKeyLabel": "Clé privée"
+      }
+    },
+    "footer": {
+      "assistance": "Besoin d'aide ?",
+      "contactSupport": "Contacter l'assistance",
+      "integrationGuide": "Guide d'intégration",
+      "apiDocs": "Documentation API",
+      "faq": "FAQ"
+    },
+    "transactions": {
+      "title": "Transactions",
+      "tabs": {
+        "all": "Toutes les transactions",
+        "received": "Reçues",
+        "sent": "Envoyées",
+        "conversions": "Conversions",
+        "invoices": "Factures",
+        "payments": "Paiements"
+      },
+      "allNote": "Affiche les dépôts. Une vue unifiée de tous les types de transactions arrivera lorsque le backend la prendra en charge.",
+      "currencyFilter": "Devise",
+      "currencyAll": "Toutes les devises",
+      "columns": {
+        "coin": "Crypto",
+        "amount": "Montant",
+        "status": "Statut",
+        "date": "Date",
+        "reference": "Référence"
+      },
+      "empty": "Aucune transaction pour le moment.",
+      "error": "Impossible de charger les transactions. Le service est peut-être indisponible — réessayez bientôt.",
+      "tabUnavailable": "{tab} ne sont pas encore disponibles. Cet onglet s'activera une fois son backend connecté.",
+      "pagination": {
+        "nav": "Pages des transactions",
+        "prev": "Préc.",
+        "next": "Suiv.",
+        "page": "Page {page}"
+      }
+    }
+  },
+  "notFound": {
+    "title": "Transaction introuvable",
+    "subtitle": "Cette route a renvoyé 0x000… — la page recherchée n'a jamais été minée.",
+    "receipt": "STATUT 404 · CONFIRMATIONS 0 · JAMAIS MINÉ",
+    "ctaHome": "Retour à l'accueil",
+    "ctaDashboard": "Aller au tableau de bord"
   }
 }

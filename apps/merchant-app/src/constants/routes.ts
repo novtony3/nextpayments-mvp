@@ -8,7 +8,14 @@ export const ROUTES = {
   LOGIN: '/login',
   REGISTER: '/register',
   FORGOT_PASSWORD: '/forgot-password',
+  /** Wallet / Balances — the protected dashboard landing. */
   DASHBOARD: '/dashboard',
+  TRANSACTIONS: '/transactions',
+  PAY_SETTINGS: '/pay-settings',
+  INTEGRATIONS: '/integrations',
+  INVOICING: '/invoicing',
+  QUICK_POS: '/quick-pos',
+  SUPPORT: '/support',
 } as const;
 
 export type Route = (typeof ROUTES)[keyof typeof ROUTES];

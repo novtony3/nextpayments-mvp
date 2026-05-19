@@ -90,11 +90,7 @@ export default function UiKitPage() {
           variant="destructive"
           icon={<Trash2 className="h-4 w-4" />}
         />
-        <IconButton
-          aria-label="Add"
-          variant="outline"
-          icon={<Plus className="h-4 w-4" />}
-        />
+        <IconButton aria-label="Add" variant="outline" icon={<Plus className="h-4 w-4" />} />
       </Section>
 
       <Section title="Button group">
