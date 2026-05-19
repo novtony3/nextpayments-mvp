@@ -199,5 +199,41 @@
       "button": "Se déconnecter",
       "success": "Déconnexion réussie"
     }
+  },
+  "dashboard": {
+    "nav": {
+      "wallet": "Portefeuille",
+      "transactions": "Transactions",
+      "paySettings": "Paramètres de paiement",
+      "integrations": "Intégrations",
+      "invoicing": "Facturation",
+      "quickPos": "POS rapide",
+      "support": "Assistance",
+      "more": "Plus"
+    },
+    "newTransaction": "Nouvelle transaction",
+    "fiatSelector": "Devise d'affichage",
+    "openMenu": "Ouvrir le menu de navigation",
+    "closeMenu": "Fermer le menu de navigation",
+    "verify": {
+      "message": "Veuillez vérifier votre compte pour activer toutes les devises et fonctionnalités.",
+      "cta": "Terminer la vérification"
+    },
+    "balances": {
+      "title": "Soldes",
+      "searchPlaceholder": "Rechercher",
+      "filterAll": "Afficher toutes les cryptos",
+      "estimatedBalance": "Solde estimé",
+      "autoAccept": "Accepter automatiquement les dépôts incorrects sur les soldes principaux",
+      "locked": "Vérifiez votre compte pour activer {ticker}",
+      "send": "Envoyer",
+      "receive": "Recevoir",
+      "convert": "Convertir",
+      "empty": "Aucune crypto ne correspond à votre recherche."
+    },
+    "placeholder": {
+      "title": "{section} arrive bientôt",
+      "description": "Cette section n'est pas encore disponible. Elle s'activera une fois son backend connecté."
+    }
   }
 }

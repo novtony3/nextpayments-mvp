@@ -199,5 +199,41 @@
       "button": "Log out",
       "success": "Signed out"
     }
+  },
+  "dashboard": {
+    "nav": {
+      "wallet": "Wallet",
+      "transactions": "Transactions",
+      "paySettings": "Pay Settings",
+      "integrations": "Integrations",
+      "invoicing": "Invoicing",
+      "quickPos": "Quick POS",
+      "support": "Support",
+      "more": "More"
+    },
+    "newTransaction": "New Transaction",
+    "fiatSelector": "Display currency",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu",
+    "verify": {
+      "message": "Please verify your account to enable all currencies and features.",
+      "cta": "Complete Verification"
+    },
+    "balances": {
+      "title": "Balances",
+      "searchPlaceholder": "Search",
+      "filterAll": "Show All Coins",
+      "estimatedBalance": "Estimated balance",
+      "autoAccept": "Auto-Accept Incorrect Deposits into Primary Balances",
+      "locked": "Verify your account to enable {ticker}",
+      "send": "Send",
+      "receive": "Receive",
+      "convert": "Convert",
+      "empty": "No coins match your search."
+    },
+    "placeholder": {
+      "title": "{section} is coming soon",
+      "description": "This section is not available yet. It will light up once its backend is connected."
+    }
   }
 }

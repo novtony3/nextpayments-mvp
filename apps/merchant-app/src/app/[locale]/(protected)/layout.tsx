@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { ROUTES } from '@/constants/routes';
 import { redirect } from '@/i18n/routing';
 import { isAuthenticated } from '@/lib/auth/session';
+import { DashboardShell } from '@/components/dashboard/dashboard-shell';
 
 type ProtectedLayoutProps = {
   children: ReactNode;
@@ -22,5 +23,5 @@ export default async function ProtectedLayout({ children, params }: ProtectedLay
     redirect({ href: ROUTES.LOGIN, locale });
   }
 
-  return <>{children}</>;
+  return <DashboardShell>{children}</DashboardShell>;
 }

@@ -25,11 +25,7 @@ export function PasswordToggle({ shown, onToggle, labelShow, labelHide }: Passwo
       aria-label={shown ? labelHide : labelShow}
       className="absolute right-1 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg text-[var(--color-text-muted)] transition-colors hover:bg-[var(--glass-fill)] hover:text-[var(--color-text)]"
     >
-      {shown ? (
-        <EyeOff className="h-4 w-4" aria-hidden />
-      ) : (
-        <Eye className="h-4 w-4" aria-hidden />
-      )}
+      {shown ? <EyeOff className="h-4 w-4" aria-hidden /> : <Eye className="h-4 w-4" aria-hidden />}
     </button>
   );
 }
