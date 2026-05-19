@@ -1,0 +1,33 @@
+services:
+  merchant-app:
+    build:
+      context: .
+      dockerfile: apps/merchant-app/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+    image: crypto-payment-merchant-app:local
+    container_name: crypto-payment-merchant-app
+    restart: unless-stopped
+    env_file:
+      - ./envs/merchant-app.env.docker
+    ports:
+      - "127.0.0.1:5001:5001"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:5001/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+    stop_grace_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 256M
+        reservations:
+          memory: 128M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

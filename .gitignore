@@ -48,3 +48,6 @@ coverage/
 
 # Internal planning doc — not shared to this remote
 PLAN.md
+
+# Docker env files — templates are tracked, filled-in secrets are not
+envs/*.env.local
