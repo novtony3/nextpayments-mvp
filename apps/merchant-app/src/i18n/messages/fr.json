@@ -356,5 +356,12 @@
         "page": "Page {page}"
       }
     }
+  },
+  "notFound": {
+    "title": "Transaction introuvable",
+    "subtitle": "Cette route a renvoyé 0x000… — la page recherchée n'a jamais été minée.",
+    "receipt": "STATUT 404 · CONFIRMATIONS 0 · JAMAIS MINÉ",
+    "ctaHome": "Retour à l'accueil",
+    "ctaDashboard": "Aller au tableau de bord"
   }
 }

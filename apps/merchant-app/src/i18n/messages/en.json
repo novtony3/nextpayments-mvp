@@ -356,5 +356,12 @@
         "page": "Page {page}"
       }
     }
+  },
+  "notFound": {
+    "title": "Transaction not found",
+    "subtitle": "This route returned 0x000… — the page you were looking for was never mined.",
+    "receipt": "STATUS 404 · CONFIRMATIONS 0 · NEVER MINED",
+    "ctaHome": "Back to home",
+    "ctaDashboard": "Go to dashboard"
   }
 }
