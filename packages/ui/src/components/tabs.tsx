@@ -7,6 +7,8 @@ import { cn } from '../lib/utils';
 export type TabItem = {
   value: string;
   label: string;
+  /** Optional leading icon. */
+  icon?: React.ReactNode;
 };
 
 export interface TabsProps {
@@ -56,13 +58,14 @@ export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
               tabIndex={active ? 0 : -1}
               onClick={() => onValueChange(item.value)}
               className={cn(
-                '-mb-px border-b-2 px-1 py-3 text-sm font-medium transition-colors duration-200',
+                '-mb-px inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors duration-200',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]',
                 active
                   ? 'border-[var(--color-accent)] text-[var(--color-text)]'
                   : 'border-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)]',
               )}
             >
+              {item.icon}
               {item.label}
             </button>
           );

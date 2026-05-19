@@ -259,6 +259,36 @@
       "integrationGuide": "Integration Guide",
       "apiDocs": "API Documentation",
       "faq": "FAQ"
+    },
+    "transactions": {
+      "title": "Transactions",
+      "tabs": {
+        "all": "All Transactions",
+        "received": "Received",
+        "sent": "Sent",
+        "conversions": "Conversions",
+        "invoices": "Invoices",
+        "payments": "Payments"
+      },
+      "allNote": "Showing deposits. A unified view across all transaction types will arrive when the backend supports it.",
+      "currencyFilter": "Currency",
+      "currencyAll": "Any Currency",
+      "columns": {
+        "coin": "Coin",
+        "amount": "Amount",
+        "status": "Status",
+        "date": "Date",
+        "reference": "Reference"
+      },
+      "empty": "No transactions yet.",
+      "error": "Couldn't load transactions. The service may be unavailable — try again shortly.",
+      "tabUnavailable": "{tab} are not available yet. This tab will activate once its backend is connected.",
+      "pagination": {
+        "nav": "Transactions pages",
+        "prev": "Prev",
+        "next": "Next",
+        "page": "Page {page}"
+      }
     }
   }
 }

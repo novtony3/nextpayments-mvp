@@ -19,8 +19,18 @@ export function getBackendTarget(): string {
   return process.env[API_PROXY_TARGET_ENV] ?? DEFAULT_API_PROXY_TARGET;
 }
 
-export function backendUrl(route: ApiRoute): string {
-  return `${getBackendTarget()}${API_BASE_URL}${route}`;
+/** Query values to append as `?k=v`; `undefined` entries are skipped. */
+export type BackendQuery = Record<string, string | number | undefined>;
+
+export function backendUrl(route: ApiRoute, query?: BackendQuery): string {
+  const base = `${getBackendTarget()}${API_BASE_URL}${route}`;
+  if (!query) return base;
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(query)) {
+    if (value !== undefined) params.set(key, String(value));
+  }
+  const qs = params.toString();
+  return qs ? `${base}?${qs}` : base;
 }
 
 export interface BackendResponse {
@@ -34,11 +44,15 @@ export interface BackendResponse {
  * Fetch a backend route. Rejects (throws) on transport failure — e.g. the
  * tunnel is down — so callers can tell that apart from an HTTP error status.
  */
-export async function backendFetch(route: ApiRoute, init?: RequestInit): Promise<BackendResponse> {
-  const res = await fetch(backendUrl(route), {
+export async function backendFetch(
+  route: ApiRoute,
+  init?: RequestInit & { query?: BackendQuery },
+): Promise<BackendResponse> {
+  const { query, ...requestInit } = init ?? {};
+  const res = await fetch(backendUrl(route, query), {
     cache: 'no-store',
-    ...init,
-    headers: { Accept: 'application/json', ...init?.headers },
+    ...requestInit,
+    headers: { Accept: 'application/json', ...requestInit.headers },
   });
   return { ok: res.ok, status: res.status, raw: await res.text() };
 }

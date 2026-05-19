@@ -20,6 +20,9 @@ export const API_ROUTES = {
   USER_REFRESH: '/user/refresh-token',
   USER_LOGOUT: '/user/logout',
   USER_ME: '/user/me',
+  FUND_DEPOSIT_HISTORY: '/fund/deposit-history',
+  FUND_WITHDRAW_HISTORY: '/fund/withdraw-history',
+  FUND_BALANCE_HISTORY: '/fund/balance-history',
 } as const;
 
 export type ApiRoute = (typeof API_ROUTES)[keyof typeof API_ROUTES];
