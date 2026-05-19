@@ -74,4 +74,36 @@
     background-color: color-mix(in oklab, var(--color-brand-blue) 35%, transparent);
     color: var(--color-text);
   }
+
+  /*
+   * Unified thin scrollbar — Windows/Linux render chunky native bars by
+   * default; this makes every platform read like the slim macOS overlay
+   * thumb. Theme-aware (border-strong → text-subtle on hover); transparent
+   * track + padding-box inset keep the thumb pill-thin and unobtrusive.
+   */
+  * {
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--color-border-strong) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-border-strong);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-text-subtle);
+  }
 }
