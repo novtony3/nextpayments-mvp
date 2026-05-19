@@ -24,6 +24,11 @@ function reference(row: TransactionRow): string {
   return cell(row.transactionHash ?? row._id ?? row.id);
 }
 
+function rowKey(row: TransactionRow, index: number): string {
+  const id = row._id ?? row.id;
+  return id === undefined || id === null ? String(index) : String(id);
+}
+
 /**
  * Transaction list. Rows are rendered adaptively (provisional shape — see
  * `lib/fund/types`); missing fields show as "—". Pagination pushes `?page=`
@@ -43,8 +48,8 @@ export function TransactionsTable({ data, tab, coin }: TransactionsTableProps) {
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  const formatDate = (value?: string): string => {
-    if (!value) return '—';
+  const formatDate = (value: unknown): string => {
+    if (typeof value !== 'string' && typeof value !== 'number') return cell(value);
     const d = new Date(value);
     return Number.isNaN(d.getTime()) ? cell(value) : d.toLocaleString(locale);
   };
@@ -75,7 +80,7 @@ export function TransactionsTable({ data, tab, coin }: TransactionsTableProps) {
           <tbody className="divide-y divide-[var(--color-border)]">
             {data.rows.map((row, i) => (
               <tr
-                key={String(row._id ?? row.id ?? i)}
+                key={rowKey(row, i)}
                 className="transition-colors duration-200 hover:bg-[var(--glass-fill)]"
               >
                 <td className="px-5 py-4 font-medium text-[var(--color-text)]">{cell(row.coin)}</td>

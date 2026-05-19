@@ -24,21 +24,18 @@ export type TransactionTab = (typeof TRANSACTION_TABS)[number];
 
 export const transactionTabSchema = z.enum(TRANSACTION_TABS);
 
-/** Provisional transaction row — only fields we can reasonably expect. */
-export const transactionRowSchema = z
-  .object({
-    _id: z.string().optional(),
-    id: z.union([z.string(), z.number()]).optional(),
-    coin: z.string().optional(),
-    network: z.string().optional(),
-    amount: z.union([z.string(), z.number()]).optional(),
-    status: z.string().optional(),
-    address: z.string().optional(),
-    transactionHash: z.string().optional(),
-    createdAt: z.string().optional(),
-    updatedAt: z.string().optional(),
-  })
-  .passthrough();
+/**
+ * Transaction row — intentionally a free-form record. The documented postman
+ * collection is absent and the verified account is empty, so the real field
+ * shape is unknown. Validating specific field *types* here would reject real
+ * rows (e.g. `amount` as an object) and mislead the user into the
+ * transport-error state. Accept any object; the table reads fields
+ * defensively and stringifies. Tighten when a real row is observed.
+ *
+ * Fields the UI looks for (best-effort): `coin`, `amount`, `status`,
+ * `createdAt`, `transactionHash`/`_id`/`id`.
+ */
+export const transactionRowSchema = z.record(z.string(), z.unknown());
 
 export type TransactionRow = z.infer<typeof transactionRowSchema>;
 
