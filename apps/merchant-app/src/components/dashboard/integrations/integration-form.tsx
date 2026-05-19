@@ -71,7 +71,6 @@ export function IntegrationForm({ type, onBack, onSubmit }: IntegrationFormProps
         placeholder={t('form.namePlaceholder')}
         value={name}
         onChange={(e) => setName(e.target.value)}
-        autoFocus
         required
       />
       <TextField

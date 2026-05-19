@@ -73,7 +73,6 @@ export function ApiKeyStep({ integrationName, onSubmit, onDone }: ApiKeyStepProp
         placeholder={t('apiKey.labelPlaceholder')}
         value={label}
         onChange={(e) => setLabel(e.target.value)}
-        autoFocus
         required
       />
 
