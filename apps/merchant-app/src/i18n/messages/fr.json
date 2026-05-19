@@ -246,11 +246,77 @@
       "emptyDescription": "Connectez votre boutique ou application pour commencer à accepter les paiements crypto.",
       "webhooksEmptyTitle": "Aucun événement webhook",
       "webhooksEmptyDescription": "Les tentatives de livraison apparaîtront ici une fois une intégration active.",
+      "error": "Impossible de charger les intégrations. Le service est peut-être indisponible — réessayez bientôt.",
       "pagination": {
         "nav": "Pages des intégrations",
         "prev": "Préc.",
         "next": "Suiv.",
         "page": "Page {page}"
+      },
+      "list": {
+        "name": "Nom",
+        "site": "URL du site",
+        "status": "Statut",
+        "created": "Créée le",
+        "active": "Active",
+        "inactive": "Inactive",
+        "none": "—"
+      },
+      "sheet": {
+        "title": "Nouvelle intégration",
+        "close": "Fermer",
+        "question": "Quel type d'intégration ajoutez-vous ?",
+        "back": "Retour"
+      },
+      "types": {
+        "plugins": {
+          "title": "Plugins prêts à l'emploi",
+          "description": "Acceptez les cryptos sur les plateformes e-commerce et de facturation (Magento et autres)."
+        },
+        "api": {
+          "title": "Intégrations API",
+          "description": "Créez des intégrations crypto personnalisées pour votre entreprise."
+        },
+        "buttons": {
+          "title": "Boutons de paiement",
+          "description": "Créez de simples boutons « Acheter » et des paniers automatisés."
+        }
+      },
+      "form": {
+        "nameLabel": "Nom de l'intégration",
+        "namePlaceholder": "Ma boutique",
+        "siteUrlLabel": "URL du site (optionnel)",
+        "siteUrlPlaceholder": "https://maboutique.com",
+        "ipnUrlLabel": "URL IPN / webhook (optionnel)",
+        "ipnUrlPlaceholder": "https://maboutique.com/webhooks/crypto",
+        "submit": "Créer l'intégration",
+        "submitting": "Création…"
+      },
+      "errors": {
+        "nameRequired": "Le nom de l'intégration est requis.",
+        "nameTaken": "Ce nom est déjà pris — choisissez-en un autre.",
+        "invalidUrl": "Saisissez une URL valide (ou laissez le champ vide).",
+        "invalid": "Veuillez vérifier le formulaire et réessayer.",
+        "generic": "Une erreur s'est produite. Veuillez réessayer."
+      },
+      "success": {
+        "title": "Intégration créée",
+        "ipnSecretLabel": "Secret IPN",
+        "warning": "Copiez-le maintenant — il n'est affiché qu'une seule fois et ne pourra pas être récupéré.",
+        "copy": "Copier",
+        "copied": "Copié",
+        "done": "Terminé",
+        "next": "Créer une clé API"
+      },
+      "apiKey": {
+        "title": "Créer une clé API",
+        "description": "Générez une paire de clés pour {name}. La clé privée n'est affichée qu'une seule fois.",
+        "labelLabel": "Libellé de la clé",
+        "labelPlaceholder": "Serveur de production",
+        "submit": "Générer la clé",
+        "submitting": "Génération…",
+        "publicKeyLabel": "Clé publique",
+        "privateKeyLabel": "Clé privée"
       }
     },
     "footer": {

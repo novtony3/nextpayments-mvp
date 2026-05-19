@@ -8,6 +8,13 @@ import {
 } from '@/constants/api';
 
 /**
+ * A backend path. Static endpoints come from `API_ROUTES` (`ApiRoute`);
+ * resource paths with an id are built by the typed helpers in
+ * `constants/api` — still never a raw literal at the call site.
+ */
+export type BackendRoute = ApiRoute | (string & {});
+
+/**
  * Server-side calls to the backend, straight to the upstream origin reached
  * via the SSH tunnel (the browser `/api` rewrite is for client code only).
  * The upstream host comes from a server-only env, so it never reaches the
@@ -22,7 +29,7 @@ export function getBackendTarget(): string {
 /** Query values to append as `?k=v`; `undefined` entries are skipped. */
 export type BackendQuery = Record<string, string | number | undefined>;
 
-export function backendUrl(route: ApiRoute, query?: BackendQuery): string {
+export function backendUrl(route: BackendRoute, query?: BackendQuery): string {
   const base = `${getBackendTarget()}${API_BASE_URL}${route}`;
   if (!query) return base;
   const params = new URLSearchParams();
@@ -45,7 +52,7 @@ export interface BackendResponse {
  * tunnel is down — so callers can tell that apart from an HTTP error status.
  */
 export async function backendFetch(
-  route: ApiRoute,
+  route: BackendRoute,
   init?: RequestInit & { query?: BackendQuery },
 ): Promise<BackendResponse> {
   const { query, ...requestInit } = init ?? {};

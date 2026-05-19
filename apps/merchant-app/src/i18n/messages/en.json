@@ -246,11 +246,77 @@
       "emptyDescription": "Connect your store or app to start accepting crypto payments.",
       "webhooksEmptyTitle": "No webhook events",
       "webhooksEmptyDescription": "Delivery attempts will appear here once an integration is active.",
+      "error": "Couldn't load integrations. The service may be unavailable — try again shortly.",
       "pagination": {
         "nav": "Integrations pages",
         "prev": "Prev",
         "next": "Next",
         "page": "Page {page}"
+      },
+      "list": {
+        "name": "Name",
+        "site": "Site URL",
+        "status": "Status",
+        "created": "Created",
+        "active": "Active",
+        "inactive": "Inactive",
+        "none": "—"
+      },
+      "sheet": {
+        "title": "New Integration",
+        "close": "Close",
+        "question": "What type of integration are you adding?",
+        "back": "Back"
+      },
+      "types": {
+        "plugins": {
+          "title": "Pre-Built Plugins",
+          "description": "Seamlessly accept crypto on ecommerce and billing platforms (Magento and others)."
+        },
+        "api": {
+          "title": "API Integrations",
+          "description": "Create custom cryptocurrency integrations for your business."
+        },
+        "buttons": {
+          "title": "Payment Buttons",
+          "description": "Create simple Buy Now and automated checkout cart buttons."
+        }
+      },
+      "form": {
+        "nameLabel": "Integration name",
+        "namePlaceholder": "My store",
+        "siteUrlLabel": "Site URL (optional)",
+        "siteUrlPlaceholder": "https://yourstore.com",
+        "ipnUrlLabel": "IPN / webhook URL (optional)",
+        "ipnUrlPlaceholder": "https://yourstore.com/webhooks/crypto",
+        "submit": "Create integration",
+        "submitting": "Creating…"
+      },
+      "errors": {
+        "nameRequired": "Integration name is required.",
+        "nameTaken": "That name is already taken — pick another.",
+        "invalidUrl": "Enter a valid URL (or leave the field empty).",
+        "invalid": "Please check the form and try again.",
+        "generic": "Something went wrong. Please try again."
+      },
+      "success": {
+        "title": "Integration created",
+        "ipnSecretLabel": "IPN secret",
+        "warning": "Copy this now — it is shown only once and cannot be retrieved later.",
+        "copy": "Copy",
+        "copied": "Copied",
+        "done": "Done",
+        "next": "Create API key"
+      },
+      "apiKey": {
+        "title": "Create an API key",
+        "description": "Generate a key pair for {name}. The private key is shown only once.",
+        "labelLabel": "Key label",
+        "labelPlaceholder": "Production server",
+        "submit": "Generate key",
+        "submitting": "Generating…",
+        "publicKeyLabel": "Public key",
+        "privateKeyLabel": "Private key"
       }
     },
     "footer": {

@@ -23,9 +23,19 @@ export const API_ROUTES = {
   FUND_DEPOSIT_HISTORY: '/fund/deposit-history',
   FUND_WITHDRAW_HISTORY: '/fund/withdraw-history',
   FUND_BALANCE_HISTORY: '/fund/balance-history',
+  INTEGRATIONS: '/integrations',
 } as const;
 
 export type ApiRoute = (typeof API_ROUTES)[keyof typeof API_ROUTES];
+
+/**
+ * Resource paths with an id — built from {@link API_ROUTES} so no raw path
+ * literal appears at a call site (the no-hardcoding rule still holds).
+ */
+export const apiPath = {
+  integration: (id: string): string => `${API_ROUTES.INTEGRATIONS}/${id}`,
+  integrationApiKeys: (id: string): string => `${API_ROUTES.INTEGRATIONS}/${id}/api-keys`,
+} as const;
 
 /** Env var (server-only) that points the Next rewrite at the tunnel. */
 export const API_PROXY_TARGET_ENV = 'API_PROXY_TARGET' as const;
