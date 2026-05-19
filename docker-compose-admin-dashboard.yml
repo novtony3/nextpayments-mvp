@@ -1,0 +1,31 @@
+services:
+  admin-dashboard:
+    build:
+      context: .
+      dockerfile: apps/admin-dashboard/Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-/api}
+    image: crypto-payment-admin-dashboard:local
+    container_name: crypto-payment-admin-dashboard
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5002:5002"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:5002/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+    stop_grace_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 64M
+        reservations:
+          memory: 32M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

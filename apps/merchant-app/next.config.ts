@@ -13,6 +13,8 @@ const apiProxyTarget = process.env.API_PROXY_TARGET ?? DEFAULT_API_PROXY_TARGET;
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Produces a self-contained .next/standalone/ bundle for Docker (no full node_modules needed)
+  output: 'standalone',
   transpilePackages: ['@nextpayments/ui'],
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion'],
