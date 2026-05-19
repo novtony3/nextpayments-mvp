@@ -236,6 +236,7 @@
       "description": "This section is not available yet. It will light up once its backend is connected."
     },
     "integrations": {
+      "title": "Integrations",
       "help": "Need help getting started? Visit our <docs>API Documentation</docs> and <kb>Knowledge Base</kb>.",
       "tabActive": "Active Integrations",
       "tabWebhooks": "Webhook History",

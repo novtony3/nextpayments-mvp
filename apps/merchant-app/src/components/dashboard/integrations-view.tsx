@@ -63,7 +63,7 @@ export function IntegrationsView() {
         </p>
       </Card>
 
-      <Tabs aria-label={t('tabActive')} items={tabItems} value={tab} onValueChange={setTab} />
+      <Tabs aria-label={t('title')} items={tabItems} value={tab} onValueChange={setTab} />
 
       {tab === TAB_ACTIVE ? (
         <>

@@ -236,6 +236,7 @@
       "description": "Cette section n'est pas encore disponible. Elle s'activera une fois son backend connecté."
     },
     "integrations": {
+      "title": "Intégrations",
       "help": "Besoin d'aide pour démarrer ? Consultez notre <docs>documentation API</docs> et notre <kb>base de connaissances</kb>.",
       "tabActive": "Intégrations actives",
       "tabWebhooks": "Historique des webhooks",
