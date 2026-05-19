@@ -15,8 +15,8 @@ export interface PaginationProps {
     nav: string;
     prev: string;
     next: string;
-    /** `aria-label` for a page button; `{page}` is substituted. */
-    page: string;
+    /** `aria-label` for the page-`n` button (caller does the i18n). */
+    page: (page: number) => string;
   };
   className?: string;
 }
@@ -52,7 +52,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
             variant={p === page ? 'primary' : 'outline'}
             size="icon"
             aria-current={p === page ? 'page' : undefined}
-            aria-label={labels.page.replace('{page}', String(p))}
+            aria-label={labels.page(p)}
             onClick={() => onPageChange(p)}
           >
             {p}

@@ -90,7 +90,7 @@ export function IntegrationsView() {
               nav: t('pagination.nav'),
               prev: t('pagination.prev'),
               next: t('pagination.next'),
-              page: t('pagination.page'),
+              page: (n) => t('pagination.page', { page: n }),
             }}
           />
         </>
