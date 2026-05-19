@@ -3,9 +3,8 @@ import 'server-only';
 import { API_ROUTES, apiPath } from '@/constants/api';
 import { getAccessToken } from '@/lib/auth/session';
 import { AuthError, envelopeSchema } from '@/lib/auth/types';
+import { toPaginatedPage } from '@/lib/pagination';
 import { backendFetch } from '@/lib/server/backend-fetch';
-
-import type { IntegrationListResult } from './types';
 
 import {
   createApiKeyResponseSchema,
@@ -14,6 +13,8 @@ import {
   listIntegrationsResponseSchema,
   type CreateIntegrationInput,
   type Integration,
+  type IntegrationListPage,
+  type IntegrationListResult,
 } from './types';
 
 /**
@@ -60,14 +61,14 @@ export async function backendCreateIntegration(
 export async function backendListIntegrations(
   token: string,
   query: { page: number; limit: number },
-): Promise<ReturnType<typeof listIntegrationsResponseSchema.parse>['data']> {
+): Promise<IntegrationListPage> {
   const res = await backendFetch(API_ROUTES.INTEGRATIONS, {
     headers: { Authorization: `Bearer ${token}` },
     query: { page: query.page, limit: query.limit },
   });
   const json = parseJson(res.raw);
   ensureOk(res.ok, json, 'Could not load integrations');
-  return listIntegrationsResponseSchema.parse(json).data;
+  return toPaginatedPage(listIntegrationsResponseSchema.parse(json));
 }
 
 export async function backendCreateApiKey(
@@ -99,16 +100,7 @@ export async function loadIntegrationList(query: {
   if (!token) return { ok: false };
   try {
     const data = await backendListIntegrations(token, query);
-    return {
-      ok: true,
-      data: {
-        rows: data.data,
-        total: data.total,
-        totalPages: data.totalPages,
-        page: data.page,
-        limit: data.limit,
-      },
-    };
+    return { ok: true, data };
   } catch {
     return { ok: false };
   }

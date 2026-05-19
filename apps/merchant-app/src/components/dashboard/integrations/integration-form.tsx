@@ -6,7 +6,7 @@ import { useState, useTransition } from 'react';
 
 import { Button } from '@nextpayments/ui/components/button';
 
-import { TextField } from '@/components/auth/text-field';
+import { TextField } from '@/components/shared/text-field';
 import {
   INTEGRATION_ERROR_CODE,
   createIntegrationSchema,

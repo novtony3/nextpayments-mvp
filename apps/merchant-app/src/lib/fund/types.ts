@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { paginatedSchema, type PaginatedPage } from '@/lib/pagination';
+
 /**
  * Fund (transactions) domain types + zod schemas. Schema is the source of
  * truth; types are inferred. Backend contract: API.md §2 paginated envelope.
@@ -39,25 +41,11 @@ export const transactionRowSchema = z.record(z.string(), z.unknown());
 
 export type TransactionRow = z.infer<typeof transactionRowSchema>;
 
-/** API.md §2 paginated envelope: `{ success, data: { data:[], total, ... } }`. */
-export const paginatedTransactionsSchema = z.object({
-  data: z.object({
-    data: z.array(transactionRowSchema),
-    total: z.number(),
-    totalPages: z.number(),
-    page: z.number(),
-    limit: z.number(),
-  }),
-});
+/** Shared API.md §2 paginated envelope (declared once in `lib/pagination`). */
+export const paginatedTransactionsSchema = paginatedSchema(transactionRowSchema);
 
 /** Normalized result the page consumes (success path). */
-export type TransactionsPage = {
-  rows: TransactionRow[];
-  total: number;
-  totalPages: number;
-  page: number;
-  limit: number;
-};
+export type TransactionsPage = PaginatedPage<TransactionRow>;
 
 /** Discriminated, serializable result — never throws into the RSC tree. */
 export type TransactionsResult =

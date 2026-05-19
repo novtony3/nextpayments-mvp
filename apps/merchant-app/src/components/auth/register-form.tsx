@@ -13,7 +13,7 @@ import { useRouter } from '@/i18n/routing';
 import { ROUTES } from '@/constants/routes';
 import { AUTH_FIELD_PLACEHOLDERS, PASSWORD_MIN_LENGTH } from '@/constants/auth';
 import { registerAction } from '@/lib/auth/actions';
-import { TextField } from '@/components/auth/text-field';
+import { TextField } from '@/components/shared/text-field';
 import { PasswordToggle } from '@/components/auth/password-toggle';
 
 export function RegisterForm() {

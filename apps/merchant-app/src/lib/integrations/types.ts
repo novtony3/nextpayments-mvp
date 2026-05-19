@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { paginatedSchema, type PaginatedPage } from '@/lib/pagination';
+
 /**
  * Integrations domain — zod is the source of truth, types inferred. Backend
  * contract (API.md Integrations + live probe 2026-05-19):
@@ -56,15 +58,7 @@ export const createIntegrationResponseSchema = z.object({
   }),
 });
 
-export const listIntegrationsResponseSchema = z.object({
-  data: z.object({
-    data: z.array(integrationSchema),
-    total: z.number(),
-    totalPages: z.number(),
-    page: z.number(),
-    limit: z.number(),
-  }),
-});
+export const listIntegrationsResponseSchema = paginatedSchema(integrationSchema);
 
 export const createApiKeyResponseSchema = z.object({
   data: z.object({
@@ -80,13 +74,7 @@ export const INTEGRATION_ERROR_CODE: Record<string, string> = {
   INER004: 'invalidUrl',
 };
 
-export type IntegrationListPage = {
-  rows: Integration[];
-  total: number;
-  totalPages: number;
-  page: number;
-  limit: number;
-};
+export type IntegrationListPage = PaginatedPage<Integration>;
 
 export type IntegrationListResult = { ok: true; data: IntegrationListPage } | { ok: false };
 

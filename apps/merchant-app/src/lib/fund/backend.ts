@@ -3,6 +3,7 @@ import 'server-only';
 import { API_ROUTES, type ApiRoute } from '@/constants/api';
 import { getAccessToken } from '@/lib/auth/session';
 import { envelopeSchema } from '@/lib/auth/types';
+import { toPaginatedPage } from '@/lib/pagination';
 import { backendFetch } from '@/lib/server/backend-fetch';
 
 import {
@@ -62,17 +63,7 @@ export async function backendFundHistory(
     const parsed = paginatedTransactionsSchema.safeParse(json);
     if (!parsed.success) return { ok: false, reason: 'error' };
 
-    const { data } = parsed.data;
-    return {
-      ok: true,
-      data: {
-        rows: data.data,
-        total: data.total,
-        totalPages: data.totalPages,
-        page: data.page,
-        limit: data.limit,
-      },
-    };
+    return { ok: true, data: toPaginatedPage(parsed.data) };
   } catch {
     // Transport failure (tunnel down) or unexpected response shape.
     return { ok: false, reason: 'error' };
