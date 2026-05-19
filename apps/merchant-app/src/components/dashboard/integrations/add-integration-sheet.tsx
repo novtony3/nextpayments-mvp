@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import { Button } from '@nextpayments/ui/components/button';
-import { Sheet } from '@nextpayments/ui/components/sheet';
+import { Sheet, SHEET_TRANSITION_MS } from '@nextpayments/ui/components/sheet';
 
 import { INTEGRATION_TYPE_META } from '@/constants/integrations';
 import { useRouter } from '@/i18n/routing';
@@ -41,12 +41,12 @@ export function AddIntegrationSheet({ open, onClose }: AddIntegrationSheetProps)
 
   const close = () => {
     onClose();
-    // Reset only after the slide-out so the content doesn't flash.
+    // Reset only after the slide-out finishes so the content doesn't flash.
     setTimeout(() => {
       setStep('select');
       setType(null);
       setCreated(null);
-    }, 300);
+    }, SHEET_TRANSITION_MS);
   };
 
   return (
