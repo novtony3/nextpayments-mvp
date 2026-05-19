@@ -56,3 +56,15 @@ export const ZERO_FIAT = '0.00' as const;
  * the gated layout is exercised.
  */
 export const SHOW_VERIFY_BANNER = true as const;
+
+/**
+ * Outbound documentation/support links. Placeholders (`#`) for the UI phase —
+ * centralized so the real URLs are swapped in one place, never inlined.
+ */
+export const DOC_LINKS = {
+  apiDocs: '#',
+  knowledgeBase: '#',
+  integrationGuide: '#',
+  faq: '#',
+  support: '#',
+} as const;

@@ -234,6 +234,30 @@
     "placeholder": {
       "title": "{section} arrive bientôt",
       "description": "Cette section n'est pas encore disponible. Elle s'activera une fois son backend connecté."
+    },
+    "integrations": {
+      "help": "Besoin d'aide pour démarrer ? Consultez notre <docs>documentation API</docs> et notre <kb>base de connaissances</kb>.",
+      "tabActive": "Intégrations actives",
+      "tabWebhooks": "Historique des webhooks",
+      "searchPlaceholder": "Rechercher des intégrations",
+      "add": "Ajouter une intégration",
+      "emptyTitle": "Aucune intégration",
+      "emptyDescription": "Connectez votre boutique ou application pour commencer à accepter les paiements crypto.",
+      "webhooksEmptyTitle": "Aucun événement webhook",
+      "webhooksEmptyDescription": "Les tentatives de livraison apparaîtront ici une fois une intégration active.",
+      "pagination": {
+        "nav": "Pages des intégrations",
+        "prev": "Préc.",
+        "next": "Suiv.",
+        "page": "Page {page}"
+      }
+    },
+    "footer": {
+      "assistance": "Besoin d'aide ?",
+      "contactSupport": "Contacter l'assistance",
+      "integrationGuide": "Guide d'intégration",
+      "apiDocs": "Documentation API",
+      "faq": "FAQ"
     }
   }
 }

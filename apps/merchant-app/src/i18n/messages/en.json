@@ -234,6 +234,30 @@
     "placeholder": {
       "title": "{section} is coming soon",
       "description": "This section is not available yet. It will light up once its backend is connected."
+    },
+    "integrations": {
+      "help": "Need help getting started? Visit our <docs>API Documentation</docs> and <kb>Knowledge Base</kb>.",
+      "tabActive": "Active Integrations",
+      "tabWebhooks": "Webhook History",
+      "searchPlaceholder": "Search integrations",
+      "add": "Add Integration",
+      "emptyTitle": "No integrations yet",
+      "emptyDescription": "Connect your store or app to start accepting crypto payments.",
+      "webhooksEmptyTitle": "No webhook events",
+      "webhooksEmptyDescription": "Delivery attempts will appear here once an integration is active.",
+      "pagination": {
+        "nav": "Integrations pages",
+        "prev": "Prev",
+        "next": "Next",
+        "page": "Page {page}"
+      }
+    },
+    "footer": {
+      "assistance": "Need assistance?",
+      "contactSupport": "Contact Support",
+      "integrationGuide": "Integration Guide",
+      "apiDocs": "API Documentation",
+      "faq": "FAQ"
     }
   }
 }

@@ -1,5 +1,5 @@
-import { ComingSoon } from '@/components/dashboard/coming-soon';
+import { IntegrationsView } from '@/components/dashboard/integrations-view';
 
 export default function IntegrationsPage() {
-  return <ComingSoon section="integrations" />;
+  return <IntegrationsView />;
 }
