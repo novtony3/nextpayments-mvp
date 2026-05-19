@@ -12,9 +12,9 @@ import { Tabs } from '@nextpayments/ui/components/tabs';
 import { DOC_LINKS } from '@/constants/dashboard';
 import type { IntegrationListResult } from '@/lib/integrations/types';
 
-import { DashboardFooter } from './dashboard-footer';
-import { AddIntegrationSheet } from './integrations/add-integration-sheet';
-import { IntegrationsList } from './integrations/integrations-list';
+import { DashboardFooter } from '../shell/dashboard-footer';
+import { AddIntegrationSheet } from './add-integration-sheet';
+import { IntegrationsList } from './integrations-list';
 
 const TAB_ACTIVE = 'active';
 const TAB_WEBHOOKS = 'webhooks';

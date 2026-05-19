@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { ROUTES } from '@/constants/routes';
 import { redirect } from '@/i18n/routing';
 import { isAuthenticated } from '@/lib/auth/session';
-import { DashboardShell } from '@/components/dashboard/dashboard-shell';
+import { DashboardShell } from '@/components/dashboard/shell/dashboard-shell';
 
 type ProtectedLayoutProps = {
   children: ReactNode;

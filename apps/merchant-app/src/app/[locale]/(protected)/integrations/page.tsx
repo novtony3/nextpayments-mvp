@@ -1,5 +1,5 @@
 import { INTEGRATIONS_PAGE_SIZE, INTEGRATIONS_PARAM } from '@/constants/integrations';
-import { IntegrationsView } from '@/components/dashboard/integrations-view';
+import { IntegrationsView } from '@/components/dashboard/integrations/integrations-view';
 import { loadIntegrationList } from '@/lib/integrations/backend';
 
 type SearchParams = Record<string, string | string[] | undefined>;
