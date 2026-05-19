@@ -4,14 +4,14 @@ import { Button } from '@nextpayments/ui/components/button';
 
 import { ROUTES } from '@/constants/routes';
 import { Link } from '@/i18n/routing';
-import { BlueAccent } from '@/components/shared/blue-accent';
+import { TwinAuroras } from '@/components/shared/twin-auroras';
 import { Logo } from '@/components/shared/logo';
 import { Reveal } from '@/components/landing/reveal';
 
 /**
  * 404 — themed as a failed crypto transaction (on-brand creative twist):
  * a never-mined route. Stays inside the Gemini system — monochrome canvas,
- * the shared `BlueAccent` aurora as the single living accent, the gradient
+ * the `TwinAuroras` (two coiling aurora ribbons) as the living accent, the gradient
  * used once on the hero "404" numerals (a designated hero moment), Geist
  * Mono for the receipt line (the project's crypto-data typeface). Reuses
  * shared primitives only; tokens throughout; calm motion via `Reveal`
@@ -22,7 +22,7 @@ export function NotFoundView() {
 
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
-      <BlueAccent intensity="bold" feather={false} className="-z-10" />
+      <TwinAuroras intensity="bold" feather={false} className="-z-10" />
 
       <Link
         href={ROUTES.HOME}
@@ -35,7 +35,7 @@ export function NotFoundView() {
       <Reveal className="flex flex-col items-center gap-6">
         <span
           aria-hidden="true"
-          className="text-brand-gradient select-none font-[family-name:var(--font-mono)] text-[clamp(5rem,22vw,12rem)] font-bold leading-none tracking-tighter"
+          className="text-aurora-gradient select-none font-mono text-[clamp(5rem,22vw,12rem)] font-bold leading-none tracking-tighter"
         >
           404
         </span>
