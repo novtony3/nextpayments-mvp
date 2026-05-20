@@ -10,10 +10,12 @@ import {
   createApiKeyResponseSchema,
   createIntegrationResponseSchema,
   listIntegrationsResponseSchema,
+  updateIntegrationResponseSchema,
   type CreateIntegrationInput,
   type Integration,
   type IntegrationListPage,
   type IntegrationListResult,
+  type UpdateIntegrationInput,
 } from './types';
 
 /**
@@ -68,6 +70,21 @@ export async function backendListIntegrations(
   const json = parseJson(res.raw);
   ensureOk(res.ok, json, 'Could not load integrations');
   return toPaginatedPage(listIntegrationsResponseSchema.parse(json));
+}
+
+export async function backendUpdateIntegration(
+  token: string,
+  integrationId: string,
+  input: UpdateIntegrationInput,
+): Promise<Integration> {
+  const res = await backendFetch(apiPath.integration(integrationId), {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ ipnUrl: input.ipnUrl ?? '' }),
+  });
+  const json = parseJson(res.raw);
+  ensureOk(res.ok, json, 'Could not update the integration');
+  return updateIntegrationResponseSchema.parse(json).data.integration;
 }
 
 export async function backendCreateApiKey(

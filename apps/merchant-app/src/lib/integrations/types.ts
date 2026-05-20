@@ -34,6 +34,14 @@ export const createApiKeySchema = z.object({
   label: z.string().trim().min(1),
 });
 
+/** PUT /api/integrations/:id — only ipnUrl is editable here (the
+ * Manage-Webhooks panel). Empty string is accepted (clear webhook). */
+export const updateIntegrationSchema = z.object({
+  ipnUrl: optionalUrl,
+});
+
+export type UpdateIntegrationInput = z.infer<typeof updateIntegrationSchema>;
+
 /** Loose row — exact shape only partly documented; passthrough + optional. */
 export const integrationSchema = z
   .object({
@@ -67,6 +75,10 @@ export const createApiKeyResponseSchema = z.object({
   }),
 });
 
+export const updateIntegrationResponseSchema = z.object({
+  data: z.object({ integration: integrationSchema }),
+});
+
 /** Backend error code → i18n reason key (under `dashboard.integrations.errors`). */
 export const INTEGRATION_ERROR_CODE: Record<string, string> = {
   INER001: 'nameRequired',
@@ -85,4 +97,34 @@ export type CreateIntegrationResult =
 
 export type CreateApiKeyResult =
   | { ok: true; publicKey: string; privateKey: string }
+  | { ok: false; reason: 'invalid' | 'error'; code?: string };
+
+/**
+ * Combined result of the create-flow (POST integration + POST api-keys for
+ * its _id). `partial` means the integration exists but the API-key call
+ * failed — surface what we have so the user can still see Name/Store URL
+ * + ipnSecret without losing the just-created integration.
+ */
+export type CreateIntegrationWithKeyResult =
+  | {
+      ok: true;
+      integrationId: string;
+      name: string;
+      storeUrl: string;
+      ipnSecret: string;
+      publicKey: string;
+      privateKey: string;
+    }
+  | {
+      ok: 'partial';
+      integrationId: string;
+      name: string;
+      storeUrl: string;
+      ipnSecret: string;
+      code?: string;
+    }
+  | { ok: false; reason: 'invalid' | 'error'; code?: string };
+
+export type UpdateIntegrationResult =
+  | { ok: true }
   | { ok: false; reason: 'invalid' | 'error'; code?: string };

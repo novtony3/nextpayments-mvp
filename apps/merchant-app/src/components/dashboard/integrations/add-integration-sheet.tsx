@@ -3,54 +3,93 @@
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
-import { Button } from '@nextpayments/ui/components/button';
 import { Sheet, SHEET_TRANSITION_MS } from '@nextpayments/ui/components/sheet';
 
-import { INTEGRATION_TYPE_META } from '@/constants/integrations';
 import { useRouter } from '@/i18n/routing';
-import { createApiKeyAction, createIntegrationAction } from '@/lib/integrations/actions';
-import type { IntegrationType } from '@/lib/integrations/types';
+import { createIntegrationWithApiKeyAction } from '@/lib/integrations/actions';
+import type { CreateIntegrationWithKeyResult, IntegrationType } from '@/lib/integrations/types';
 
-import { ApiKeyStep } from './api-key-step';
+import { IntegrationCompletedView } from './integration-completed-view';
 import { IntegrationForm } from './integration-form';
 import { IntegrationTypeCards } from './integration-type-cards';
-import { SecretReveal } from './secret-reveal';
 
 type AddIntegrationSheetProps = {
   open: boolean;
   onClose: () => void;
 };
 
-type Created = { integrationId: string; ipnSecret: string; name: string };
-type Step = 'select' | 'form' | 'success' | 'apikey';
+type CompletedData = {
+  integrationId: string;
+  name: string;
+  storeUrl: string;
+  ipnSecret: string;
+  clientId: string;
+  clientSecret: string;
+  /** Set when the auto-API-key call failed; surfaces a warning in the view. */
+  apiKeyError?: string;
+};
+
+type Step = 'select' | 'form' | 'completed';
 
 /**
- * Add-integration bottom sheet. State machine: pick type → form → success
- * (IPN secret shown once) → optional API-key step for the `api` type. The
- * list is refreshed on create so the new row appears behind the sheet.
+ * Add-integration sheet. Three steps:
+ *   1. `select`    — pick integration type (cards)
+ *   2. `form`      — Name + Store URL (IPN URL is set later in webhooks)
+ *   3. `completed` — combined view: read-only credentials (Client ID/Secret
+ *                    from the auto-created default API key) + manage webhooks
+ *
+ * The create step calls `createIntegrationWithApiKeyAction`, which posts the
+ * integration AND a default API key in one round-trip (using
+ * `integration._id` from the first response). The sheet widens on the
+ * completed step so the two-column layout fits.
  */
 export function AddIntegrationSheet({ open, onClose }: AddIntegrationSheetProps) {
   const t = useTranslations('dashboard.integrations');
   const router = useRouter();
   const [step, setStep] = useState<Step>('select');
-  const [type, setType] = useState<IntegrationType | null>(null);
-  const [created, setCreated] = useState<Created | null>(null);
-
-  const generatesApiKey =
-    INTEGRATION_TYPE_META.find((m) => m.key === type)?.generatesApiKey ?? false;
+  const [, setType] = useState<IntegrationType | null>(null);
+  const [completed, setCompleted] = useState<CompletedData | null>(null);
 
   const close = () => {
     onClose();
-    // Reset only after the slide-out finishes so the content doesn't flash.
+    // Reset only after the slide-out finishes so content doesn't flash.
     setTimeout(() => {
       setStep('select');
       setType(null);
-      setCreated(null);
+      setCompleted(null);
     }, SHEET_TRANSITION_MS);
   };
 
+  const handleCreate = async (input: {
+    name: string;
+    siteUrl: string;
+  }): Promise<CreateIntegrationWithKeyResult> => {
+    const result = await createIntegrationWithApiKeyAction(input);
+
+    if (result.ok === true || result.ok === 'partial') {
+      setCompleted({
+        integrationId: result.integrationId,
+        name: result.name,
+        storeUrl: result.storeUrl,
+        ipnSecret: result.ipnSecret,
+        clientId: result.ok === true ? result.publicKey : '',
+        clientSecret: result.ok === true ? result.privateKey : '',
+        apiKeyError: result.ok === 'partial' ? t('errors.apiKeyFailed') : undefined,
+      });
+      setStep('completed');
+      router.refresh();
+    }
+    return result;
+  };
+
   return (
-    <Sheet open={open} onClose={close} title={t('sheet.title')} closeLabel={t('sheet.close')}>
+    <Sheet
+      open={open}
+      onClose={close}
+      title={t('sheet.title')}
+      closeLabel={t('sheet.close')}
+      className={step === 'completed' ? 'sm:max-w-4xl' : undefined}
+    >
       {step === 'select' && (
         <IntegrationTypeCards
           onSelect={(selected) => {
@@ -60,55 +99,19 @@ export function AddIntegrationSheet({ open, onClose }: AddIntegrationSheetProps)
         />
       )}
 
-      {step === 'form' && type && (
-        <IntegrationForm
-          type={type}
-          onBack={() => setStep('select')}
-          onSubmit={async (input) => {
-            const result = await createIntegrationAction(input);
-            if (result.ok) {
-              setCreated({
-                integrationId: result.integrationId,
-                ipnSecret: result.ipnSecret,
-                name: result.name,
-              });
-              setStep('success');
-              router.refresh();
-            }
-            return result;
-          }}
-        />
+      {step === 'form' && (
+        <IntegrationForm onBack={() => setStep('select')} onSubmit={handleCreate} />
       )}
 
-      {step === 'success' && created && (
-        <div className="flex flex-col gap-5">
-          <div>
-            <p className="text-base font-semibold text-[var(--color-text)]">{t('success.title')}</p>
-            <p className="text-sm text-[var(--color-text-muted)]">{created.name}</p>
-          </div>
-          <SecretReveal label={t('success.ipnSecretLabel')} value={created.ipnSecret} />
-          <p className="text-xs text-[var(--color-warning)]">{t('success.warning')}</p>
-          <div className="flex items-center justify-end gap-3">
-            {generatesApiKey ? (
-              <>
-                <Button variant="ghost" size="sm" onClick={close}>
-                  {t('success.done')}
-                </Button>
-                <Button onClick={() => setStep('apikey')}>{t('success.next')}</Button>
-              </>
-            ) : (
-              <Button onClick={close} fullWidth>
-                {t('success.done')}
-              </Button>
-            )}
-          </div>
-        </div>
-      )}
-
-      {step === 'apikey' && created && (
-        <ApiKeyStep
-          integrationName={created.name}
-          onSubmit={(label) => createApiKeyAction(created.integrationId, label)}
+      {step === 'completed' && completed && (
+        <IntegrationCompletedView
+          integrationId={completed.integrationId}
+          name={completed.name}
+          storeUrl={completed.storeUrl}
+          clientId={completed.clientId}
+          clientSecret={completed.clientSecret}
+          initialWebhookUrl=""
+          apiKeyError={completed.apiKeyError}
           onDone={close}
         />
       )}
