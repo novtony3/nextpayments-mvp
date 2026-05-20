@@ -85,10 +85,7 @@ export function BalancesView() {
           </p>
         ) : (
           rows.map((row) => (
-            <div
-              key={row.ticker}
-              className="flex items-center gap-4 px-5 py-4 transition-colors duration-200 hover:bg-[var(--glass-fill)]"
-            >
+            <div key={row.ticker} className="row-interactive flex items-center gap-4 px-5 py-4">
               <CoinAvatar row={row} />
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-[var(--color-text)]">{row.name}</p>

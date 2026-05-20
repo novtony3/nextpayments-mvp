@@ -93,6 +93,12 @@
   --radius-xl: 1.25rem; /* 20px */
   --radius-2xl: 1.5rem; /* 24px */
 
+  /* === Interaction tokens ===
+   * Shared timing for hover/focus across the dashboard (row-interactive,
+   * action-icon, …). Tune here to retune the whole app at once. */
+  --interaction-duration: 180ms;
+  --interaction-easing: cubic-bezier(0.16, 1, 0.3, 1); /* luxury ease-out */
+
   /* === Typography === */
   --font-sans:
     'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
@@ -178,4 +184,57 @@
     color-mix(in oklab, var(--color-brand-blue) 8%, transparent) 35%,
     transparent 70%
   );
+}
+
+/* === Interaction utilities ===
+ * One source of truth for the dashboard's hover/focus feel. Used by table
+ * rows and per-row action icons; tune via the --interaction-* tokens above.
+ *
+ *   row-interactive      → table row (subtle accent-tinted hover)
+ *   action-icon          → icon button in a row (accent on hover + lift)
+ *   action-icon-danger   → destructive variant (red on hover) — combine with
+ *                          .action-icon (e.g. class="action-icon action-icon-danger")
+ *
+ * Tailwind v4 + Lightning CSS supports native nesting; the &:hover/&:active
+ * blocks resolve to standard selectors. prefers-reduced-motion is honored —
+ * the lift transform is disabled when the user prefers reduced motion.
+ */
+@utility row-interactive {
+  transition:
+    background-color var(--interaction-duration) var(--interaction-easing),
+    box-shadow var(--interaction-duration) var(--interaction-easing);
+
+  &:hover {
+    background-color: color-mix(in oklab, var(--color-accent) 8%, transparent);
+    box-shadow: inset 3px 0 0 0 var(--color-accent);
+  }
+}
+
+@utility action-icon {
+  transition:
+    background-color var(--interaction-duration) var(--interaction-easing),
+    color var(--interaction-duration) var(--interaction-easing),
+    transform var(--interaction-duration) var(--interaction-easing);
+
+  &:hover {
+    background-color: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    &:hover {
+      transform: translateY(-1px);
+    }
+  }
+}
+
+@utility action-icon-danger {
+  &:hover {
+    background-color: color-mix(in oklab, var(--color-danger) 14%, transparent);
+    color: var(--color-danger);
+  }
 }

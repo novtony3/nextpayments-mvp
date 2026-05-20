@@ -6,9 +6,11 @@ import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from
 import { toast } from 'sonner';
 
 import { Button } from '@nextpayments/ui/components/button';
-import { Sheet, SHEET_TRANSITION_MS } from '@nextpayments/ui/components/sheet';
-import { Tabs, type TabItem } from '@nextpayments/ui/components/tabs';
+import { SHEET_TRANSITION_MS } from '@nextpayments/ui/components/sheet';
+import { type TabItem } from '@nextpayments/ui/components/tabs';
+import { TabbedSheet } from '@nextpayments/ui/components/tabbed-sheet';
 import { ToggleSwitch } from '@nextpayments/ui/components/toggle-switch';
+import { useSheetSnapshot } from '@nextpayments/ui/lib/use-sheet-snapshot';
 
 import { TextField } from '@/components/shared/text-field';
 import { useRouter } from '@/i18n/routing';
@@ -41,7 +43,9 @@ type ManageIntegrationSheetProps = {
 const KEYS_PAGE_SIZE = 50;
 
 /**
- * Manage existing integration — 3 tabs:
+ * Manage existing integration — 3 tabs composed onto the shared
+ * {@link TabbedSheet} primitive (same Sheet base as `AddIntegrationSheet`,
+ * so look/feel is identical):
  *   Settings → PUT /api/integrations/:id (name/siteUrl/ipnUrl/isActive)
  *   API Keys → GET/POST/DELETE /api/integrations/:id/api-keys[/:keyId]
  *   Delete   → DELETE /api/integrations/:id (type-to-confirm)
@@ -76,36 +80,44 @@ export function ManageIntegrationSheet({
     setTimeout(() => setTab(initialTab), SHEET_TRANSITION_MS);
   };
 
-  if (!integration) {
-    return null;
-  }
-  const integrationId = integration._id ?? String(integration.id ?? '');
+  // Snapshot the latest integration so panels keep rendering through the
+  // slide-out (parent clears `integration` the moment `onClose` runs —
+  // without this the wrapper would return null and Sheet's close animation
+  // would only show the backdrop fading, with no panel sliding down).
+  const snapshot = useSheetSnapshot(integration);
+  if (!snapshot) return null;
+  const integrationId = snapshot._id ?? String(snapshot.id ?? '');
 
   return (
-    <Sheet
+    <TabbedSheet
       open={open}
       onClose={close}
-      title={t('title', { name: integration.name ?? '' })}
+      title={t('title', { name: snapshot.name ?? '' })}
       closeLabel={t('close')}
+      tabsAriaLabel={t('tabsAriaLabel')}
+      tabs={tabItems}
+      activeTab={tab}
+      onTabChange={(v) => setTab(v as ManageTab)}
       className="sm:max-w-3xl"
-    >
-      <div className="flex flex-col gap-6">
-        <Tabs
-          items={tabItems}
-          value={tab}
-          onValueChange={(v) => setTab(v as ManageTab)}
-          aria-label={t('tabsAriaLabel')}
-        />
-
-        {tab === 'settings' && (
-          <SettingsPanel integration={integration} integrationId={integrationId} />
-        )}
-        {tab === 'keys' && <ApiKeysPanel integrationId={integrationId} />}
-        {tab === 'delete' && (
-          <DeletePanel integration={integration} integrationId={integrationId} onDeleted={close} />
-        )}
-      </div>
-    </Sheet>
+      // Key panels by integrationId so switching to a different row remounts
+      // them (clears edit-form state from the previous integration). During
+      // close the key is unchanged → panels stay mounted → the slide-out
+      // plays smoothly with the snapshot data still rendered.
+      panels={{
+        settings: (
+          <SettingsPanel key={integrationId} integration={snapshot} integrationId={integrationId} />
+        ),
+        keys: <ApiKeysPanel key={integrationId} integrationId={integrationId} />,
+        delete: (
+          <DeletePanel
+            key={integrationId}
+            integration={snapshot}
+            integrationId={integrationId}
+            onDeleted={close}
+          />
+        ),
+      }}
+    />
   );
 }
 
@@ -287,14 +299,17 @@ function ApiKeysPanel({ integrationId }: { integrationId: string }) {
         </div>
       ) : (
         <form onSubmit={createKey} className="flex items-end gap-3">
-          <TextField
-            id="key-label"
-            label={t('createLabel')}
-            placeholder={t('createPlaceholder')}
-            value={label}
-            onChange={(e) => setLabel(e.target.value)}
-            className="flex-1"
-          />
+          {/* Wrap so the flex-1 lands on the TextField's wrapper, not the
+              already-w-full <input> inside it. */}
+          <div className="min-w-0 flex-1">
+            <TextField
+              id="key-label"
+              label={t('createLabel')}
+              placeholder={t('createPlaceholder')}
+              value={label}
+              onChange={(e) => setLabel(e.target.value)}
+            />
+          </div>
           <Button type="submit" loading={isCreating} leftIcon={<Plus className="h-4 w-4" />}>
             {isCreating ? t('creating') : t('create')}
           </Button>

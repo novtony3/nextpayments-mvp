@@ -4,8 +4,8 @@ import { KeyRound, Pencil, Trash2 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 
+import { ActionIcon } from '@nextpayments/ui/components/action-icon';
 import { Card } from '@nextpayments/ui/components/card';
-import { IconButton } from '@nextpayments/ui/components/icon-button';
 import { Pagination } from '@nextpayments/ui/components/pagination';
 
 import { INTEGRATIONS_PARAM } from '@/constants/integrations';
@@ -63,10 +63,7 @@ export function IntegrationsList({ data }: IntegrationsListProps) {
           </thead>
           <tbody className="divide-y divide-[var(--color-border)]">
             {data.rows.map((row, i) => (
-              <tr
-                key={row._id ?? String(row.id ?? i)}
-                className="transition-colors duration-200 hover:bg-[var(--glass-fill)]"
-              >
+              <tr key={row._id ?? String(row.id ?? i)} className="row-interactive">
                 <td className="px-5 py-4 font-medium text-[var(--color-text)]">
                   {row.name || t('list.none')}
                 </td>
@@ -87,24 +84,21 @@ export function IntegrationsList({ data }: IntegrationsListProps) {
                 <td className="px-5 py-4 text-[var(--color-text-muted)]">{created(row)}</td>
                 <td className="px-5 py-4 text-right">
                   <div className="inline-flex items-center gap-1">
-                    <IconButton
+                    <ActionIcon
                       icon={<Pencil className="h-4 w-4" />}
                       aria-label={tManage('row.edit')}
                       onClick={() => openAt(row, 'settings')}
-                      size="sm"
                     />
-                    <IconButton
+                    <ActionIcon
                       icon={<KeyRound className="h-4 w-4" />}
                       aria-label={tManage('row.keys')}
                       onClick={() => openAt(row, 'keys')}
-                      size="sm"
                     />
-                    <IconButton
+                    <ActionIcon
                       icon={<Trash2 className="h-4 w-4" />}
                       aria-label={tManage('row.delete')}
                       onClick={() => openAt(row, 'delete')}
-                      size="sm"
-                      className="hover:text-[var(--color-danger)]"
+                      tone="danger"
                     />
                   </div>
                 </td>

@@ -5,9 +5,9 @@
   "type": "module",
   "sideEffects": false,
   "exports": {
-    "./lib/utils": {
-      "types": "./src/lib/utils.ts",
-      "default": "./src/lib/utils.ts"
+    "./lib/*": {
+      "types": "./src/lib/*.ts",
+      "default": "./src/lib/*.ts"
     },
     "./components/*": {
       "types": "./src/components/*.tsx",
