@@ -9,8 +9,12 @@ import { backendFetch } from '@/lib/server/backend-fetch';
 import {
   createApiKeyResponseSchema,
   createIntegrationResponseSchema,
+  getIntegrationResponseSchema,
+  listApiKeysResponseSchema,
   listIntegrationsResponseSchema,
   updateIntegrationResponseSchema,
+  type ApiKeyListPage,
+  type ApiKeyListResult,
   type CreateIntegrationInput,
   type Integration,
   type IntegrationListPage,
@@ -72,19 +76,97 @@ export async function backendListIntegrations(
   return toPaginatedPage(listIntegrationsResponseSchema.parse(json));
 }
 
+export async function backendGetIntegration(
+  token: string,
+  integrationId: string,
+): Promise<Integration> {
+  const res = await backendFetch(apiPath.integration(integrationId), {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const json = parseJson(res.raw);
+  ensureOk(res.ok, json, 'Could not load the integration');
+  return getIntegrationResponseSchema.parse(json).data.integration;
+}
+
+/**
+ * PUT only the fields actually supplied — undefined keys are dropped so the
+ * backend never sees an unintended overwrite. Use `''` for siteUrl/ipnUrl
+ * to clear, or `isActive: false` to pause.
+ */
 export async function backendUpdateIntegration(
   token: string,
   integrationId: string,
   input: UpdateIntegrationInput,
 ): Promise<Integration> {
+  const body: Record<string, unknown> = {};
+  if (input.name !== undefined) body.name = input.name;
+  if (input.siteUrl !== undefined) body.siteUrl = input.siteUrl;
+  if (input.ipnUrl !== undefined) body.ipnUrl = input.ipnUrl;
+  if (input.isActive !== undefined) body.isActive = input.isActive;
+
   const res = await backendFetch(apiPath.integration(integrationId), {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-    body: JSON.stringify({ ipnUrl: input.ipnUrl ?? '' }),
+    body: JSON.stringify(body),
   });
   const json = parseJson(res.raw);
   ensureOk(res.ok, json, 'Could not update the integration');
   return updateIntegrationResponseSchema.parse(json).data.integration;
+}
+
+export async function backendDeleteIntegration(
+  token: string,
+  integrationId: string,
+): Promise<void> {
+  const res = await backendFetch(apiPath.integration(integrationId), {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const json = parseJson(res.raw);
+  ensureOk(res.ok, json, 'Could not delete the integration');
+}
+
+export async function backendListApiKeys(
+  token: string,
+  integrationId: string,
+  query: { page: number; limit: number },
+): Promise<ApiKeyListPage> {
+  const res = await backendFetch(apiPath.integrationApiKeys(integrationId), {
+    headers: { Authorization: `Bearer ${token}` },
+    query: { page: query.page, limit: query.limit },
+  });
+  const json = parseJson(res.raw);
+  ensureOk(res.ok, json, 'Could not load API keys');
+  return toPaginatedPage(listApiKeysResponseSchema.parse(json));
+}
+
+export async function backendRevokeApiKey(
+  token: string,
+  integrationId: string,
+  keyId: string,
+): Promise<void> {
+  const res = await backendFetch(`${apiPath.integrationApiKeys(integrationId)}/${keyId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const json = parseJson(res.raw);
+  ensureOk(res.ok, json, 'Could not revoke the API key');
+}
+
+/** Server Component reader for the manage sheet — `{ ok:false }` on any
+ * failure so the sheet shows a degraded notice instead of crashing. */
+export async function loadIntegrationApiKeys(
+  integrationId: string,
+  query: { page: number; limit: number },
+): Promise<ApiKeyListResult> {
+  const token = await getAccessToken();
+  if (!token) return { ok: false };
+  try {
+    const data = await backendListApiKeys(token, integrationId, query);
+    return { ok: true, data };
+  } catch {
+    return { ok: false };
+  }
 }
 
 export async function backendCreateApiKey(

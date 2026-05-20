@@ -34,13 +34,24 @@ export const createApiKeySchema = z.object({
   label: z.string().trim().min(1),
 });
 
-/** PUT /api/integrations/:id — only ipnUrl is editable here (the
- * Manage-Webhooks panel). Empty string is accepted (clear webhook). */
+/**
+ * PUT /api/integrations/:id — every field optional, only the supplied keys
+ * are sent. `name` is non-empty when present; URLs may be empty (clear them
+ * out) but otherwise must be valid; `isActive` toggles active/paused.
+ */
 export const updateIntegrationSchema = z.object({
+  name: z.string().trim().min(1).optional(),
+  siteUrl: optionalUrl,
   ipnUrl: optionalUrl,
+  isActive: z.boolean().optional(),
 });
 
 export type UpdateIntegrationInput = z.infer<typeof updateIntegrationSchema>;
+
+/** Type-to-confirm guard for the destructive delete tab. */
+export const deleteIntegrationSchema = z.object({
+  confirmName: z.string().trim().min(1),
+});
 
 /** Loose row — exact shape only partly documented; passthrough + optional. */
 export const integrationSchema = z
@@ -78,6 +89,33 @@ export const createApiKeyResponseSchema = z.object({
 export const updateIntegrationResponseSchema = z.object({
   data: z.object({ integration: integrationSchema }),
 });
+
+/** GET /api/integrations/:id → { data: { integration } }. */
+export const getIntegrationResponseSchema = updateIntegrationResponseSchema;
+
+/**
+ * Loose row for `GET /api/integrations/:id/api-keys`. The merchant only
+ * sees `publicKey` (never the private key after creation), plus the label
+ * and lifecycle flags.
+ */
+export const apiKeySchema = z
+  .object({
+    _id: z.string(),
+    integrationId: z.string().optional(),
+    publicKey: z.string(),
+    label: z.string().optional(),
+    isActive: z.boolean().optional(),
+    revokeAt: z.string().nullable().optional(),
+    createdAt: z.string().optional(),
+    updatedAt: z.string().optional(),
+  })
+  .passthrough();
+
+export type ApiKey = z.infer<typeof apiKeySchema>;
+
+export const listApiKeysResponseSchema = paginatedSchema(apiKeySchema);
+export type ApiKeyListPage = PaginatedPage<ApiKey>;
+export type ApiKeyListResult = { ok: true; data: ApiKeyListPage } | { ok: false };
 
 /** Backend error code → i18n reason key (under `dashboard.integrations.errors`). */
 export const INTEGRATION_ERROR_CODE: Record<string, string> = {
@@ -128,5 +166,13 @@ export type CreateIntegrationWithKeyResult =
   | { ok: false; reason: 'invalid' | 'error'; code?: string };
 
 export type UpdateIntegrationResult =
+  | { ok: true; integration: Integration }
+  | { ok: false; reason: 'invalid' | 'error'; code?: string };
+
+export type DeleteIntegrationResult =
+  | { ok: true }
+  | { ok: false; reason: 'invalid' | 'error'; code?: string };
+
+export type RevokeApiKeyResult =
   | { ok: true }
   | { ok: false; reason: 'invalid' | 'error'; code?: string };

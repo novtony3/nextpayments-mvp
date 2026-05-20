@@ -260,7 +260,8 @@
         "created": "Créée le",
         "active": "Active",
         "inactive": "Inactive",
-        "none": "—"
+        "none": "—",
+        "actions": "Actions"
       },
       "sheet": {
         "title": "Nouvelle intégration",
@@ -364,6 +365,59 @@
           "invoiceTimedOut": "Facture expirée",
           "paymentCreated": "Paiement créé",
           "paymentTimedOut": "Paiement expiré"
+        }
+      },
+      "manage": {
+        "title": "Gérer · {name}",
+        "close": "Fermer",
+        "tabsAriaLabel": "Sections de gestion de l'intégration",
+        "tabs": {
+          "settings": "Paramètres",
+          "keys": "Clés API",
+          "delete": "Supprimer"
+        },
+        "row": {
+          "edit": "Modifier l'intégration",
+          "keys": "Gérer les clés API",
+          "delete": "Supprimer l'intégration"
+        },
+        "settings": {
+          "isActive": "Active",
+          "isActiveHint": "Mettez en pause pour cesser d'accepter les paiements sans perdre l'intégration.",
+          "save": "Enregistrer",
+          "saving": "Enregistrement…",
+          "saved": "Intégration mise à jour."
+        },
+        "keys": {
+          "createLabel": "Libellé de la nouvelle clé",
+          "createPlaceholder": "Serveur de production",
+          "create": "Créer",
+          "creating": "Création…",
+          "loading": "Chargement des clés…",
+          "loadError": "Impossible de charger les clés API.",
+          "empty": "Aucune clé API — créez-en une ci-dessus.",
+          "publicKey": "Clé publique",
+          "unlabelled": "(sans libellé)",
+          "statusActive": "Active",
+          "statusRevoked": "Révoquée",
+          "revoke": "Révoquer",
+          "revoked": "Clé API révoquée.",
+          "confirmRevoke": "Révoquer « {label} » ? Les clients utilisant cette clé cesseront de fonctionner.",
+          "newKey": {
+            "title": "Enregistrez ces identifiants maintenant",
+            "publicKey": "Clé publique (Client ID)",
+            "privateKey": "Clé privée (Client Secret)",
+            "warning": "La clé privée n'est affichée qu'une seule fois. Copiez-la avant de fermer.",
+            "dismiss": "J'ai copié la clé"
+          }
+        },
+        "delete": {
+          "warningTitle": "Action irréversible",
+          "warningBody": "Supprimer « {name} » révoquera toutes ses clés API et désactivera les clients qui les utilisent.",
+          "confirmLabel": "Tapez « {name} » pour confirmer",
+          "delete": "Supprimer l'intégration",
+          "deleting": "Suppression…",
+          "deleted": "Intégration « {name} » supprimée."
         }
       }
     },

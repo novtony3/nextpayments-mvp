@@ -4,14 +4,24 @@ import { DEFAULT_API_KEY_LABEL } from '@/constants/integrations';
 import { getAccessToken } from '@/lib/auth/session';
 import { AuthError } from '@/lib/auth/types';
 
-import { backendCreateApiKey, backendCreateIntegration, backendUpdateIntegration } from './backend';
+import {
+  backendCreateApiKey,
+  backendCreateIntegration,
+  backendDeleteIntegration,
+  backendRevokeApiKey,
+  backendUpdateIntegration,
+  loadIntegrationApiKeys,
+} from './backend';
 import {
   createApiKeySchema,
   createIntegrationSchema,
   updateIntegrationSchema,
+  type ApiKeyListResult,
   type CreateApiKeyResult,
   type CreateIntegrationResult,
   type CreateIntegrationWithKeyResult,
+  type DeleteIntegrationResult,
+  type RevokeApiKeyResult,
   type UpdateIntegrationResult,
 } from './types';
 
@@ -105,6 +115,12 @@ export async function createIntegrationWithApiKeyAction(
   }
 }
 
+/**
+ * Edit/save an existing integration. Caller passes any subset of
+ * `{name, siteUrl, ipnUrl, isActive}` — undefined fields are not sent so the
+ * Webhooks panel ({ipnUrl}) and the Settings tab (full edit form) share one
+ * action without unintentionally overwriting unrelated fields.
+ */
 export async function updateIntegrationAction(
   integrationId: string,
   input: unknown,
@@ -118,7 +134,47 @@ export async function updateIntegrationAction(
   if (!token) return { ok: false, reason: 'error' };
 
   try {
-    await backendUpdateIntegration(token, integrationId, parsed.data);
+    const integration = await backendUpdateIntegration(token, integrationId, parsed.data);
+    return { ok: true, integration };
+  } catch (err) {
+    if (err instanceof AuthError) return { ok: false, reason: 'invalid', code: err.code };
+    return { ok: false, reason: 'error' };
+  }
+}
+
+export async function deleteIntegrationAction(
+  integrationId: string,
+): Promise<DeleteIntegrationResult> {
+  if (!integrationId) return { ok: false, reason: 'invalid' };
+  const token = await getAccessToken();
+  if (!token) return { ok: false, reason: 'error' };
+  try {
+    await backendDeleteIntegration(token, integrationId);
+    return { ok: true };
+  } catch (err) {
+    if (err instanceof AuthError) return { ok: false, reason: 'invalid', code: err.code };
+    return { ok: false, reason: 'error' };
+  }
+}
+
+/** Server-callable reader the manage sheet uses to load API keys lazily. */
+export async function listApiKeysAction(
+  integrationId: string,
+  query: { page: number; limit: number },
+): Promise<ApiKeyListResult> {
+  if (!integrationId) return { ok: false };
+  return loadIntegrationApiKeys(integrationId, query);
+}
+
+export async function revokeApiKeyAction(
+  integrationId: string,
+  keyId: string,
+): Promise<RevokeApiKeyResult> {
+  if (!integrationId || !keyId) return { ok: false, reason: 'invalid' };
+  const token = await getAccessToken();
+  if (!token) return { ok: false, reason: 'error' };
+  try {
+    await backendRevokeApiKey(token, integrationId, keyId);
     return { ok: true };
   } catch (err) {
     if (err instanceof AuthError) return { ok: false, reason: 'invalid', code: err.code };

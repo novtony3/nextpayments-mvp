@@ -260,7 +260,8 @@
         "created": "Created",
         "active": "Active",
         "inactive": "Inactive",
-        "none": "—"
+        "none": "—",
+        "actions": "Actions"
       },
       "sheet": {
         "title": "New Integration",
@@ -364,6 +365,59 @@
           "invoiceTimedOut": "Invoice Timed Out",
           "paymentCreated": "Payment Created",
           "paymentTimedOut": "Payment Timed Out"
+        }
+      },
+      "manage": {
+        "title": "Manage · {name}",
+        "close": "Close",
+        "tabsAriaLabel": "Manage integration sections",
+        "tabs": {
+          "settings": "Settings",
+          "keys": "API Keys",
+          "delete": "Delete"
+        },
+        "row": {
+          "edit": "Edit integration",
+          "keys": "Manage API keys",
+          "delete": "Delete integration"
+        },
+        "settings": {
+          "isActive": "Active",
+          "isActiveHint": "Pause to stop accepting payments without losing the integration.",
+          "save": "Save changes",
+          "saving": "Saving…",
+          "saved": "Integration updated."
+        },
+        "keys": {
+          "createLabel": "New key label",
+          "createPlaceholder": "Production server",
+          "create": "Create",
+          "creating": "Creating…",
+          "loading": "Loading keys…",
+          "loadError": "Couldn't load API keys.",
+          "empty": "No API keys yet — create one above.",
+          "publicKey": "Public key",
+          "unlabelled": "(no label)",
+          "statusActive": "Active",
+          "statusRevoked": "Revoked",
+          "revoke": "Revoke",
+          "revoked": "API key revoked.",
+          "confirmRevoke": "Revoke \"{label}\"? Clients using this key will stop working.",
+          "newKey": {
+            "title": "Save these credentials now",
+            "publicKey": "Public key (Client ID)",
+            "privateKey": "Private key (Client Secret)",
+            "warning": "The private key is shown only once. Copy it before dismissing.",
+            "dismiss": "I have copied the key"
+          }
+        },
+        "delete": {
+          "warningTitle": "This is permanent",
+          "warningBody": "Deleting '{name}' will revoke all of its API keys and disable any clients that use them.",
+          "confirmLabel": "Type '{name}' to confirm",
+          "delete": "Delete integration",
+          "deleting": "Deleting…",
+          "deleted": "Integration '{name}' deleted."
         }
       }
     },
