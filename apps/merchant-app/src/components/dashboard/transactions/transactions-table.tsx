@@ -79,10 +79,7 @@ export function TransactionsTable({ data, tab, coin }: TransactionsTableProps) {
           </thead>
           <tbody className="divide-y divide-[var(--color-border)]">
             {data.rows.map((row, i) => (
-              <tr
-                key={rowKey(row, i)}
-                className="transition-colors duration-200 hover:bg-[var(--glass-fill)]"
-              >
+              <tr key={rowKey(row, i)} className="row-interactive">
                 <td className="px-5 py-4 font-medium text-[var(--color-text)]">{cell(row.coin)}</td>
                 <td className="px-5 py-4 text-[var(--color-text)]">{cell(row.amount)}</td>
                 <td className="px-5 py-4">

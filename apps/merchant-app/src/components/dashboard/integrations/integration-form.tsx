@@ -10,27 +10,26 @@ import { TextField } from '@/components/shared/text-field';
 import {
   INTEGRATION_ERROR_CODE,
   createIntegrationSchema,
-  type CreateIntegrationResult,
-  type IntegrationType,
+  type CreateIntegrationWithKeyResult,
 } from '@/lib/integrations/types';
 
 type IntegrationFormProps = {
-  type: IntegrationType;
   onBack: () => void;
   onSubmit: (input: {
     name: string;
     siteUrl: string;
     ipnUrl: string;
-  }) => Promise<CreateIntegrationResult>;
+  }) => Promise<CreateIntegrationWithKeyResult>;
 };
 
 /**
- * Step 2: the create form. Same fields for every type (backend takes only
- * `{name,siteUrl,ipnUrl}`) — the per-type difference is the heading/blurb.
+ * Step 2: the create form. Backend accepts `{name, siteUrl, ipnUrl}` — name
+ * is required, the URLs are optional but must be valid when filled. The
+ * webhook URL also pre-fills the Manage Webhooks panel on step 3.
  * Client-validates with the shared zod schema; maps the backend `error.code`
  * (INER00x) to a localized message.
  */
-export function IntegrationForm({ type, onBack, onSubmit }: IntegrationFormProps) {
+export function IntegrationForm({ onBack, onSubmit }: IntegrationFormProps) {
   const t = useTranslations('dashboard.integrations');
   const [name, setName] = useState('');
   const [siteUrl, setSiteUrl] = useState('');
@@ -49,7 +48,8 @@ export function IntegrationForm({ type, onBack, onSubmit }: IntegrationFormProps
     }
     startTransition(async () => {
       const result = await onSubmit({ name, siteUrl, ipnUrl });
-      if (!result.ok) {
+      // ok === true | 'partial' → sheet advances; only the false branch surfaces here.
+      if (result.ok === false) {
         const key = result.code ? INTEGRATION_ERROR_CODE[result.code] : undefined;
         setError(t(`errors.${key ?? (result.reason === 'invalid' ? 'invalid' : 'generic')}`));
       }
@@ -58,11 +58,9 @@ export function IntegrationForm({ type, onBack, onSubmit }: IntegrationFormProps
 
   return (
     <form onSubmit={submit} className="flex flex-col gap-5" noValidate>
-      <div>
-        <p className="text-base font-semibold text-[var(--color-text)]">
-          {t(`types.${type}.title`)}
-        </p>
-        <p className="text-sm text-[var(--color-text-muted)]">{t(`types.${type}.description`)}</p>
+      <div className="space-y-1.5">
+        <p className="text-base font-semibold text-[var(--color-text)]">{t('form.title')}</p>
+        <p className="text-sm text-[var(--color-text-muted)]">{t('form.description')}</p>
       </div>
 
       <TextField

@@ -260,7 +260,8 @@
         "created": "Created",
         "active": "Active",
         "inactive": "Inactive",
-        "none": "—"
+        "none": "—",
+        "actions": "Actions"
       },
       "sheet": {
         "title": "New Integration",
@@ -290,14 +291,17 @@
         "ipnUrlLabel": "IPN / webhook URL (optional)",
         "ipnUrlPlaceholder": "https://yourstore.com/webhooks/crypto",
         "submit": "Create integration",
-        "submitting": "Creating…"
+        "submitting": "Creating…",
+        "title": "Create New Client",
+        "description": "This client will be used to manage your new integration and its Instant Payment Notifications (IPN). Please name it appropriately and provide your store's URL below."
       },
       "errors": {
         "nameRequired": "Integration name is required.",
         "nameTaken": "That name is already taken — pick another.",
         "invalidUrl": "Enter a valid URL (or leave the field empty).",
         "invalid": "Please check the form and try again.",
-        "generic": "Something went wrong. Please try again."
+        "generic": "Something went wrong. Please try again.",
+        "apiKeyFailed": "Your integration was created but the default API key could not be generated. You can create one from the integration's details page."
       },
       "success": {
         "title": "Integration created",
@@ -317,6 +321,104 @@
         "submitting": "Generating…",
         "publicKeyLabel": "Public key",
         "privateKeyLabel": "Private key"
+      },
+      "completed": {
+        "eyebrow": "New Integration",
+        "description": "Your integration has been completed.",
+        "name": "Name",
+        "storeUrl": "Store URL",
+        "permissions": "Permissions",
+        "permissionsAll": "All Permissions",
+        "allowedIps": "Allowed IPs",
+        "allowedIpsPlaceholder": "A comma-separated list of IPs allowed to use this key",
+        "apiUrl": "API URL",
+        "clientId": "Client ID",
+        "clientSecret": "Client Secret",
+        "secretWarning": "Secret is only shown once for security reasons. Make sure to copy it and save it in a safe place for future reference.",
+        "copy": "Copy"
+      },
+      "webhooks": {
+        "title": "Manage Webhooks",
+        "description": "Create and manage additional notifications for this integration. Most plugins add default webhooks during setup. These IPNs would not be displayed here.",
+        "urlLabel": "Webhook URL ({count} events)",
+        "urlPlaceholder": "https://www.example.com/callback",
+        "errors": {
+          "invalidUrl": "Enter a valid URL (https://…).",
+          "duplicate": "Please ensure each URL is unique.",
+          "invalid": "Could not save the webhook URL. Please try again.",
+          "generic": "Something went wrong. Please try again."
+        },
+        "delete": "Delete",
+        "settings": "Event settings",
+        "expand": "Show covered events",
+        "singleHint": "Only the first URL is currently saved — multi-webhook support is coming soon.",
+        "add": "Add",
+        "done": "Done",
+        "saving": "Saving…",
+        "saved": "Webhook URL saved.",
+        "events": {
+          "invoiceCreated": "Invoice Created",
+          "invoicePending": "Invoice Pending",
+          "invoicePaid": "Invoice Paid",
+          "invoiceCompleted": "Invoice Completed",
+          "invoiceCancelled": "Invoice Cancelled",
+          "invoiceTimedOut": "Invoice Timed Out",
+          "paymentCreated": "Payment Created",
+          "paymentTimedOut": "Payment Timed Out"
+        }
+      },
+      "manage": {
+        "title": "Manage · {name}",
+        "close": "Close",
+        "tabsAriaLabel": "Manage integration sections",
+        "tabs": {
+          "settings": "Settings",
+          "keys": "API Keys",
+          "delete": "Delete"
+        },
+        "row": {
+          "edit": "Edit integration",
+          "keys": "Manage API keys",
+          "delete": "Delete integration"
+        },
+        "settings": {
+          "isActive": "Active",
+          "isActiveHint": "Pause to stop accepting payments without losing the integration.",
+          "save": "Save changes",
+          "saving": "Saving…",
+          "saved": "Integration updated."
+        },
+        "keys": {
+          "createLabel": "New key label",
+          "createPlaceholder": "Production server",
+          "create": "Create",
+          "creating": "Creating…",
+          "loading": "Loading keys…",
+          "loadError": "Couldn't load API keys.",
+          "empty": "No API keys yet — create one above.",
+          "publicKey": "Public key",
+          "unlabelled": "(no label)",
+          "statusActive": "Active",
+          "statusRevoked": "Revoked",
+          "revoke": "Revoke",
+          "revoked": "API key revoked.",
+          "confirmRevoke": "Revoke \"{label}\"? Clients using this key will stop working.",
+          "newKey": {
+            "title": "Save these credentials now",
+            "publicKey": "Public key (Client ID)",
+            "privateKey": "Private key (Client Secret)",
+            "warning": "The private key is shown only once. Copy it before dismissing.",
+            "dismiss": "I have copied the key"
+          }
+        },
+        "delete": {
+          "warningTitle": "This is permanent",
+          "warningBody": "Deleting '{name}' will revoke all of its API keys and disable any clients that use them.",
+          "confirmLabel": "Type '{name}' to confirm",
+          "delete": "Delete integration",
+          "deleting": "Deleting…",
+          "deleted": "Integration '{name}' deleted."
+        }
       }
     },
     "footer": {
