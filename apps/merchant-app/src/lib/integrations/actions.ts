@@ -68,6 +68,7 @@ export async function createIntegrationWithApiKeyAction(
   let integrationId = '';
   let name = parsed.data.name;
   let storeUrl = parsed.data.siteUrl ?? '';
+  let ipnUrl = parsed.data.ipnUrl ?? '';
   let ipnSecret = '';
 
   try {
@@ -75,6 +76,7 @@ export async function createIntegrationWithApiKeyAction(
     integrationId = created.integration._id ?? String(created.integration.id ?? '');
     name = created.integration.name ?? name;
     storeUrl = created.integration.siteUrl ?? storeUrl;
+    ipnUrl = created.integration.ipnUrl ?? ipnUrl;
     ipnSecret = created.ipnSecret;
   } catch (err) {
     if (err instanceof AuthError) return { ok: false, reason: 'invalid', code: err.code };
@@ -87,10 +89,19 @@ export async function createIntegrationWithApiKeyAction(
       integrationId,
       DEFAULT_API_KEY_LABEL,
     );
-    return { ok: true, integrationId, name, storeUrl, ipnSecret, publicKey, privateKey };
+    return {
+      ok: true,
+      integrationId,
+      name,
+      storeUrl,
+      ipnUrl,
+      ipnSecret,
+      publicKey,
+      privateKey,
+    };
   } catch (err) {
     const code = err instanceof AuthError ? err.code : undefined;
-    return { ok: 'partial', integrationId, name, storeUrl, ipnSecret, code };
+    return { ok: 'partial', integrationId, name, storeUrl, ipnUrl, ipnSecret, code };
   }
 }
 

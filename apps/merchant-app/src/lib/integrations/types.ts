@@ -111,6 +111,7 @@ export type CreateIntegrationWithKeyResult =
       integrationId: string;
       name: string;
       storeUrl: string;
+      ipnUrl: string;
       ipnSecret: string;
       publicKey: string;
       privateKey: string;
@@ -120,6 +121,7 @@ export type CreateIntegrationWithKeyResult =
       integrationId: string;
       name: string;
       storeUrl: string;
+      ipnUrl: string;
       ipnSecret: string;
       code?: string;
     }

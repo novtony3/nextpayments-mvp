@@ -22,6 +22,7 @@ type CompletedData = {
   integrationId: string;
   name: string;
   storeUrl: string;
+  ipnUrl: string;
   ipnSecret: string;
   clientId: string;
   clientSecret: string;
@@ -63,6 +64,7 @@ export function AddIntegrationSheet({ open, onClose }: AddIntegrationSheetProps)
   const handleCreate = async (input: {
     name: string;
     siteUrl: string;
+    ipnUrl: string;
   }): Promise<CreateIntegrationWithKeyResult> => {
     const result = await createIntegrationWithApiKeyAction(input);
 
@@ -71,6 +73,7 @@ export function AddIntegrationSheet({ open, onClose }: AddIntegrationSheetProps)
         integrationId: result.integrationId,
         name: result.name,
         storeUrl: result.storeUrl,
+        ipnUrl: result.ipnUrl,
         ipnSecret: result.ipnSecret,
         clientId: result.ok === true ? result.publicKey : '',
         clientSecret: result.ok === true ? result.privateKey : '',
@@ -110,7 +113,7 @@ export function AddIntegrationSheet({ open, onClose }: AddIntegrationSheetProps)
           storeUrl={completed.storeUrl}
           clientId={completed.clientId}
           clientSecret={completed.clientSecret}
-          initialWebhookUrl=""
+          initialWebhookUrl={completed.ipnUrl}
           apiKeyError={completed.apiKeyError}
           onDone={close}
         />

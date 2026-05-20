@@ -15,12 +15,17 @@ import {
 
 type IntegrationFormProps = {
   onBack: () => void;
-  onSubmit: (input: { name: string; siteUrl: string }) => Promise<CreateIntegrationWithKeyResult>;
+  onSubmit: (input: {
+    name: string;
+    siteUrl: string;
+    ipnUrl: string;
+  }) => Promise<CreateIntegrationWithKeyResult>;
 };
 
 /**
- * Step 2: the create form. Same fields for every type (backend takes only
- * `{name,siteUrl,ipnUrl}`) — the per-type difference is the heading/blurb.
+ * Step 2: the create form. Backend accepts `{name, siteUrl, ipnUrl}` — name
+ * is required, the URLs are optional but must be valid when filled. The
+ * webhook URL also pre-fills the Manage Webhooks panel on step 3.
  * Client-validates with the shared zod schema; maps the backend `error.code`
  * (INER00x) to a localized message.
  */
@@ -28,20 +33,21 @@ export function IntegrationForm({ onBack, onSubmit }: IntegrationFormProps) {
   const t = useTranslations('dashboard.integrations');
   const [name, setName] = useState('');
   const [siteUrl, setSiteUrl] = useState('');
+  const [ipnUrl, setIpnUrl] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    const parsed = createIntegrationSchema.safeParse({ name, siteUrl });
+    const parsed = createIntegrationSchema.safeParse({ name, siteUrl, ipnUrl });
     if (!parsed.success) {
       // name is the only required field; anything else failing is a bad URL.
       setError(t(name.trim() ? 'errors.invalidUrl' : 'errors.nameRequired'));
       return;
     }
     startTransition(async () => {
-      const result = await onSubmit({ name, siteUrl });
+      const result = await onSubmit({ name, siteUrl, ipnUrl });
       // ok === true | 'partial' → sheet advances; only the false branch surfaces here.
       if (result.ok === false) {
         const key = result.code ? INTEGRATION_ERROR_CODE[result.code] : undefined;
@@ -72,6 +78,14 @@ export function IntegrationForm({ onBack, onSubmit }: IntegrationFormProps) {
         inputMode="url"
         value={siteUrl}
         onChange={(e) => setSiteUrl(e.target.value)}
+      />
+      <TextField
+        id="integration-ipn"
+        label={t('form.ipnUrlLabel')}
+        placeholder={t('form.ipnUrlPlaceholder')}
+        inputMode="url"
+        value={ipnUrl}
+        onChange={(e) => setIpnUrl(e.target.value)}
       />
 
       {error && (
