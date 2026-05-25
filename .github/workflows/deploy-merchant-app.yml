@@ -34,7 +34,7 @@ on:
       branch:
         description: 'Branch to deploy (leave blank to use triggering branch)'
         required: false
-        default: ''
+        default: 'dev'
 
 jobs:
   deploy:
