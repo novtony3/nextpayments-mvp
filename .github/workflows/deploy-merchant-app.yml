@@ -1,0 +1,63 @@
+# =============================================================================
+# deploy-merchant-app.yml  (crypto-payment-fe)
+#
+# Trigger: push to main branch → deploy merchant-app (Next.js 15 SSR).
+#          workflow_dispatch → manual re-deploy.
+#
+# Env var behaviour:
+#   NEXT_PUBLIC_* — baked at build time → full rebuild required on change
+#   PORT, HOSTNAME — runtime vars      → restart only (no rebuild needed)
+#
+# ── GitHub Variables (Settings → Variables) ──────────────────────────────────
+#   FE_MERCHANT_APP_ENV_VARS  — Non-sensitive env vars, e.g.:
+#                                 NEXT_PUBLIC_API_URL=http://103.160.4.145:3000
+#                                 HOSTNAME=0.0.0.0
+#                                 PORT=5001
+#                                 NODE_ENV=production
+#
+# ── GitHub Secrets (Settings → Secrets) ──────────────────────────────────────
+#   SSH_PRIVATE_KEY             — Full PEM content of ~/.ssh/my-key.pem
+#   DEPLOY_PAT                  — Fine-grained PAT (read: crypto-payment-fe
+#                                 + crypto-payment-devops-cicd)
+#   FE_MERCHANT_APP_ENV_SECRETS — Sensitive runtime vars, e.g.:
+#                                   NEXTAUTH_SECRET=<secret>
+#                                   DATABASE_URL=<url-with-credentials>
+# =============================================================================
+
+name: Deploy FE → merchant-app
+
+on:
+  # push:
+  #   branches: [main]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy (leave blank to use triggering branch)'
+        required: false
+        default: ''
+
+jobs:
+  deploy:
+    uses: thdung3/crypto-payment-devops-cicd/.github/workflows/_reusable-deploy.yml@main
+    with:
+      # ── Non-sensitive server config ───────────────────────────────────────────
+      deploy_host: 103.160.4.145
+      deploy_user: devops
+      deploy_port: ${{ vars.DEPLOY_PORT || '22' }}
+
+      # ── Non-sensitive env vars ────────────────────────────────────────────────
+      env_vars: ${{ vars.FE_MERCHANT_APP_ENV_VARS }}
+
+      # ── App-specific config ───────────────────────────────────────────────────
+      repo:            thdung3/crypto-payment-fe
+      branch:          ${{ github.event.inputs.branch || github.ref_name }}
+      compose:         docker-compose-merchant-app.yml
+      service_name:    merchant-app
+      remote_env_name: envs/merchant-app.env.docker
+    secrets:
+      # ── Sensitive credentials ─────────────────────────────────────────────────
+      SSH_PRIVATE_KEY:   ${{ secrets.SSH_PRIVATE_KEY }}
+      GITHUB_DEPLOY_PAT: ${{ secrets.DEPLOY_PAT }}
+
+      # ── Sensitive env vars ────────────────────────────────────────────────────
+      ENV_SECRETS: ${{ secrets.FE_MERCHANT_APP_ENV_SECRETS }}

@@ -1,0 +1,57 @@
+# =============================================================================
+# deploy-admin-dashboard.yml  (crypto-payment-fe)
+#
+# Trigger: push to main branch → deploy admin-dashboard (Vite SPA → nginx).
+#          workflow_dispatch → manual re-deploy.
+#
+# Note: VITE_* vars are baked at build time → full rebuild required on change.
+#
+# ── GitHub Variables (Settings → Variables) ──────────────────────────────────
+#   FE_ADMIN_DASHBOARD_ENV_VARS  — Non-sensitive build args, e.g.:
+#                                    VITE_API_URL=http://103.160.4.145:3000
+#
+# ── GitHub Secrets (Settings → Secrets) ──────────────────────────────────────
+#   SSH_PRIVATE_KEY                  — Full PEM content of ~/.ssh/my-key.pem
+#   DEPLOY_PAT                       — Fine-grained PAT (read: crypto-payment-fe
+#                                      + crypto-payment-devops-cicd)
+#   FE_ADMIN_DASHBOARD_ENV_SECRETS   — Sensitive build args (if any), e.g.:
+#                                        API tokens baked into the bundle
+# =============================================================================
+
+name: Deploy FE → admin-dashboard
+
+on:
+  # push:
+  #   branches: [main]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy (leave blank to use triggering branch)'
+        required: false
+        default: ''
+
+jobs:
+  deploy:
+    uses: thdung3/crypto-payment-devops-cicd/.github/workflows/_reusable-deploy.yml@main
+    with:
+      # ── Non-sensitive server config ───────────────────────────────────────────
+      deploy_host: 103.160.4.145
+      deploy_user: devops
+      deploy_port: ${{ vars.DEPLOY_PORT || '22' }}
+
+      # ── Non-sensitive env vars ────────────────────────────────────────────────
+      env_vars: ${{ vars.FE_ADMIN_DASHBOARD_ENV_VARS }}
+
+      # ── App-specific config ───────────────────────────────────────────────────
+      repo:            thdung3/crypto-payment-fe
+      branch:          ${{ github.event.inputs.branch || github.ref_name }}
+      compose:         docker-compose-admin-dashboard.yml
+      service_name:    admin-dashboard
+      remote_env_name: envs/admin-dashboard.env.docker
+    secrets:
+      # ── Sensitive credentials ─────────────────────────────────────────────────
+      SSH_PRIVATE_KEY:   ${{ secrets.SSH_PRIVATE_KEY }}
+      GITHUB_DEPLOY_PAT: ${{ secrets.DEPLOY_PAT }}
+
+      # ── Sensitive env vars ────────────────────────────────────────────────────
+      ENV_SECRETS: ${{ secrets.FE_ADMIN_DASHBOARD_ENV_SECRETS }}
