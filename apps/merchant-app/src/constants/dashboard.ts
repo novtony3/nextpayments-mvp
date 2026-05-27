@@ -12,6 +12,7 @@ import { ROUTES, type Route } from '@/constants/routes';
 export type DashboardIconKey =
   | 'wallet'
   | 'transactions'
+  | 'orders'
   | 'paySettings'
   | 'integrations'
   | 'invoicing'
@@ -31,6 +32,7 @@ export type DashboardNavItem = {
 export const DASHBOARD_NAV: ReadonlyArray<DashboardNavItem> = [
   { key: 'wallet', route: ROUTES.DASHBOARD, icon: 'wallet', backed: true },
   { key: 'transactions', route: ROUTES.TRANSACTIONS, icon: 'transactions', backed: true },
+  { key: 'orders', route: ROUTES.ORDERS, icon: 'orders', backed: true },
   { key: 'paySettings', route: ROUTES.PAY_SETTINGS, icon: 'paySettings', backed: false },
   { key: 'integrations', route: ROUTES.INTEGRATIONS, icon: 'integrations', backed: true },
   { key: 'invoicing', route: ROUTES.INVOICING, icon: 'invoicing', backed: false },

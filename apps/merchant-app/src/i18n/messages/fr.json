@@ -204,6 +204,7 @@
     "nav": {
       "wallet": "Portefeuille",
       "transactions": "Transactions",
+      "orders": "Commandes",
       "paySettings": "Paramètres de paiement",
       "integrations": "Intégrations",
       "invoicing": "Facturation",
@@ -230,6 +231,80 @@
       "receive": "Recevoir",
       "convert": "Convertir",
       "empty": "Aucune crypto ne correspond à votre recherche."
+    },
+    "orderStats": {
+      "title": "Statistiques des commandes",
+      "error": "Impossible de charger les statistiques. Le service est peut-être indisponible — réessayez plus tard.",
+      "cards": {
+        "totalOrders": "Total des commandes",
+        "paidOrders": "Commandes payées",
+        "totalUsdt": "Valeur payée"
+      },
+      "byCoin": {
+        "title": "Payé par crypto",
+        "amount": "{amount} · {count} commandes"
+      },
+      "unpriced": "Conversion USDT manquante pour : {coins}. Les totaux excluent ces cryptos."
+    },
+    "orders": {
+      "title": "Commandes",
+      "statusFilter": "Statut",
+      "status": {
+        "all": "Tous les statuts",
+        "pending": "En attente",
+        "paid": "Payée",
+        "expired": "Expirée",
+        "cancelled": "Annulée"
+      },
+      "columns": {
+        "reference": "ID de commande",
+        "coin": "Crypto",
+        "amount": "Montant",
+        "status": "Statut",
+        "createdAt": "Créée"
+      },
+      "viewDetail": "Voir la commande {reference}",
+      "empty": "Aucune commande pour le moment.",
+      "error": "Impossible de charger les commandes. Le service est peut-être indisponible — réessayez plus tard.",
+      "pagination": {
+        "nav": "Pages de commandes",
+        "prev": "Préc.",
+        "next": "Suiv.",
+        "page": "Page {page}"
+      },
+      "detail": {
+        "eyebrow": "Commande",
+        "back": "Retour aux commandes",
+        "copy": "Copier",
+        "createdAt": "Créée le {date}",
+        "notFound": "La commande {orderId} est introuvable parmi vos commandes récentes.",
+        "error": "Impossible de charger la commande {orderId}. Le service est peut-être indisponible — réessayez plus tard.",
+        "sections": {
+          "payment": "Paiement",
+          "transaction": "Transaction",
+          "ipn": "Livraison IPN",
+          "identity": "Identité"
+        },
+        "fields": {
+          "amount": "Montant",
+          "network": "Réseau",
+          "status": "Statut",
+          "address": "Adresse du portefeuille",
+          "memo": "Mémo",
+          "expiresAt": "Expire le",
+          "paidAt": "Payée le",
+          "transactionHash": "Hash de transaction",
+          "ipnStatus": "Statut IPN",
+          "ipnAttempts": "Tentatives de livraison",
+          "ipnDeliveredAt": "Livrée le",
+          "ipnLastError": "Dernière erreur",
+          "orderId": "ID de commande",
+          "externalOrderId": "ID externe de commande",
+          "integrationId": "ID d'intégration",
+          "description": "Description",
+          "updatedAt": "Dernière mise à jour"
+        }
+      }
     },
     "placeholder": {
       "title": "{section} arrive bientôt",

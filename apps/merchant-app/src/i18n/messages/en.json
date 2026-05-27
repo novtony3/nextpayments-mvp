@@ -204,6 +204,7 @@
     "nav": {
       "wallet": "Wallet",
       "transactions": "Transactions",
+      "orders": "Orders",
       "paySettings": "Pay Settings",
       "integrations": "Integrations",
       "invoicing": "Invoicing",
@@ -230,6 +231,80 @@
       "receive": "Receive",
       "convert": "Convert",
       "empty": "No coins match your search."
+    },
+    "orderStats": {
+      "title": "Order Stats",
+      "error": "Couldn't load order stats. The service may be unavailable — try again shortly.",
+      "cards": {
+        "totalOrders": "Total orders",
+        "paidOrders": "Paid orders",
+        "totalUsdt": "Paid value"
+      },
+      "byCoin": {
+        "title": "Paid by coin",
+        "amount": "{amount} · {count} orders"
+      },
+      "unpriced": "USDT conversion missing for: {coins}. Totals exclude these coins."
+    },
+    "orders": {
+      "title": "Orders",
+      "statusFilter": "Status",
+      "status": {
+        "all": "All statuses",
+        "pending": "Pending",
+        "paid": "Paid",
+        "expired": "Expired",
+        "cancelled": "Cancelled"
+      },
+      "columns": {
+        "reference": "Order ID",
+        "coin": "Coin",
+        "amount": "Amount",
+        "status": "Status",
+        "createdAt": "Created"
+      },
+      "viewDetail": "View order {reference}",
+      "empty": "No orders yet.",
+      "error": "Couldn't load orders. The service may be unavailable — try again shortly.",
+      "pagination": {
+        "nav": "Orders pages",
+        "prev": "Prev",
+        "next": "Next",
+        "page": "Page {page}"
+      },
+      "detail": {
+        "eyebrow": "Order",
+        "back": "Back to orders",
+        "copy": "Copy",
+        "createdAt": "Created on {date}",
+        "notFound": "Order {orderId} was not found in your recent orders.",
+        "error": "Couldn't load order {orderId}. The service may be unavailable — try again shortly.",
+        "sections": {
+          "payment": "Payment",
+          "transaction": "Transaction",
+          "ipn": "IPN delivery",
+          "identity": "Identity"
+        },
+        "fields": {
+          "amount": "Amount",
+          "network": "Network",
+          "status": "Status",
+          "address": "Wallet address",
+          "memo": "Memo",
+          "expiresAt": "Expires at",
+          "paidAt": "Paid at",
+          "transactionHash": "Transaction hash",
+          "ipnStatus": "IPN status",
+          "ipnAttempts": "Delivery attempts",
+          "ipnDeliveredAt": "Delivered at",
+          "ipnLastError": "Last error",
+          "orderId": "Order ID",
+          "externalOrderId": "External order ID",
+          "integrationId": "Integration ID",
+          "description": "Description",
+          "updatedAt": "Last updated"
+        }
+      }
     },
     "placeholder": {
       "title": "{section} is coming soon",
