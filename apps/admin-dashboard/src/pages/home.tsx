@@ -14,9 +14,7 @@ export function Home() {
         <h1 className="text-2xl font-semibold tracking-tight text-[var(--color-text)]">
           {t('home.title')}
         </h1>
-        <p className="mt-1.5 text-sm text-[var(--color-text-muted)]">
-          {t('home.subtitle')}
-        </p>
+        <p className="mt-1.5 text-sm text-[var(--color-text-muted)]">{t('home.subtitle')}</p>
       </header>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -35,9 +33,7 @@ export function Home() {
 
       <section className="overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)]">
         <div className="flex items-center justify-between border-b border-[var(--color-border)] px-5 py-4">
-          <h2 className="text-sm font-medium text-[var(--color-text)]">
-            {t('home.recent.title')}
-          </h2>
+          <h2 className="text-sm font-medium text-[var(--color-text)]">{t('home.recent.title')}</h2>
           <button
             type="button"
             className="text-xs text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-accent)]"

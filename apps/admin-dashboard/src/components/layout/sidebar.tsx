@@ -45,10 +45,7 @@ export function Sidebar() {
               )}
             >
               <Icon
-                className={cn(
-                  'h-[18px] w-[18px] shrink-0',
-                  active && 'text-[var(--color-accent)]',
-                )}
+                className={cn('h-[18px] w-[18px] shrink-0', active && 'text-[var(--color-accent)]')}
                 strokeWidth={1.75}
               />
               {!collapsed && <span>{t(labelKey)}</span>}

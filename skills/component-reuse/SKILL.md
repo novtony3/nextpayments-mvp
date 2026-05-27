@@ -20,6 +20,7 @@ Before writing a single new component, **search what already exists** and use it
   design tokens in `packages/config/tailwind/theme.css`.
 
 Process every time:
+
 1. Grep/scan the locations above for the thing you need (by name and by purpose).
 2. If a component exists → **use it as-is**. Need a variant? Extend it via props
    (`variant`, `intensity`, `color`, `size`, `asChild`) — do **not** fork or copy it.

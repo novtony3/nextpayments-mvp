@@ -26,7 +26,7 @@ export function Topbar() {
         <input
           type="search"
           placeholder={t('common.search')}
-          className="h-10 w-full rounded-xl border border-[var(--color-border-strong)] bg-[color-mix(in_oklab,var(--color-surface)_60%,transparent)] pl-9 pr-4 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-subtle)] backdrop-blur-md transition-colors focus:border-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-soft)]"
+          className="h-10 w-full rounded-xl border border-[var(--color-border-strong)] bg-[color-mix(in_oklab,var(--color-surface)_60%,transparent)] pl-9 pr-4 text-sm text-[var(--color-text)] backdrop-blur-md transition-colors placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-soft)]"
         />
       </div>
 

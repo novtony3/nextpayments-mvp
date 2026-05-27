@@ -15,7 +15,13 @@ export function BrandMark({
 }) {
   return (
     <span className="inline-flex items-center gap-2.5">
-      <svg width={24} height={24} viewBox="0 0 24 24" aria-hidden xmlns="http://www.w3.org/2000/svg">
+      <svg
+        width={24}
+        height={24}
+        viewBox="0 0 24 24"
+        aria-hidden
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <defs>
           <linearGradient id="admin-spark" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#3ed0f1" />
@@ -31,8 +37,7 @@ export function BrandMark({
       </svg>
       {!collapsed && (
         <span className="text-[15px] font-medium tracking-tight text-[var(--color-text)]">
-          {appName}{' '}
-          <span className={cn('text-[var(--color-text-subtle)]')}>{suffix}</span>
+          {appName} <span className={cn('text-[var(--color-text-subtle)]')}>{suffix}</span>
         </span>
       )}
     </span>
