@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { cn } from '@nextpayments/ui/lib/utils';
 
 import { SHOW_VERIFY_BANNER } from '@/constants/dashboard';
+import type { HeaderUser } from '@/lib/auth/types';
 
 import { DashboardSidebar } from './dashboard-sidebar';
 import { DashboardTopbar } from './dashboard-topbar';
@@ -13,8 +14,10 @@ import { VerifyBanner } from './verify-banner';
 
 type DashboardShellProps = {
   children: ReactNode;
-  /** Whether the signed-in account's email is verified (from the layout). */
-  emailVerified: boolean;
+  /** Header identity resolved server-side in the protected layout. Drives the
+   * topbar account menu (correct on first paint, no flash) and the verify
+   * banner gate. */
+  user: HeaderUser | null;
 };
 
 const SIDEBAR_WIDTH = 'w-64';
@@ -25,13 +28,13 @@ const SIDEBAR_WIDTH = 'w-64';
  * top bar. The auth guard stays in the server `(protected)/layout`; this only
  * owns presentation + the mobile drawer state.
  */
-export function DashboardShell({ children, emailVerified }: DashboardShellProps) {
+export function DashboardShell({ children, user }: DashboardShellProps) {
   const t = useTranslations('dashboard');
   const [mobileOpen, setMobileOpen] = useState(false);
 
   // Banner is a feature flag (master switch) AND gated on real account state —
   // hidden once the email is verified.
-  const showVerifyBanner = SHOW_VERIFY_BANNER && !emailVerified;
+  const showVerifyBanner = SHOW_VERIFY_BANNER && !user?.emailVerified;
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -80,7 +83,7 @@ export function DashboardShell({ children, emailVerified }: DashboardShellProps)
         )}
 
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-          <DashboardTopbar onMenuClick={() => setMobileOpen(true)} />
+          <DashboardTopbar user={user} onMenuClick={() => setMobileOpen(true)} />
           <main className="min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
             {children}
           </main>

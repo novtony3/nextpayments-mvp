@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 import { ROUTES } from '@/constants/routes';
 import { redirect } from '@/i18n/routing';
-import { getCurrentUser, isAuthenticated } from '@/lib/auth/session';
+import { getHeaderUser, isAuthenticated } from '@/lib/auth/session';
 import { DashboardShell } from '@/components/dashboard/shell/dashboard-shell';
 
 type ProtectedLayoutProps = {
@@ -16,8 +16,10 @@ type ProtectedLayoutProps = {
  * NOT done here — a layout cannot mutate cookies; the login page performs the
  * explicit refresh when only a refresh cookie remains.
  *
- * Resolves `emailVerified` here (server-side, cookie-authed) and threads it
- * to the shell so the verify banner only shows for unverified accounts.
+ * Resolves the header identity here (server-side, cookie-authed) and threads
+ * it to the shell, so the topbar account menu renders correctly on first
+ * paint (no "Get started" flash on locale switch) and the verify banner only
+ * shows for unverified accounts.
  */
 export default async function ProtectedLayout({ children, params }: ProtectedLayoutProps) {
   const { locale } = await params;
@@ -26,8 +28,7 @@ export default async function ProtectedLayout({ children, params }: ProtectedLay
     redirect({ href: ROUTES.LOGIN, locale });
   }
 
-  const user = await getCurrentUser();
-  const emailVerified = Boolean(user?.emailVerified);
+  const user = await getHeaderUser();
 
-  return <DashboardShell emailVerified={emailVerified}>{children}</DashboardShell>;
+  return <DashboardShell user={user}>{children}</DashboardShell>;
 }

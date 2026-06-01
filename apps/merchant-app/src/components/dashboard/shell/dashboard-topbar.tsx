@@ -8,6 +8,7 @@ import { SelectField } from '@nextpayments/ui/components/select-field';
 
 import { DASHBOARD_NAV, FIAT } from '@/constants/dashboard';
 import { usePathname } from '@/i18n/routing';
+import type { HeaderUser } from '@/lib/auth/types';
 import { AuthControls } from '@/components/auth/auth-controls';
 import { LanguageSwitcher } from '@/components/shared/language-switcher';
 import { ThemeToggle } from '@/components/shared/theme-toggle';
@@ -15,6 +16,8 @@ import { ThemeToggle } from '@/components/shared/theme-toggle';
 import { DASHBOARD_ICONS } from './nav-icons';
 
 type DashboardTopbarProps = {
+  /** Header identity resolved server-side (protected layout → shell). */
+  user: HeaderUser | null;
   /** Opens the mobile navigation drawer. */
   onMenuClick: () => void;
 };
@@ -27,7 +30,7 @@ const DEFAULT_NAV = DASHBOARD_NAV[0]!;
  * controls. Reuses the shared language/theme/auth chrome rather than forking
  * a second copy.
  */
-export function DashboardTopbar({ onMenuClick }: DashboardTopbarProps) {
+export function DashboardTopbar({ user, onMenuClick }: DashboardTopbarProps) {
   const t = useTranslations('dashboard');
   const pathname = usePathname();
 
@@ -67,7 +70,7 @@ export function DashboardTopbar({ onMenuClick }: DashboardTopbarProps) {
           />
           <LanguageSwitcher />
           <ThemeToggle />
-          <AuthControls />
+          <AuthControls user={user} />
         </div>
       </div>
     </header>

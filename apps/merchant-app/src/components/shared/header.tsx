@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { cn } from '@nextpayments/ui/lib/utils';
 
 import { Link } from '@/i18n/routing';
+import type { HeaderUser } from '@/lib/auth/types';
 import { AuthControls } from '@/components/auth/auth-controls';
 import { LanguageSwitcher } from './language-switcher';
 import { Logo } from './logo';
@@ -18,7 +19,13 @@ const NAV_KEYS = ['features', 'coins', 'pricing', 'docs'] as const;
 /** Scroll past this (px) collapses the bar into the floating pill. */
 const SCROLL_COLLAPSE_THRESHOLD_PX = 24;
 
-export function Header() {
+type HeaderProps = {
+  /** Session identity resolved server-side in the marketing layout, so the
+   * auth slot renders correctly on first paint (no flash). */
+  initialUser: HeaderUser | null;
+};
+
+export function Header({ initialUser }: HeaderProps) {
   const t = useTranslations('nav');
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -76,7 +83,7 @@ export function Header() {
         <div className="hidden items-center gap-1 md:flex">
           <LanguageSwitcher />
           <ThemeToggle />
-          <AuthControls />
+          <AuthControls user={initialUser} />
         </div>
 
         <button
@@ -109,7 +116,7 @@ export function Header() {
             <LanguageSwitcher />
             <ThemeToggle />
             <div className="ml-auto">
-              <AuthControls onNavigate={() => setMobileOpen(false)} />
+              <AuthControls user={initialUser} onNavigate={() => setMobileOpen(false)} />
             </div>
           </div>
         </div>
