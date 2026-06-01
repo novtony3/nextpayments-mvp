@@ -70,6 +70,18 @@ pnpm dev
 pnpm dev:merchant
 ```
 
+**Full-stack dev (recommended — needs the backend):** brings up the SSH tunnel
+to the backend, waits for it to answer, then starts the dev server. Use this
+when any page hits the API (login, dashboard, 2FA, affiliate, …) — without the
+tunnel those calls 502.
+
+```bash
+pnpm --filter merchant-app dev:full
+```
+
+Manage the tunnel on its own with `pnpm --filter merchant-app tunnel <up|down|status|wait>`
+(see `scripts/tunnel.sh`). Override host/port via env, e.g. `LOCAL_PORT=13000`.
+
 Open in the browser:
 
 - `http://localhost:5001` → redirects to `http://localhost:5001/en` (default locale)
@@ -252,21 +264,23 @@ Architecture rationale + why each package is split out: see `PLAN.md` section 2.
 
 From the repo root:
 
-| Command               | Effect                                                       |
-| --------------------- | ------------------------------------------------------------ |
-| `pnpm dev`            | Alias for `dev:merchant` (default — runs merchant-app)       |
-| `pnpm dev:merchant`   | Run merchant-app dev only (port 5001, Turbopack)             |
-| `pnpm dev:admin`      | Run admin-dashboard dev only (port 5002, Vite)               |
-| `pnpm dev:all`        | Run **every** workspace app with a `dev` script, in parallel |
-| `pnpm build`          | Build the whole workspace (both apps)                        |
-| `pnpm build:merchant` | Build merchant-app only                                      |
-| `pnpm build:admin`    | Build admin-dashboard only                                   |
-| `pnpm start`          | Alias for `start:merchant` — serve built merchant on :5001   |
-| `pnpm start:merchant` | Serve built merchant-app (`next start`) — :5001              |
-| `pnpm start:admin`    | Serve built admin-dashboard (`vite preview`) — :5002         |
-| `pnpm lint`           | Lint the whole workspace                                     |
-| `pnpm format`         | Prettier-format all source                                   |
-| `pnpm clean`          | Remove `node_modules`, `.next`, `dist` in every package      |
+| Command                                                      | Effect                                                               |
+| ------------------------------------------------------------ | -------------------------------------------------------------------- |
+| `pnpm dev`                                                   | Alias for `dev:merchant` (default — runs merchant-app)               |
+| `pnpm dev:merchant`                                          | Run merchant-app dev only (port 5001, Turbopack)                     |
+| `pnpm --filter merchant-app dev:full`                        | Tunnel up + wait for backend, then run merchant-app dev (full-stack) |
+| `pnpm --filter merchant-app tunnel <up\|down\|status\|wait>` | Manage the SSH tunnel to the backend                                 |
+| `pnpm dev:admin`                                             | Run admin-dashboard dev only (port 5002, Vite)                       |
+| `pnpm dev:all`                                               | Run **every** workspace app with a `dev` script, in parallel         |
+| `pnpm build`                                                 | Build the whole workspace (both apps)                                |
+| `pnpm build:merchant`                                        | Build merchant-app only                                              |
+| `pnpm build:admin`                                           | Build admin-dashboard only                                           |
+| `pnpm start`                                                 | Alias for `start:merchant` — serve built merchant on :5001           |
+| `pnpm start:merchant`                                        | Serve built merchant-app (`next start`) — :5001                      |
+| `pnpm start:admin`                                           | Serve built admin-dashboard (`vite preview`) — :5002                 |
+| `pnpm lint`                                                  | Lint the whole workspace                                             |
+| `pnpm format`                                                | Prettier-format all source                                           |
+| `pnpm clean`                                                 | Remove `node_modules`, `.next`, `dist` in every package              |
 
 ### Run both apps in parallel
 
