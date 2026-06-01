@@ -18,7 +18,9 @@ agents do not decide formatting — Prettier does.
   - `trailingComma: "all"` · `printWidth: 100`
   - plugin: `prettier-plugin-tailwindcss` (auto-sorts Tailwind class lists — do
     not manually reorder `className` utilities; let the plugin do it)
-- **Format before declaring done.** Run from the repo root:
+- **Format before EVERY commit** (not only at task end) — it is step 3 of the
+  output validation gate (**nextpayments-conventions §6**). Skipping it leaves
+  drift a later sweep has to fix. Run from the repo root:
   ```bash
   pnpm format          # prettier --write across the workspace
   ```
@@ -30,8 +32,9 @@ agents do not decide formatting — Prettier does.
   Run both; never disable an ESLint rule to avoid a formatting fix.
 - Generated files, lockfiles, and `*.pen` are not hand-formatted.
 
-## Self-check before finishing
+## Self-check before every commit (and before finishing)
 
-- Did I run `pnpm format` (or verify `prettier --check` is clean) on what I touched?
+- Did I run `pnpm format` (or verify `prettier --check` is clean) on what I touched — for THIS commit?
 - Are Tailwind `className` lists left for the plugin to sort (not hand-ordered)?
 - Untouched `.prettierrc`?
+- Is the rest of the validation gate green too (typecheck, lint, i18n parity)? See nextpayments-conventions §6.
