@@ -7,6 +7,7 @@ import { getMessages, setRequestLocale } from 'next-intl/server';
 
 import '../globals.css';
 
+import { AccentScript } from '@/components/shared/accent-script';
 import { Providers } from '@/components/shared/providers';
 import { routing, type Locale } from '@/i18n/routing';
 
@@ -53,6 +54,8 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
       className={`${GeistSans.variable} ${GeistMono.variable}`}
     >
       <body className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] antialiased">
+        {/* Pre-paint: apply the saved accent from cookie before anything renders. */}
+        <AccentScript />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Providers>{children}</Providers>
         </NextIntlClientProvider>
