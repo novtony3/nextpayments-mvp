@@ -24,6 +24,7 @@ export const API_ROUTES = {
   FUND_WITHDRAW_HISTORY: '/fund/withdraw-history',
   FUND_BALANCE_HISTORY: '/fund/balance-history',
   INTEGRATIONS: '/integrations',
+  ORDERS: '/orders',
 } as const;
 
 export type ApiRoute = (typeof API_ROUTES)[keyof typeof API_ROUTES];
@@ -35,6 +36,9 @@ export type ApiRoute = (typeof API_ROUTES)[keyof typeof API_ROUTES];
 export const apiPath = {
   integration: (id: string): string => `${API_ROUTES.INTEGRATIONS}/${id}`,
   integrationApiKeys: (id: string): string => `${API_ROUTES.INTEGRATIONS}/${id}/api-keys`,
+  /** JWT-protected dashboard endpoints (no HMAC needed — uses the session). */
+  ordersMe: (): string => `${API_ROUTES.ORDERS}/me`,
+  ordersMeStats: (): string => `${API_ROUTES.ORDERS}/me/stats`,
 } as const;
 
 /** Env var (server-only) that points the Next rewrite at the tunnel. */

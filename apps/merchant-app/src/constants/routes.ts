@@ -11,6 +11,7 @@ export const ROUTES = {
   /** Wallet / Balances — the protected dashboard landing. */
   DASHBOARD: '/dashboard',
   TRANSACTIONS: '/transactions',
+  ORDERS: '/orders',
   PAY_SETTINGS: '/pay-settings',
   INTEGRATIONS: '/integrations',
   INVOICING: '/invoicing',

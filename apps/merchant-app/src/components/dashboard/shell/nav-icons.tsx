@@ -3,6 +3,7 @@ import {
   Code2,
   FileText,
   LifeBuoy,
+  ReceiptText,
   ScanLine,
   Settings2,
   Wallet,
@@ -19,6 +20,7 @@ import type { DashboardIconKey } from '@/constants/dashboard';
 export const DASHBOARD_ICONS: Record<DashboardIconKey, LucideIcon> = {
   wallet: Wallet,
   transactions: ArrowLeftRight,
+  orders: ReceiptText,
   paySettings: Settings2,
   integrations: Code2,
   invoicing: FileText,
