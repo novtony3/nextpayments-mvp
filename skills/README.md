@@ -39,6 +39,7 @@ parseable by any other agent or script.
 | `react-nextjs-best-practices` | Writing React 19 / Next.js 15 App Router code                                                                                                |
 | `code-formatting`             | Before every commit (gate step 3) and any file change — Prettier-format to the repo config; never hand-format                                |
 | `type-safety`                 | Writing/editing any TS/TSX — full explicit types/interfaces, no `any`, no unsafe casts                                                       |
+| `modern-javascript`           | Writing/editing any JS/TS/TSX — ES2015+ idioms only, no legacy (`var`, prototype/IIFE, `.then` chains), no outdated/unnecessary classes      |
 | `git-teamwork`                | Before any change/commit/push — feature-branch only, branch naming, fresh main; commit only when the validation gate is green                |
 
 ## Wiring an agent to these skills (dynamic link)
