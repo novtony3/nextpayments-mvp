@@ -9,6 +9,18 @@
 export const PASSWORD_MIN_LENGTH = 8;
 
 /**
+ * Backend login `error.code`s that warrant a specific (non-generic) message
+ * instead of the catch-all "invalid email or password". `USER006` = the email
+ * isn't registered; `USER007` = the account exists but its email is still
+ * unverified (the backend blocks login until verification, even though
+ * register itself auto-signs-in — see the register flow note in actions.ts).
+ */
+export const LOGIN_ERROR_CODE = {
+  NO_ACCOUNT: 'USER006',
+  EMAIL_NOT_VERIFIED: 'USER007',
+} as const;
+
+/**
  * 2FA TOTP code length the backend emits via Google Authenticator (RFC 6238,
  * 6-digit default). Drives input validation, `maxlength`, and the regex below.
  * Never inline a `6` at a call site.

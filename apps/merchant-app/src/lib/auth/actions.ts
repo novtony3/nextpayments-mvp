@@ -1,5 +1,6 @@
 'use server';
 
+import { LOGIN_ERROR_CODE } from '@/constants/auth';
 import { TWO_FA_LOGIN_CODES } from '@/constants/security';
 
 import { backendLogin, backendLogout, backendRefresh, backendRegister } from './backend';
@@ -49,6 +50,15 @@ export async function loginAction(input: unknown): Promise<LoginActionResult> {
       if (err.code && TWO_FA_LOGIN_CODES.has(err.code)) {
         return { ok: false, reason: 'twoFaRequired' };
       }
+      // Email exists but isn't verified — distinct from bad credentials so the
+      // form can prompt the user to verify rather than blame the password.
+      if (err.code === LOGIN_ERROR_CODE.EMAIL_NOT_VERIFIED) {
+        return { ok: false, reason: 'emailNotVerified' };
+      }
+      // Email isn't registered at all.
+      if (err.code === LOGIN_ERROR_CODE.NO_ACCOUNT) {
+        return { ok: false, reason: 'noAccount' };
+      }
       return { ok: false, reason: 'invalid' };
     }
     // Transport failure (tunnel down), 5xx, or unexpected response shape.
@@ -63,11 +73,12 @@ export async function registerAction(input: unknown): Promise<RegisterActionResu
   }
 
   try {
-    const session = await backendRegister(parsed.data);
-    // Backend issues an access token on register → user is signed in.
-    await writeSession(session);
-    const displayName = session.user.name ?? session.user.userName ?? parsed.data.userName;
-    return { ok: true, displayName };
+    // Backend issues a valid access token on register, but the account is
+    // unverified and a later login is blocked until verification (USER007).
+    // We intentionally DO NOT persist that token — instead the form routes to
+    // a "verify your email" step, keeping register and login symmetric.
+    await backendRegister(parsed.data);
+    return { ok: true, email: parsed.data.email };
   } catch (err) {
     if (err instanceof AuthError) {
       return {

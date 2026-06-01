@@ -66,6 +66,38 @@ export function LoginForm() {
     router.refresh(); // let server components observe the new session cookie
   };
 
+  /**
+   * Surface a failed login the same way from either step. Returns the field a
+   * caller may want to refocus on (email-related issues) so the 2FA step can
+   * drop back to the credentials step when appropriate.
+   */
+  const showLoginFailure = (
+    reason: 'invalid' | 'error' | 'emailNotVerified' | 'noAccount',
+  ): void => {
+    if (reason === 'error') {
+      // Transport failure (tunnel down), 5xx, or unexpected response shape.
+      toast.error(t('errors.serverError'));
+      return;
+    }
+    if (reason === 'emailNotVerified') {
+      const message = t('errors.emailNotVerified');
+      setError('email', { message });
+      toast.error(message);
+      return;
+    }
+    if (reason === 'noAccount') {
+      const message = t('errors.noAccount');
+      setError('email', { message });
+      toast.error(message);
+      return;
+    }
+    // reason === 'invalid'
+    const message = t('errors.invalidCredentials');
+    setError('email', { message });
+    setError('password', { message });
+    toast.error(message);
+  };
+
   const onCredentialsSubmit = async (values: LoginValues) => {
     const result = await loginAction({ ...values, token2fa: '' });
 
@@ -81,16 +113,7 @@ export function LoginForm() {
       return;
     }
 
-    if (result.reason === 'invalid') {
-      const message = t('errors.invalidCredentials');
-      setError('email', { message });
-      setError('password', { message });
-      toast.error(message);
-      return;
-    }
-
-    // Transport failure (tunnel down), 5xx, or unexpected response shape.
-    toast.error(t('errors.serverError'));
+    showLoginFailure(result.reason);
   };
 
   const onTwoFaSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -114,17 +137,11 @@ export function LoginForm() {
         return;
       }
 
-      if (result.reason === 'invalid') {
-        const message = t('errors.invalidCredentials');
-        setError('email', { message });
-        setError('password', { message });
-        toast.error(message);
-        setStep('credentials');
-        resetField('password');
-        return;
-      }
-
-      toast.error(t('errors.serverError'));
+      // Any other failure invalidates the whole attempt — drop back to step 1
+      // (clearing the password) and surface the reason there.
+      setStep('credentials');
+      resetField('password');
+      showLoginFailure(result.reason);
     } finally {
       setTwoFaSubmitting(false);
     }

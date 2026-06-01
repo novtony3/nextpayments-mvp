@@ -165,7 +165,9 @@
         "passwordTooShort": "Password must be at least 8 characters",
         "invalidCredentials": "Invalid email or password",
         "serverError": "Something went wrong. Please try again.",
-        "twoFaCodeInvalid": "Enter the 6-digit code from your authenticator app."
+        "twoFaCodeInvalid": "Enter the 6-digit code from your authenticator app.",
+        "emailNotVerified": "This email isn't verified yet. Check your inbox for the verification link.",
+        "noAccount": "No account found for this email. Sign up to get started."
       },
       "twoFaPrompt": "Enter the 6-digit code from your authenticator app to finish signing in.",
       "twoFaCode": "Authentication code",
@@ -200,6 +202,13 @@
         "confirmRequired": "Please confirm your password",
         "passwordMismatch": "Passwords do not match",
         "serverError": "Something went wrong. Please try again."
+      },
+      "verify": {
+        "toast": "Account created. Verify your email to sign in.",
+        "title": "Check your email",
+        "body": "We sent a verification link to {email}. Click it to activate your account.",
+        "hint": "Didn't get it? Check your spam folder.",
+        "goToLogin": "Go to sign in"
       }
     },
     "logout": {

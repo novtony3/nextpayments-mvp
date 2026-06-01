@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { MailCheck } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
@@ -9,7 +10,7 @@ import { z } from 'zod';
 
 import { Button } from '@nextpayments/ui/components/button';
 
-import { useRouter } from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
 import { ROUTES } from '@/constants/routes';
 import { AUTH_FIELD_PLACEHOLDERS, PASSWORD_MIN_LENGTH } from '@/constants/auth';
 import { registerAction } from '@/lib/auth/actions';
@@ -18,8 +19,9 @@ import { PasswordToggle } from '@/components/auth/password-toggle';
 
 export function RegisterForm() {
   const t = useTranslations('auth.register');
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  // Set once register succeeds → swaps the form for the "verify email" panel.
+  const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
 
   // Schema built inside the component so validation messages follow the locale.
   const schema = z
@@ -62,10 +64,11 @@ export function RegisterForm() {
     });
 
     if (result.ok) {
-      // Backend signs the user in on register (sets the session cookie).
-      toast.success(t('success', { name: result.displayName }));
-      router.push(ROUTES.HOME);
-      router.refresh(); // let server components observe the new session cookie
+      // No auto-login: the account is unverified and a later login is blocked
+      // until verification, so we show the "check your email" step instead of
+      // dropping the user into the dashboard with an unverified session.
+      toast.success(t('verify.toast'));
+      setSubmittedEmail(result.email);
       return;
     }
 
@@ -79,6 +82,26 @@ export function RegisterForm() {
     // Unexpected validation rejection, transport failure, or 5xx.
     toast.error(t('errors.serverError'));
   };
+
+  if (submittedEmail) {
+    return (
+      <div className="flex flex-col items-center gap-5 text-center">
+        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-accent-soft)] text-[var(--color-accent)]">
+          <MailCheck className="h-7 w-7" aria-hidden="true" />
+        </span>
+        <div className="flex flex-col gap-2">
+          <h2 className="text-lg font-medium text-[var(--color-text)]">{t('verify.title')}</h2>
+          <p className="text-sm text-[var(--color-text-muted)]">
+            {t('verify.body', { email: submittedEmail })}
+          </p>
+          <p className="text-xs text-[var(--color-text-subtle)]">{t('verify.hint')}</p>
+        </div>
+        <Button asChild variant="primary" size="lg" fullWidth>
+          <Link href={ROUTES.LOGIN}>{t('verify.goToLogin')}</Link>
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
