@@ -158,10 +158,10 @@ export function TwoFaCard({ initialEnabled }: TwoFaCardProps) {
   // step === 'showSecret' OR 'confirm' — both show the QR/secret and the form.
   return (
     <SecurityCard title={t('title')} description={t('descriptionScan')} badge={badge}>
-      <div className="grid gap-5 sm:grid-cols-[auto_1fr]">
-        <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col gap-6 rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-fill)] p-5 sm:flex-row sm:items-center sm:gap-7">
+        <div className="flex shrink-0 flex-col items-center gap-2.5">
           {otpauthUri && (
-            <div className="rounded-xl bg-white p-3">
+            <div className="rounded-2xl bg-white p-4 shadow-[0_4px_20px_-6px_rgba(0,0,0,0.45)]">
               <QRCodeSVG
                 value={otpauthUri}
                 size={QR_SIZE_PX}
@@ -170,18 +170,16 @@ export function TwoFaCard({ initialEnabled }: TwoFaCardProps) {
               />
             </div>
           )}
-          <p className="text-xs text-[var(--color-text-muted)]">{t('qrCaption')}</p>
+          <span className="text-xs text-[var(--color-text-subtle)]">{t('qrCaption')}</span>
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="flex min-w-0 flex-1 flex-col gap-2.5">
           <p className="text-sm text-[var(--color-text-muted)]">{t('secretInstruction')}</p>
-          <div className="flex flex-col gap-1">
-            <span className="text-xs uppercase tracking-wide text-[var(--color-text-subtle)]">
-              {t('secretLabel')}
-            </span>
-            <code className="break-all rounded-lg border border-[var(--glass-border)] bg-[var(--glass-fill)] px-3 py-2 font-mono text-sm text-[var(--color-text)]">
-              {secret}
-            </code>
-          </div>
+          <span className="text-xs uppercase tracking-wide text-[var(--color-text-subtle)]">
+            {t('secretLabel')}
+          </span>
+          <code className="block break-all rounded-lg border border-[var(--glass-border)] bg-[var(--color-surface)] px-3 py-2.5 font-mono text-sm tracking-[0.08em] text-[var(--color-text)]">
+            {secret}
+          </code>
         </div>
       </div>
 

@@ -579,8 +579,11 @@
           "newRequired": "Enter a new password.",
           "newTooShort": "New password must be at least 8 characters.",
           "invalid": "Could not change the password.",
-          "server": "Something went wrong. Please try again."
-        }
+          "server": "Something went wrong. Please try again.",
+          "confirmRequired": "Confirm your new password.",
+          "mismatch": "Passwords don't match."
+        },
+        "confirmPasswordLabel": "Confirm new password"
       },
       "twoFa": {
         "title": "Two-factor authentication",

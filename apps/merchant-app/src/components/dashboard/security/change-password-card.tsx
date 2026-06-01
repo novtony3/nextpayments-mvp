@@ -35,14 +35,21 @@ export function ChangePasswordCard() {
   const tErr = useTranslations('paySettings.security.errors');
   const [showOld, setShowOld] = useState(false);
   const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
-  const schema = z.object({
-    oldPassword: z.string().min(1, { message: t('errors.oldRequired') }),
-    password: z
-      .string()
-      .min(1, { message: t('errors.newRequired') })
-      .min(PASSWORD_MIN_LENGTH, { message: t('errors.newTooShort') }),
-  });
+  const schema = z
+    .object({
+      oldPassword: z.string().min(1, { message: t('errors.oldRequired') }),
+      password: z
+        .string()
+        .min(1, { message: t('errors.newRequired') })
+        .min(PASSWORD_MIN_LENGTH, { message: t('errors.newTooShort') }),
+      confirmPassword: z.string().min(1, { message: t('errors.confirmRequired') }),
+    })
+    .refine((v) => v.password === v.confirmPassword, {
+      path: ['confirmPassword'],
+      message: t('errors.mismatch'),
+    });
 
   type Values = z.infer<typeof schema>;
 
@@ -56,14 +63,19 @@ export function ChangePasswordCard() {
     resolver: zodResolver(schema),
     mode: 'onBlur',
     reValidateMode: 'onChange',
-    defaultValues: { oldPassword: '', password: '' },
+    defaultValues: { oldPassword: '', password: '', confirmPassword: '' },
   });
 
   const onSubmit = async (values: Values) => {
-    const result = await changePasswordAction(values);
+    // confirmPassword is a client-only guard — the backend only needs the
+    // current + new password.
+    const result = await changePasswordAction({
+      oldPassword: values.oldPassword,
+      password: values.password,
+    });
     if (result.ok) {
       toast.success(t('success'));
-      reset({ oldPassword: '', password: '' });
+      reset({ oldPassword: '', password: '', confirmPassword: '' });
       return;
     }
     if (result.reason === 'invalid') {
@@ -120,6 +132,24 @@ export function ChangePasswordCard() {
             />
           }
           {...register('password')}
+        />
+
+        <TextField
+          id="confirmPassword"
+          type={showConfirm ? 'text' : 'password'}
+          autoComplete="new-password"
+          label={t('confirmPasswordLabel')}
+          placeholder={AUTH_FIELD_PLACEHOLDERS.PASSWORD}
+          error={errors.confirmPassword?.message}
+          trailing={
+            <PasswordToggle
+              shown={showConfirm}
+              onToggle={() => setShowConfirm((v) => !v)}
+              labelShow={t('showPassword')}
+              labelHide={t('hidePassword')}
+            />
+          }
+          {...register('confirmPassword')}
         />
 
         <div className="flex justify-end">
