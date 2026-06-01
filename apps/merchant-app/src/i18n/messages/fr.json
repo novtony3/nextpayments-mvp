@@ -641,6 +641,21 @@
       },
       "pageTitle": "Sécurité du compte",
       "pageSubtitle": "Protégez votre compte avec un mot de passe robuste et l'authentification à deux facteurs."
+    },
+    "appearance": {
+      "title": "Apparence",
+      "description": "Choisissez une couleur d'accent pour votre tableau de bord. Enregistrée sur cet appareil.",
+      "colorLabel": "Couleur d'accent",
+      "colors": {
+        "blue": "Bleu",
+        "violet": "Violet",
+        "emerald": "Émeraude",
+        "rose": "Rose",
+        "amber": "Ambre",
+        "cyan": "Cyan",
+        "indigo": "Indigo",
+        "teal": "Sarcelle"
+      }
     }
   },
   "affiliate": {

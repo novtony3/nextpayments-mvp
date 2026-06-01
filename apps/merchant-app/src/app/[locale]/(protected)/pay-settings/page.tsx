@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
+import { AppearanceCard } from '@/components/dashboard/security/appearance-card';
 import { ChangePasswordCard } from '@/components/dashboard/security/change-password-card';
 import { EmailVerificationCard } from '@/components/dashboard/security/email-verification-card';
 import { TwoFaCard } from '@/components/dashboard/security/two-fa-card';
@@ -36,10 +37,8 @@ export default async function PaySettingsPage({ params }: PaySettingsPageProps) 
 
       <ChangePasswordCard />
       <TwoFaCard initialEnabled={state?.gaEnabled ?? false} />
-      <EmailVerificationCard
-        verified={state?.emailVerified ?? false}
-        email={state?.email ?? ''}
-      />
+      <EmailVerificationCard verified={state?.emailVerified ?? false} email={state?.email ?? ''} />
+      <AppearanceCard />
     </div>
   );
 }

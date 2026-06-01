@@ -641,6 +641,21 @@
       },
       "pageTitle": "Account security",
       "pageSubtitle": "Protect your account with a strong password and two-factor authentication."
+    },
+    "appearance": {
+      "title": "Appearance",
+      "description": "Pick an accent color for your dashboard. Saved on this device.",
+      "colorLabel": "Accent color",
+      "colors": {
+        "blue": "Blue",
+        "violet": "Violet",
+        "emerald": "Emerald",
+        "rose": "Rose",
+        "amber": "Amber",
+        "cyan": "Cyan",
+        "indigo": "Indigo",
+        "teal": "Teal"
+      }
     }
   },
   "affiliate": {
