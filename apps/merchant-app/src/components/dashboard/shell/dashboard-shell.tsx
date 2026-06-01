@@ -13,19 +13,25 @@ import { VerifyBanner } from './verify-banner';
 
 type DashboardShellProps = {
   children: ReactNode;
+  /** Whether the signed-in account's email is verified (from the layout). */
+  emailVerified: boolean;
 };
 
 const SIDEBAR_WIDTH = 'w-64';
 
 /**
- * Dashboard frame: optional verify banner, a persistent sidebar (static from
- * `lg`, a slide-in drawer below it), and the top bar. The auth guard stays in
- * the server `(protected)/layout`; this only owns presentation + the mobile
- * drawer state.
+ * Dashboard frame: a verify banner (only for unverified accounts), a
+ * persistent sidebar (static from `lg`, a slide-in drawer below it), and the
+ * top bar. The auth guard stays in the server `(protected)/layout`; this only
+ * owns presentation + the mobile drawer state.
  */
-export function DashboardShell({ children }: DashboardShellProps) {
+export function DashboardShell({ children, emailVerified }: DashboardShellProps) {
   const t = useTranslations('dashboard');
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Banner is a feature flag (master switch) AND gated on real account state —
+  // hidden once the email is verified.
+  const showVerifyBanner = SHOW_VERIFY_BANNER && !emailVerified;
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -38,7 +44,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
 
   return (
     <div className="flex h-dvh flex-col overflow-hidden bg-[var(--color-bg)]">
-      {SHOW_VERIFY_BANNER && (
+      {showVerifyBanner && (
         <div className="shrink-0">
           <VerifyBanner />
         </div>

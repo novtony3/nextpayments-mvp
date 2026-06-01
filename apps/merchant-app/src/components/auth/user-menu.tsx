@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronDown, LayoutDashboard, LogOut } from 'lucide-react';
+import { BadgeCheck, ChevronDown, LayoutDashboard, LogOut, ShieldAlert } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useId, useRef, useState, useTransition } from 'react';
 
@@ -25,6 +25,7 @@ type UserMenuProps = {
  */
 export function UserMenu({ user, onNavigate }: UserMenuProps) {
   const t = useTranslations('nav');
+  const tAccount = useTranslations('auth.account');
   const tLogout = useTranslations('auth.logout');
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -36,6 +37,9 @@ export function UserMenu({ user, onNavigate }: UserMenuProps) {
   const firstItemRef = useRef<HTMLAnchorElement>(null);
 
   const initial = user.displayName.charAt(0).toUpperCase();
+  const verifiedLabel = user.emailVerified
+    ? tAccount('verifiedBadge')
+    : tAccount('unverifiedBadge');
 
   const close = useCallback((restoreFocus: boolean) => {
     setOpen(false);
@@ -77,10 +81,11 @@ export function UserMenu({ user, onNavigate }: UserMenuProps) {
         className="gap-2 px-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
         leftIcon={
           <span
-            aria-hidden="true"
-            className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-accent-soft)] text-[11px] font-semibold text-[var(--color-accent)]"
+            className="relative flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-accent-soft)] text-[11px] font-semibold text-[var(--color-accent)]"
+            title={verifiedLabel}
           >
-            {initial}
+            <span aria-hidden="true">{initial}</span>
+            <VerifiedBadgeIcon verified={user.emailVerified} label={verifiedLabel} />
           </span>
         }
         rightIcon={
@@ -111,12 +116,15 @@ export function UserMenu({ user, onNavigate }: UserMenuProps) {
           }}
           className="absolute right-0 top-[calc(100%+0.5rem)] z-50 min-w-[14rem] overflow-hidden rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-fill-strong)] p-1 shadow-[0_16px_48px_-16px_rgba(0,0,0,0.5)] backdrop-blur-2xl"
         >
-          <p
-            className="truncate px-3 py-2 text-xs text-[var(--color-text-subtle)]"
-            title={user.email}
-          >
-            {user.email}
-          </p>
+          <div className="flex flex-col gap-1 px-3 py-2">
+            <p
+              className="truncate text-xs text-[var(--color-text-subtle)]"
+              title={user.email}
+            >
+              {user.email}
+            </p>
+            <VerifiedRow verified={user.emailVerified} label={verifiedLabel} />
+          </div>
           <div className="my-1 h-px bg-[var(--glass-border)]" role="separator" />
 
           <Link
@@ -146,5 +154,51 @@ export function UserMenu({ user, onNavigate }: UserMenuProps) {
         </div>
       )}
     </div>
+  );
+}
+
+type VerifiedProps = { verified: boolean; label: string };
+
+/**
+ * Small badge pinned to the bottom-right corner of the avatar circle.
+ * - verified → green check on a bg that matches the surface (so the badge
+ *   visually punches through the avatar edge)
+ * - unverified → amber shield-alert as a "needs attention" cue
+ *
+ * The label drives `aria-label` for screen readers; the visual icon is
+ * hidden from the AT tree to avoid duplicate announcement.
+ */
+function VerifiedBadgeIcon({ verified, label }: VerifiedProps) {
+  const Icon = verified ? BadgeCheck : ShieldAlert;
+  return (
+    <span
+      role="img"
+      aria-label={label}
+      className={cn(
+        'absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full',
+        'ring-2 ring-[var(--color-bg)]',
+        verified
+          ? 'bg-[var(--color-success)] text-[var(--color-bg)]'
+          : 'bg-[var(--color-warning)] text-[var(--color-bg)]',
+      )}
+    >
+      <Icon className="h-2.5 w-2.5" strokeWidth={3} aria-hidden="true" />
+    </span>
+  );
+}
+
+/** Inline row inside the dropdown that mirrors the avatar's badge state. */
+function VerifiedRow({ verified, label }: VerifiedProps) {
+  const Icon = verified ? BadgeCheck : ShieldAlert;
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center gap-1.5 text-[11px] font-medium',
+        verified ? 'text-[var(--color-success)]' : 'text-[var(--color-warning)]',
+      )}
+    >
+      <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+      {label}
+    </span>
   );
 }

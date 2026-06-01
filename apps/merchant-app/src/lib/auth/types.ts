@@ -66,6 +66,12 @@ const userSchema = z
     userName: z.string().optional(),
     name: z.string().optional(),
     email: z.string().optional(),
+    /** Account lifecycle (`pending` until verified, then `active`). */
+    state: z.string().optional(),
+    /** True once the verification email link has been used. */
+    emailVerified: z.boolean().optional(),
+    /** True once 2FA (Google Authenticator) is enabled on the account. */
+    gaEnabled: z.boolean().optional(),
   })
   .passthrough();
 
@@ -86,10 +92,12 @@ export const meResponseSchema = z.object({ data: z.object({ user: userSchema }) 
 /**
  * Minimal, serializable identity for the header (Server Action → client).
  * Backend only reliably returns `email`; `displayName` is derived.
+ * `emailVerified` drives the verified badge overlaid on the avatar.
  */
 export interface HeaderUser {
   email: string;
   displayName: string;
+  emailVerified: boolean;
 }
 
 /** Register success: backend issues an accessToken but NO refreshToken. */
@@ -110,9 +118,14 @@ export type RegisterSession = z.infer<typeof registerResponseSchema>['data'];
  * Serializable results the auth Server Actions return to the client forms.
  * `reason` keeps the i18n decision on the client (locale-aware messages).
  */
+/**
+ * `twoFaRequired` is surfaced when the backend rejects a login with a
+ * 2FA-related error code (see {@link TWO_FA_LOGIN_CODES}). The form flips to
+ * step 2 (code input) and re-submits with `token2fa` filled.
+ */
 export type LoginActionResult =
   | { ok: true; displayName: string }
-  | { ok: false; reason: 'invalid' | 'error' };
+  | { ok: false; reason: 'invalid' | 'error' | 'twoFaRequired' };
 
 export type RegisterActionResult =
   | { ok: true; displayName: string }

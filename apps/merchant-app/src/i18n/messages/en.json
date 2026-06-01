@@ -164,8 +164,15 @@
         "passwordRequired": "Password is required",
         "passwordTooShort": "Password must be at least 8 characters",
         "invalidCredentials": "Invalid email or password",
-        "serverError": "Something went wrong. Please try again."
-      }
+        "serverError": "Something went wrong. Please try again.",
+        "twoFaCodeInvalid": "Enter the 6-digit code from your authenticator app."
+      },
+      "twoFaPrompt": "Enter the 6-digit code from your authenticator app to finish signing in.",
+      "twoFaCode": "Authentication code",
+      "twoFaCodePlaceholder": "123456",
+      "twoFaSubmit": "Verify",
+      "twoFaSubmitting": "Verifying...",
+      "twoFaCancel": "Back"
     },
     "register": {
       "title": "Create your account",
@@ -198,6 +205,10 @@
     "logout": {
       "button": "Log out",
       "success": "Signed out"
+    },
+    "account": {
+      "verifiedBadge": "Email verified",
+      "unverifiedBadge": "Email not verified"
     }
   },
   "dashboard": {
@@ -205,6 +216,7 @@
       "wallet": "Wallet",
       "transactions": "Transactions",
       "orders": "Orders",
+      "affiliate": "Affiliate",
       "paySettings": "Pay Settings",
       "integrations": "Integrations",
       "invoicing": "Invoicing",
@@ -540,5 +552,124 @@
     "receipt": "STATUS 404 · CONFIRMATIONS 0 · NEVER MINED",
     "ctaHome": "Back to home",
     "ctaDashboard": "Go to dashboard"
+  },
+  "paySettings": {
+    "security": {
+      "changePassword": {
+        "title": "Change password",
+        "description": "Pick a long, unique password you do not reuse elsewhere.",
+        "oldPasswordLabel": "Current password",
+        "newPasswordLabel": "New password",
+        "submit": "Update password",
+        "submitting": "Updating...",
+        "success": "Password updated.",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
+        "errors": {
+          "oldRequired": "Enter your current password.",
+          "newRequired": "Enter a new password.",
+          "newTooShort": "New password must be at least 8 characters.",
+          "invalid": "Could not change the password.",
+          "server": "Something went wrong. Please try again."
+        }
+      },
+      "twoFa": {
+        "title": "Two-factor authentication",
+        "descriptionDisabled": "Add a second step at sign-in using Google Authenticator, 1Password, Authy or any compatible app.",
+        "descriptionEnabled": "Two-factor authentication is on. You will be asked for a code every time you sign in.",
+        "descriptionScan": "Scan the QR code with your authenticator app, then enter the 6-digit code it shows.",
+        "badgeEnabled": "Enabled",
+        "badgeDisabled": "Disabled",
+        "enableCta": "Enable 2FA",
+        "enableStarting": "Starting...",
+        "enableSubmit": "Turn on 2FA",
+        "enableSubmitting": "Turning on...",
+        "enableSuccess": "Two-factor authentication is now enabled.",
+        "alreadyEnabled": "Two-factor authentication is already on for this account.",
+        "disableCta": "Disable 2FA",
+        "disableSubmit": "Turn off 2FA",
+        "disableSubmitting": "Turning off...",
+        "disableSuccess": "Two-factor authentication is now disabled.",
+        "passwordLabel": "Current password",
+        "codeLabel": "Authentication code",
+        "codePlaceholder": "123456",
+        "cancel": "Cancel",
+        "secretInstruction": "Can't scan? Enter this secret manually into your authenticator app.",
+        "secretLabel": "Secret",
+        "qrCaption": "Scan with your authenticator app",
+        "qrAlt": "QR code containing the 2FA setup secret",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
+        "errors": {
+          "passwordRequired": "Enter your password.",
+          "passwordTooShort": "Password must be at least 8 characters.",
+          "codeRequired": "Enter the 6-digit code.",
+          "codeInvalid": "Enter the 6-digit code from your authenticator app.",
+          "setupFailed": "Could not start 2FA setup. Please try again.",
+          "server": "Something went wrong. Please try again."
+        }
+      },
+      "emailVerification": {
+        "title": "Email verification",
+        "descriptionVerified": "Your email address has been verified.",
+        "descriptionUnverified": "Verify your email address to unlock withdrawals and account recovery.",
+        "badgeVerified": "Verified",
+        "badgeUnverified": "Not verified",
+        "emailLabel": "Account email",
+        "emailUnknown": "Unknown",
+        "resendHint": "We'll wire up the resend flow when the verify-email and forgot-password routes ship."
+      },
+      "errors": {
+        "wrongPassword": "Password is incorrect.",
+        "wrongOldPassword": "Current password is incorrect.",
+        "invalid2faCode": "That code is not valid. Try the latest one from your authenticator app.",
+        "twoFaAlreadyEnabled": "Two-factor authentication is already on for this account.",
+        "passwordTooShort": "Password must be at least 8 characters.",
+        "emailNotVerified": "Verify your email address before continuing."
+      },
+      "pageTitle": "Account security",
+      "pageSubtitle": "Protect your account with a strong password and two-factor authentication."
+    }
+  },
+  "affiliate": {
+    "pageTitle": "Affiliate program",
+    "pageSubtitle": "Track the merchants you've referred and the commissions earned on their activity.",
+    "totals": {
+      "title": "Total commissions",
+      "empty": "No commissions yet — they will appear here as your downline transacts.",
+      "count": "{count} payments",
+      "error": "Couldn't load totals. Check the tunnel and refresh."
+    },
+    "downline": {
+      "title": "Downline",
+      "description": "Users who joined through your referral link.",
+      "levelFilter": "Level",
+      "allLevels": "All",
+      "empty": "No downline at this level yet.",
+      "error": "Couldn't load the downline. Try again in a moment.",
+      "headers": {
+        "email": "Email",
+        "level": "Level",
+        "joined": "Joined"
+      }
+    },
+    "commissions": {
+      "title": "Commissions",
+      "description": "Each commission credited to your wallet.",
+      "empty": "No commissions yet.",
+      "error": "Couldn't load commissions. Try again in a moment.",
+      "headers": {
+        "date": "Date",
+        "coin": "Coin",
+        "amount": "Amount",
+        "level": "Level",
+        "from": "From"
+      }
+    },
+    "pager": {
+      "label": "Page {page} of {totalPages}",
+      "previous": "Previous",
+      "next": "Next"
+    }
   }
 }

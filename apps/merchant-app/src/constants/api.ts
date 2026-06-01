@@ -20,11 +20,21 @@ export const API_ROUTES = {
   USER_REFRESH: '/user/refresh-token',
   USER_LOGOUT: '/user/logout',
   USER_ME: '/user/me',
+  USER_CHANGE_PASSWORD: '/user/change-password',
+  USER_FORGOT_PASSWORD: '/user/forgot-password',
+  USER_RESET_PASSWORD: '/user/reset-password',
+  USER_VERIFY_EMAIL: '/user/verify-email',
+  USER_GET_2FA_KEY: '/user/get-2fa-key',
+  USER_ENABLE_2FA: '/user/enable-2fa',
+  USER_DISABLE_2FA: '/user/disable-2fa',
   FUND_DEPOSIT_HISTORY: '/fund/deposit-history',
   FUND_WITHDRAW_HISTORY: '/fund/withdraw-history',
   FUND_BALANCE_HISTORY: '/fund/balance-history',
   INTEGRATIONS: '/integrations',
   ORDERS: '/orders',
+  AFFILIATE_TOTALS: '/affiliate/totals',
+  AFFILIATE_DOWNLINE: '/affiliate/downline',
+  AFFILIATE_COMMISSIONS: '/affiliate/commissions',
 } as const;
 
 export type ApiRoute = (typeof API_ROUTES)[keyof typeof API_ROUTES];

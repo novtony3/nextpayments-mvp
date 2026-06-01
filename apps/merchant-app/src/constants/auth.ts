@@ -9,6 +9,23 @@
 export const PASSWORD_MIN_LENGTH = 8;
 
 /**
+ * 2FA TOTP code length the backend emits via Google Authenticator (RFC 6238,
+ * 6-digit default). Drives input validation, `maxlength`, and the regex below.
+ * Never inline a `6` at a call site.
+ */
+export const TWO_FA_CODE_LENGTH = 6 as const;
+
+/** Strict numeric pattern for the 6-digit TOTP code (shared by client form +
+ * Server Action schema). */
+export const TWO_FA_CODE_PATTERN = /^\d{6}$/;
+
+/**
+ * Issuer label encoded into the `otpauth://` URI shown in the QR code.
+ * Authenticator apps group accounts under this string — keep it stable.
+ */
+export const TWO_FA_ISSUER = 'Nextpayments' as const;
+
+/**
  * Simulated network latency (ms) for the UI-only phase, so loading states are
  * visible. Replace with real requests when the backend lands.
  */

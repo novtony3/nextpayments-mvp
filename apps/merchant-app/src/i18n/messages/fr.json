@@ -164,8 +164,15 @@
         "passwordRequired": "Le mot de passe est requis",
         "passwordTooShort": "Le mot de passe doit comporter au moins 8 caractères",
         "invalidCredentials": "E-mail ou mot de passe invalide",
-        "serverError": "Une erreur est survenue. Veuillez réessayer."
-      }
+        "serverError": "Une erreur est survenue. Veuillez réessayer.",
+        "twoFaCodeInvalid": "Saisissez le code à 6 chiffres de votre application d'authentification."
+      },
+      "twoFaPrompt": "Saisissez le code à 6 chiffres de votre application d'authentification pour finaliser la connexion.",
+      "twoFaCode": "Code d'authentification",
+      "twoFaCodePlaceholder": "123456",
+      "twoFaSubmit": "Vérifier",
+      "twoFaSubmitting": "Vérification...",
+      "twoFaCancel": "Retour"
     },
     "register": {
       "title": "Créez votre compte",
@@ -198,6 +205,10 @@
     "logout": {
       "button": "Se déconnecter",
       "success": "Déconnexion réussie"
+    },
+    "account": {
+      "verifiedBadge": "E-mail vérifié",
+      "unverifiedBadge": "E-mail non vérifié"
     }
   },
   "dashboard": {
@@ -205,6 +216,7 @@
       "wallet": "Portefeuille",
       "transactions": "Transactions",
       "orders": "Commandes",
+      "affiliate": "Affiliation",
       "paySettings": "Paramètres de paiement",
       "integrations": "Intégrations",
       "invoicing": "Facturation",
@@ -540,5 +552,124 @@
     "receipt": "STATUT 404 · CONFIRMATIONS 0 · JAMAIS MINÉ",
     "ctaHome": "Retour à l'accueil",
     "ctaDashboard": "Aller au tableau de bord"
+  },
+  "paySettings": {
+    "security": {
+      "changePassword": {
+        "title": "Changer le mot de passe",
+        "description": "Choisissez un mot de passe long et unique, que vous n'utilisez nulle part ailleurs.",
+        "oldPasswordLabel": "Mot de passe actuel",
+        "newPasswordLabel": "Nouveau mot de passe",
+        "submit": "Mettre à jour",
+        "submitting": "Mise à jour...",
+        "success": "Mot de passe mis à jour.",
+        "showPassword": "Afficher le mot de passe",
+        "hidePassword": "Masquer le mot de passe",
+        "errors": {
+          "oldRequired": "Saisissez votre mot de passe actuel.",
+          "newRequired": "Saisissez un nouveau mot de passe.",
+          "newTooShort": "Le nouveau mot de passe doit comporter au moins 8 caractères.",
+          "invalid": "Impossible de changer le mot de passe.",
+          "server": "Une erreur est survenue. Veuillez réessayer."
+        }
+      },
+      "twoFa": {
+        "title": "Authentification à deux facteurs",
+        "descriptionDisabled": "Ajoutez une étape supplémentaire à la connexion avec Google Authenticator, 1Password, Authy ou toute autre application compatible.",
+        "descriptionEnabled": "L'authentification à deux facteurs est activée. Un code vous sera demandé à chaque connexion.",
+        "descriptionScan": "Scannez le QR code avec votre application d'authentification, puis saisissez le code à 6 chiffres affiché.",
+        "badgeEnabled": "Activée",
+        "badgeDisabled": "Désactivée",
+        "enableCta": "Activer la 2FA",
+        "enableStarting": "Démarrage...",
+        "enableSubmit": "Activer la 2FA",
+        "enableSubmitting": "Activation...",
+        "enableSuccess": "L'authentification à deux facteurs est maintenant activée.",
+        "alreadyEnabled": "L'authentification à deux facteurs est déjà activée pour ce compte.",
+        "disableCta": "Désactiver la 2FA",
+        "disableSubmit": "Désactiver la 2FA",
+        "disableSubmitting": "Désactivation...",
+        "disableSuccess": "L'authentification à deux facteurs est maintenant désactivée.",
+        "passwordLabel": "Mot de passe actuel",
+        "codeLabel": "Code d'authentification",
+        "codePlaceholder": "123456",
+        "cancel": "Annuler",
+        "secretInstruction": "Impossible de scanner ? Saisissez ce secret manuellement dans votre application d'authentification.",
+        "secretLabel": "Secret",
+        "qrCaption": "Scannez avec votre application d'authentification",
+        "qrAlt": "QR code contenant le secret de configuration 2FA",
+        "showPassword": "Afficher le mot de passe",
+        "hidePassword": "Masquer le mot de passe",
+        "errors": {
+          "passwordRequired": "Saisissez votre mot de passe.",
+          "passwordTooShort": "Le mot de passe doit comporter au moins 8 caractères.",
+          "codeRequired": "Saisissez le code à 6 chiffres.",
+          "codeInvalid": "Saisissez le code à 6 chiffres de votre application d'authentification.",
+          "setupFailed": "Impossible de démarrer la configuration 2FA. Veuillez réessayer.",
+          "server": "Une erreur est survenue. Veuillez réessayer."
+        }
+      },
+      "emailVerification": {
+        "title": "Vérification de l'e-mail",
+        "descriptionVerified": "Votre adresse e-mail a été vérifiée.",
+        "descriptionUnverified": "Vérifiez votre adresse e-mail pour débloquer les retraits et la récupération de compte.",
+        "badgeVerified": "Vérifiée",
+        "badgeUnverified": "Non vérifiée",
+        "emailLabel": "E-mail du compte",
+        "emailUnknown": "Inconnu",
+        "resendHint": "Le flux de renvoi sera connecté lorsque les routes verify-email et forgot-password seront livrées."
+      },
+      "errors": {
+        "wrongPassword": "Mot de passe incorrect.",
+        "wrongOldPassword": "Le mot de passe actuel est incorrect.",
+        "invalid2faCode": "Ce code n'est pas valide. Essayez le code le plus récent de votre application d'authentification.",
+        "twoFaAlreadyEnabled": "L'authentification à deux facteurs est déjà activée pour ce compte.",
+        "passwordTooShort": "Le mot de passe doit comporter au moins 8 caractères.",
+        "emailNotVerified": "Vérifiez votre adresse e-mail avant de continuer."
+      },
+      "pageTitle": "Sécurité du compte",
+      "pageSubtitle": "Protégez votre compte avec un mot de passe robuste et l'authentification à deux facteurs."
+    }
+  },
+  "affiliate": {
+    "pageTitle": "Programme d'affiliation",
+    "pageSubtitle": "Suivez les marchands que vous avez parrainés et les commissions générées par leur activité.",
+    "totals": {
+      "title": "Commissions totales",
+      "empty": "Aucune commission pour l'instant — elles apparaîtront ici dès que votre downline effectuera des transactions.",
+      "count": "{count} paiements",
+      "error": "Impossible de charger les totaux. Vérifiez le tunnel et actualisez."
+    },
+    "downline": {
+      "title": "Downline",
+      "description": "Utilisateurs ayant rejoint via votre lien de parrainage.",
+      "levelFilter": "Niveau",
+      "allLevels": "Tous",
+      "empty": "Aucun downline à ce niveau pour l'instant.",
+      "error": "Impossible de charger le downline. Réessayez dans un instant.",
+      "headers": {
+        "email": "E-mail",
+        "level": "Niveau",
+        "joined": "Inscription"
+      }
+    },
+    "commissions": {
+      "title": "Commissions",
+      "description": "Chaque commission créditée sur votre portefeuille.",
+      "empty": "Aucune commission pour l'instant.",
+      "error": "Impossible de charger les commissions. Réessayez dans un instant.",
+      "headers": {
+        "date": "Date",
+        "coin": "Monnaie",
+        "amount": "Montant",
+        "level": "Niveau",
+        "from": "De"
+      }
+    },
+    "pager": {
+      "label": "Page {page} sur {totalPages}",
+      "previous": "Précédent",
+      "next": "Suivant"
+    }
   }
 }
