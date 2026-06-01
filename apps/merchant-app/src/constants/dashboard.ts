@@ -13,6 +13,7 @@ export type DashboardIconKey =
   | 'wallet'
   | 'transactions'
   | 'orders'
+  | 'affiliate'
   | 'paySettings'
   | 'integrations'
   | 'invoicing'
@@ -33,6 +34,7 @@ export const DASHBOARD_NAV: ReadonlyArray<DashboardNavItem> = [
   { key: 'wallet', route: ROUTES.DASHBOARD, icon: 'wallet', backed: true },
   { key: 'transactions', route: ROUTES.TRANSACTIONS, icon: 'transactions', backed: true },
   { key: 'orders', route: ROUTES.ORDERS, icon: 'orders', backed: true },
+  { key: 'affiliate', route: ROUTES.AFFILIATE, icon: 'affiliate', backed: true },
   { key: 'paySettings', route: ROUTES.PAY_SETTINGS, icon: 'paySettings', backed: true },
   { key: 'integrations', route: ROUTES.INTEGRATIONS, icon: 'integrations', backed: true },
   { key: 'invoicing', route: ROUTES.INVOICING, icon: 'invoicing', backed: false },

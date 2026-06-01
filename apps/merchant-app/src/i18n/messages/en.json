@@ -216,6 +216,7 @@
       "wallet": "Wallet",
       "transactions": "Transactions",
       "orders": "Orders",
+      "affiliate": "Affiliate",
       "paySettings": "Pay Settings",
       "integrations": "Integrations",
       "invoicing": "Invoicing",
@@ -628,6 +629,47 @@
       },
       "pageTitle": "Account security",
       "pageSubtitle": "Protect your account with a strong password and two-factor authentication."
+    }
+  },
+  "affiliate": {
+    "pageTitle": "Affiliate program",
+    "pageSubtitle": "Track the merchants you've referred and the commissions earned on their activity.",
+    "totals": {
+      "title": "Total commissions",
+      "empty": "No commissions yet — they will appear here as your downline transacts.",
+      "count": "{count} payments",
+      "error": "Couldn't load totals. Check the tunnel and refresh."
+    },
+    "downline": {
+      "title": "Downline",
+      "description": "Users who joined through your referral link.",
+      "levelFilter": "Level",
+      "allLevels": "All",
+      "empty": "No downline at this level yet.",
+      "error": "Couldn't load the downline. Try again in a moment.",
+      "headers": {
+        "email": "Email",
+        "level": "Level",
+        "joined": "Joined"
+      }
+    },
+    "commissions": {
+      "title": "Commissions",
+      "description": "Each commission credited to your wallet.",
+      "empty": "No commissions yet.",
+      "error": "Couldn't load commissions. Try again in a moment.",
+      "headers": {
+        "date": "Date",
+        "coin": "Coin",
+        "amount": "Amount",
+        "level": "Level",
+        "from": "From"
+      }
+    },
+    "pager": {
+      "label": "Page {page} of {totalPages}",
+      "previous": "Previous",
+      "next": "Next"
     }
   }
 }

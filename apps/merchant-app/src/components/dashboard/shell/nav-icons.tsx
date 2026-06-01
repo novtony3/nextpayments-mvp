@@ -6,6 +6,7 @@ import {
   ReceiptText,
   ScanLine,
   Settings2,
+  Users2,
   Wallet,
   type LucideIcon,
 } from 'lucide-react';
@@ -21,6 +22,7 @@ export const DASHBOARD_ICONS: Record<DashboardIconKey, LucideIcon> = {
   wallet: Wallet,
   transactions: ArrowLeftRight,
   orders: ReceiptText,
+  affiliate: Users2,
   paySettings: Settings2,
   integrations: Code2,
   invoicing: FileText,

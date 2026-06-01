@@ -32,6 +32,9 @@ export const API_ROUTES = {
   FUND_BALANCE_HISTORY: '/fund/balance-history',
   INTEGRATIONS: '/integrations',
   ORDERS: '/orders',
+  AFFILIATE_TOTALS: '/affiliate/totals',
+  AFFILIATE_DOWNLINE: '/affiliate/downline',
+  AFFILIATE_COMMISSIONS: '/affiliate/commissions',
 } as const;
 
 export type ApiRoute = (typeof API_ROUTES)[keyof typeof API_ROUTES];

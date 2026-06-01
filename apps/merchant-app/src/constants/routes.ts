@@ -12,6 +12,9 @@ export const ROUTES = {
   DASHBOARD: '/dashboard',
   TRANSACTIONS: '/transactions',
   ORDERS: '/orders',
+  /** Affiliate dashboard — totals + downline + commissions. Top-level
+   * sidebar entry; sits above Pay Settings in the merchant nav. */
+  AFFILIATE: '/affiliate',
   PAY_SETTINGS: '/pay-settings',
   INTEGRATIONS: '/integrations',
   INVOICING: '/invoicing',

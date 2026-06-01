@@ -216,6 +216,7 @@
       "wallet": "Portefeuille",
       "transactions": "Transactions",
       "orders": "Commandes",
+      "affiliate": "Affiliation",
       "paySettings": "Paramètres de paiement",
       "integrations": "Intégrations",
       "invoicing": "Facturation",
@@ -628,6 +629,47 @@
       },
       "pageTitle": "Sécurité du compte",
       "pageSubtitle": "Protégez votre compte avec un mot de passe robuste et l'authentification à deux facteurs."
+    }
+  },
+  "affiliate": {
+    "pageTitle": "Programme d'affiliation",
+    "pageSubtitle": "Suivez les marchands que vous avez parrainés et les commissions générées par leur activité.",
+    "totals": {
+      "title": "Commissions totales",
+      "empty": "Aucune commission pour l'instant — elles apparaîtront ici dès que votre downline effectuera des transactions.",
+      "count": "{count} paiements",
+      "error": "Impossible de charger les totaux. Vérifiez le tunnel et actualisez."
+    },
+    "downline": {
+      "title": "Downline",
+      "description": "Utilisateurs ayant rejoint via votre lien de parrainage.",
+      "levelFilter": "Niveau",
+      "allLevels": "Tous",
+      "empty": "Aucun downline à ce niveau pour l'instant.",
+      "error": "Impossible de charger le downline. Réessayez dans un instant.",
+      "headers": {
+        "email": "E-mail",
+        "level": "Niveau",
+        "joined": "Inscription"
+      }
+    },
+    "commissions": {
+      "title": "Commissions",
+      "description": "Chaque commission créditée sur votre portefeuille.",
+      "empty": "Aucune commission pour l'instant.",
+      "error": "Impossible de charger les commissions. Réessayez dans un instant.",
+      "headers": {
+        "date": "Date",
+        "coin": "Monnaie",
+        "amount": "Montant",
+        "level": "Niveau",
+        "from": "De"
+      }
+    },
+    "pager": {
+      "label": "Page {page} sur {totalPages}",
+      "previous": "Précédent",
+      "next": "Suivant"
     }
   }
 }
