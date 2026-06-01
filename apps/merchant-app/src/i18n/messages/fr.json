@@ -165,7 +165,9 @@
         "passwordTooShort": "Le mot de passe doit comporter au moins 8 caractères",
         "invalidCredentials": "E-mail ou mot de passe invalide",
         "serverError": "Une erreur est survenue. Veuillez réessayer.",
-        "twoFaCodeInvalid": "Saisissez le code à 6 chiffres de votre application d'authentification."
+        "twoFaCodeInvalid": "Saisissez le code à 6 chiffres de votre application d'authentification.",
+        "emailNotVerified": "Cet e-mail n'est pas encore vérifié. Consultez votre boîte de réception pour le lien de vérification.",
+        "noAccount": "Aucun compte trouvé pour cet e-mail. Inscrivez-vous pour commencer."
       },
       "twoFaPrompt": "Saisissez le code à 6 chiffres de votre application d'authentification pour finaliser la connexion.",
       "twoFaCode": "Code d'authentification",
@@ -200,6 +202,13 @@
         "confirmRequired": "Veuillez confirmer votre mot de passe",
         "passwordMismatch": "Les mots de passe ne correspondent pas",
         "serverError": "Une erreur est survenue. Veuillez réessayer."
+      },
+      "verify": {
+        "toast": "Compte créé. Vérifiez votre e-mail pour vous connecter.",
+        "title": "Vérifiez votre e-mail",
+        "body": "Nous avons envoyé un lien de vérification à {email}. Cliquez dessus pour activer votre compte.",
+        "hint": "Vous ne l'avez pas reçu ? Vérifiez vos spams.",
+        "goToLogin": "Aller à la connexion"
       }
     },
     "logout": {
@@ -570,8 +579,11 @@
           "newRequired": "Saisissez un nouveau mot de passe.",
           "newTooShort": "Le nouveau mot de passe doit comporter au moins 8 caractères.",
           "invalid": "Impossible de changer le mot de passe.",
-          "server": "Une erreur est survenue. Veuillez réessayer."
-        }
+          "server": "Une erreur est survenue. Veuillez réessayer.",
+          "confirmRequired": "Confirmez votre nouveau mot de passe.",
+          "mismatch": "Les mots de passe ne correspondent pas."
+        },
+        "confirmPasswordLabel": "Confirmer le nouveau mot de passe"
       },
       "twoFa": {
         "title": "Authentification à deux facteurs",

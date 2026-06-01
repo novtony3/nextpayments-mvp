@@ -120,13 +120,25 @@ export type RegisterSession = z.infer<typeof registerResponseSchema>['data'];
  */
 /**
  * `twoFaRequired` is surfaced when the backend rejects a login with a
- * 2FA-related error code (see {@link TWO_FA_LOGIN_CODES}). The form flips to
- * step 2 (code input) and re-submits with `token2fa` filled.
+ * 2FA-related error code (see `TWO_FA_LOGIN_CODES`). The form flips to step 2
+ * (code input) and re-submits with `token2fa` filled. `emailNotVerified`
+ * (USER007) and `noAccount` (USER006) drive distinct messages instead of the
+ * generic `invalid`.
  */
 export type LoginActionResult =
   | { ok: true; displayName: string }
-  | { ok: false; reason: 'invalid' | 'error' | 'twoFaRequired' };
+  | {
+      ok: false;
+      reason: 'invalid' | 'error' | 'twoFaRequired' | 'emailNotVerified' | 'noAccount';
+    };
 
+/**
+ * Register no longer auto-signs-in: even though the backend issues a valid
+ * token on register, the account is `emailVerified:false` and a later login
+ * is blocked until verification (USER007). To keep register/login symmetric
+ * we discard that token and route the user to a "verify your email" step, so
+ * the result carries `email` (to display) rather than a session.
+ */
 export type RegisterActionResult =
-  | { ok: true; displayName: string }
+  | { ok: true; email: string }
   | { ok: false; reason: 'emailTaken' | 'invalid' | 'error' };
