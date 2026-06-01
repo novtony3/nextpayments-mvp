@@ -77,18 +77,18 @@ Query params: `page` (1-based), `limit`, plus endpoint-specific filters
 
 ### Known error codes
 
-| Code      | Meaning                                                     | Where                       |
-| --------- | ----------------------------------------------------------- | --------------------------- |
-| `USER004` | Email already exists                                        | register                    |
-| `USER005` | Invalid referral id (sent `null`/`""` — **omit the field**) | register                    |
-| `USER006` | Email does not exist                                        | login                       |
-| `USER007` | Email is not verified                                       | login                       |
-| `USER009` | Password is incorrect                                       | enable/disable-2fa          |
-| `USER010` | Invalid 2FA code (also "code required" — empty `token2fa`)  | login, enable/disable-2fa   |
-| `USER011` | Email or password is incorrect                              | login (verified accounts)   |
-| `USER018` | Old password is incorrect                                   | change-password             |
-| `USER019` | 2FA is already enabled                                      | enable-2fa                  |
-| `USER021` | Password must be at least **8** characters                  | register, change-password   |
+| Code      | Meaning                                                     | Where                     |
+| --------- | ----------------------------------------------------------- | ------------------------- |
+| `USER004` | Email already exists                                        | register                  |
+| `USER005` | Invalid referral id (sent `null`/`""` — **omit the field**) | register                  |
+| `USER006` | Email does not exist                                        | login                     |
+| `USER007` | Email is not verified                                       | login                     |
+| `USER009` | Password is incorrect                                       | enable/disable-2fa        |
+| `USER010` | Invalid 2FA code (also "code required" — empty `token2fa`)  | login, enable/disable-2fa |
+| `USER011` | Email or password is incorrect                              | login (verified accounts) |
+| `USER018` | Old password is incorrect                                   | change-password           |
+| `USER019` | 2FA is already enabled                                      | enable-2fa                |
+| `USER021` | Password must be at least **8** characters                  | register, change-password |
 
 > Codes are partial — extend this table as new ones surface. `AuthError.code`
 > already carries `error.code` for mapping to messages. Verified live on

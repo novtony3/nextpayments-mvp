@@ -14,8 +14,7 @@ type StatusPillProps = {
 const TONE_CLASS: Record<Tone, string> = {
   positive:
     'border-[color-mix(in_oklab,var(--color-success)_30%,transparent)] bg-[color-mix(in_oklab,var(--color-success)_15%,transparent)] text-[var(--color-success)]',
-  neutral:
-    'border-[var(--glass-border)] bg-[var(--glass-fill)] text-[var(--color-text-muted)]',
+  neutral: 'border-[var(--glass-border)] bg-[var(--glass-fill)] text-[var(--color-text-muted)]',
   warning:
     'border-[color-mix(in_oklab,var(--color-warning)_35%,transparent)] bg-[color-mix(in_oklab,var(--color-warning)_18%,transparent)] text-[var(--color-warning)]',
 };

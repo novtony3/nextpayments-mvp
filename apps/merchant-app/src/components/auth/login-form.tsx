@@ -199,11 +199,7 @@ export function LoginForm() {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit(onCredentialsSubmit)}
-      noValidate
-      className="flex flex-col gap-5"
-    >
+    <form onSubmit={handleSubmit(onCredentialsSubmit)} noValidate className="flex flex-col gap-5">
       <TextField
         id="email"
         type="email"

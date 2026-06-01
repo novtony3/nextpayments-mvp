@@ -46,10 +46,7 @@ export async function backendGet2faKey(token: string): Promise<string> {
   return get2faKeyResponseSchema.parse(json).data.secret2FAKey;
 }
 
-export async function backendEnable2fa(
-  token: string,
-  input: TwoFaMutationInput,
-): Promise<void> {
+export async function backendEnable2fa(token: string, input: TwoFaMutationInput): Promise<void> {
   const res = await backendFetch(API_ROUTES.USER_ENABLE_2FA, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -58,10 +55,7 @@ export async function backendEnable2fa(
   ensureOk(res.ok, parseJson(res.raw), 'Could not enable 2FA');
 }
 
-export async function backendDisable2fa(
-  token: string,
-  input: TwoFaMutationInput,
-): Promise<void> {
+export async function backendDisable2fa(token: string, input: TwoFaMutationInput): Promise<void> {
   const res = await backendFetch(API_ROUTES.USER_DISABLE_2FA, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },

@@ -32,11 +32,7 @@ function formatDate(value: string | undefined, locale: string): string {
 }
 
 /** Commissions ledger — paginated independently from the downline table. */
-export function CommissionsTable({
-  result,
-  pageParam,
-  preservedParams,
-}: CommissionsTableProps) {
+export function CommissionsTable({ result, pageParam, preservedParams }: CommissionsTableProps) {
   const t = useTranslations('affiliate.commissions');
   const locale = useLocale();
 
@@ -60,10 +56,7 @@ export function CommissionsTable({
       {result.ok && result.data.rows.length === 0 && (
         <div className="flex min-h-[180px] flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-[var(--glass-border)] bg-[var(--glass-fill)] px-4 py-12 text-center">
           <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[color-mix(in_oklab,var(--color-surface)_60%,transparent)]">
-            <ReceiptText
-              className="h-6 w-6 text-[var(--color-text-subtle)]"
-              aria-hidden="true"
-            />
+            <ReceiptText className="h-6 w-6 text-[var(--color-text-subtle)]" aria-hidden="true" />
           </span>
           <p className="text-sm text-[var(--color-text-muted)]">{t('empty')}</p>
         </div>

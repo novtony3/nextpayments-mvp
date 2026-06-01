@@ -17,11 +17,7 @@ import {
   TWO_FA_CODE_PATTERN,
 } from '@/constants/auth';
 import { SECURITY_ERROR_CODE } from '@/constants/security';
-import {
-  begin2faSetupAction,
-  disable2faAction,
-  enable2faAction,
-} from '@/lib/security/actions';
+import { begin2faSetupAction, disable2faAction, enable2faAction } from '@/lib/security/actions';
 import { TextField } from '@/components/shared/text-field';
 import { PasswordToggle } from '@/components/auth/password-toggle';
 
@@ -162,12 +158,7 @@ export function TwoFaCard({ initialEnabled }: TwoFaCardProps) {
         <div className="flex shrink-0 flex-col items-center gap-2.5">
           {otpauthUri && (
             <div className="rounded-2xl bg-white p-4 shadow-[0_4px_20px_-6px_rgba(0,0,0,0.45)]">
-              <QRCodeSVG
-                value={otpauthUri}
-                size={QR_SIZE_PX}
-                level="M"
-                aria-label={t('qrAlt')}
-              />
+              <QRCodeSVG value={otpauthUri} size={QR_SIZE_PX} level="M" aria-label={t('qrAlt')} />
             </div>
           )}
           <span className="text-xs text-[var(--color-text-subtle)]">{t('qrCaption')}</span>

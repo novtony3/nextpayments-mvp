@@ -11,11 +11,7 @@ import {
 import { CommissionsTable } from '@/components/dashboard/affiliate/commissions-table';
 import { DownlineTable } from '@/components/dashboard/affiliate/downline-table';
 import { TotalsStrip } from '@/components/dashboard/affiliate/totals-strip';
-import {
-  loadAffiliateTotals,
-  loadCommissions,
-  loadDownline,
-} from '@/lib/affiliate/backend';
+import { loadAffiliateTotals, loadCommissions, loadDownline } from '@/lib/affiliate/backend';
 
 type AffiliatePageProps = {
   params: Promise<{ locale: string }>;

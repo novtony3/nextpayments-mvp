@@ -86,9 +86,7 @@ export async function disable2faAction(input: unknown): Promise<SecurityMutation
  * response; we re-persist it so the user stays signed in (the existing
  * refresh cookie, if any, also remains valid).
  */
-export async function changePasswordAction(
-  input: unknown,
-): Promise<SecurityMutationResult> {
+export async function changePasswordAction(input: unknown): Promise<SecurityMutationResult> {
   const parsed = changePasswordSchema.safeParse(input);
   if (!parsed.success) return { ok: false, reason: 'invalid' };
   const token = await getAccessToken();
