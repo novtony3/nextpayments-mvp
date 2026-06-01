@@ -1,42 +1,33 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@nextpayments/ui/components/button';
 
 import { ROUTES } from '@/constants/routes';
 import { Link } from '@/i18n/routing';
-import { currentUserAction } from '@/lib/auth/actions';
 import type { HeaderUser } from '@/lib/auth/types';
 
 import { UserMenu } from './user-menu';
 
 type AuthControlsProps = {
+  /** Session identity resolved server-side (marketing layout → Header). When
+   * non-null the user menu renders; otherwise the logged-out CTAs. */
+  user: HeaderUser | null;
   /** Close the mobile menu after a navigation. */
   onNavigate?: () => void;
 };
 
 /**
- * Header auth slot. Resolves the session client-side (Server Action reading
- * the httpOnly cookie) so the public landing stays statically rendered. The
- * logged-out CTAs are the stable initial render (server + pre-effect client),
- * so there is no hydration mismatch — it upgrades to the user menu once the
- * session resolves, like the theme toggle's mounted pattern.
+ * Header auth slot — a pure function of the server-resolved `user`. No client
+ * session fetch and no local state, so it renders the correct chrome on the
+ * first paint and never flashes "Get started" before resolving. (The previous
+ * useEffect approach re-initialised to null on every mount, flashing the CTA
+ * on each locale switch — which remounts this subtree.) After login/logout,
+ * `router.refresh()` re-renders the layout and a fresh `user` flows down.
  */
-export function AuthControls({ onNavigate }: AuthControlsProps) {
+export function AuthControls({ user, onNavigate }: AuthControlsProps) {
   const t = useTranslations('nav');
-  const [user, setUser] = useState<HeaderUser | null>(null);
-
-  useEffect(() => {
-    let active = true;
-    void currentUserAction().then((resolved) => {
-      if (active) setUser(resolved);
-    });
-    return () => {
-      active = false;
-    };
-  }, []);
 
   if (user) {
     return <UserMenu user={user} onNavigate={onNavigate} />;

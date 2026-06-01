@@ -62,7 +62,7 @@ export function UserMenu({ user, onNavigate }: UserMenuProps) {
       await logoutAction();
       onNavigate?.();
       router.push(ROUTES.LOGIN);
-      router.refresh(); // drop cached RSC rendered with the old session
+      router.refresh(); // re-render the server layout → header resolves to signed-out
     });
   };
 

@@ -7,7 +7,7 @@ import { backendLogin, backendLogout, backendRefresh, backendRegister } from './
 import {
   clearSession,
   getAccessToken,
-  getCurrentUser,
+  getHeaderUser,
   getRefreshToken,
   writeSession,
 } from './session';
@@ -119,18 +119,10 @@ export async function refreshAction(): Promise<boolean> {
 }
 
 /**
- * Resolve the signed-in user for client chrome (header). Returns a minimal
- * serializable identity, or null when logged out. Backend only reliably
- * returns `email`, so `displayName` falls back through name → userName →
- * the email local-part.
+ * Resolve the signed-in user for client chrome. Thin Server Action wrapper
+ * over {@link getHeaderUser} (the marketing layout resolves it directly in a
+ * Server Component for the header).
  */
 export async function currentUserAction(): Promise<HeaderUser | null> {
-  const user = await getCurrentUser();
-  if (!user?.email) return null;
-  const displayName = user.name ?? user.userName ?? user.email.split('@')[0] ?? user.email;
-  return {
-    email: user.email,
-    displayName,
-    emailVerified: Boolean(user.emailVerified),
-  };
+  return getHeaderUser();
 }

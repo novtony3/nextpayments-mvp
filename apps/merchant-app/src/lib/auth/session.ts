@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
 import { SESSION_COOKIE, SESSION_MAX_AGE } from '@/constants/auth';
 
 import { backendMe } from './backend';
-import type { SessionUser, TokenPair } from './types';
+import type { HeaderUser, SessionUser, TokenPair } from './types';
 
 /**
  * httpOnly session cookies. Reads are safe anywhere on the server (layouts,
@@ -74,3 +74,18 @@ export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
     return null;
   }
 });
+
+/**
+ * Server-side header identity, or null when signed out. Resolving this in a
+ * Server Component (the marketing layout) and passing it down means the
+ * header renders with the correct chrome in the SSR/RSC output — no
+ * client-side null→resolve transition, so no "Get started" flash on first
+ * load or when switching locale (which re-renders the layout). `getCurrentUser`
+ * is already `cache()`d, so this adds no extra backend call per request.
+ */
+export async function getHeaderUser(): Promise<HeaderUser | null> {
+  const user = await getCurrentUser();
+  if (!user?.email) return null;
+  const displayName = user.name ?? user.userName ?? user.email.split('@')[0] ?? user.email;
+  return { email: user.email, displayName, emailVerified: Boolean(user.emailVerified) };
+}
