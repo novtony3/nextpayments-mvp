@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack -p 5001",
+    "dev:full": "../../scripts/dev-merchant.sh",
+    "tunnel": "../../scripts/tunnel.sh",
     "build": "next build",
     "start": "next start -p 5001",
     "lint": "next lint",
