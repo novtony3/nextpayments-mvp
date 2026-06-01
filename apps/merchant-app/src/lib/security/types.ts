@@ -1,10 +1,6 @@
 import { z } from 'zod';
 
-import {
-  PASSWORD_MIN_LENGTH,
-  TWO_FA_CODE_PATTERN,
-  TWO_FA_ISSUER,
-} from '@/constants/auth';
+import { PASSWORD_MIN_LENGTH, TWO_FA_CODE_PATTERN, TWO_FA_ISSUER } from '@/constants/auth';
 
 /**
  * Security domain (account self-service) types + zod schemas. Backend

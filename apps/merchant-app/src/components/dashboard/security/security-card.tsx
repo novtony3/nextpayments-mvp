@@ -37,9 +37,7 @@ export function SecurityCard({
       <div className="flex items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h2 className="text-base font-medium text-[var(--color-text)]">{title}</h2>
-          {description && (
-            <p className="text-sm text-[var(--color-text-muted)]">{description}</p>
-          )}
+          {description && <p className="text-sm text-[var(--color-text-muted)]">{description}</p>}
         </div>
         {badge}
       </div>

@@ -117,10 +117,7 @@ export function UserMenu({ user, onNavigate }: UserMenuProps) {
           className="absolute right-0 top-[calc(100%+0.5rem)] z-50 min-w-[14rem] overflow-hidden rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-fill-strong)] p-1 shadow-[0_16px_48px_-16px_rgba(0,0,0,0.5)] backdrop-blur-2xl"
         >
           <div className="flex flex-col gap-1 px-3 py-2">
-            <p
-              className="truncate text-xs text-[var(--color-text-subtle)]"
-              title={user.email}
-            >
+            <p className="truncate text-xs text-[var(--color-text-subtle)]" title={user.email}>
               {user.email}
             </p>
             <VerifiedRow verified={user.emailVerified} label={verifiedLabel} />

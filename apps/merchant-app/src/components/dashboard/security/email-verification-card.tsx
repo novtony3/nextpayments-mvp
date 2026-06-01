@@ -37,9 +37,7 @@ export function EmailVerificationCard({ verified, email }: EmailVerificationCard
         </span>
         <span className="text-sm text-[var(--color-text)]">{email || t('emailUnknown')}</span>
       </div>
-      {!verified && (
-        <p className="text-xs text-[var(--color-text-muted)]">{t('resendHint')}</p>
-      )}
+      {!verified && <p className="text-xs text-[var(--color-text-muted)]">{t('resendHint')}</p>}
     </SecurityCard>
   );
 }
