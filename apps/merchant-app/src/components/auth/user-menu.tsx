@@ -18,10 +18,17 @@ type UserMenuProps = {
   onNavigate?: () => void;
 };
 
+/** Approx. dropdown height (px). If the space below the trigger is smaller,
+ * the menu flips above it — so a trigger near the bottom (e.g. the mobile
+ * full-screen menu, where the account control docks at the bottom) doesn't
+ * get its content clipped by the viewport edge. */
+const MENU_ESTIMATED_HEIGHT_PX = 240;
+
 /**
  * Signed-in account menu. Same accessible disclosure pattern as the language
  * switcher (role=menu, keyboard nav, Esc/outside-click close). Shows the
- * user's identity and offers Dashboard + Log out.
+ * user's identity and offers Dashboard + Log out. The panel flips above the
+ * trigger when there isn't room below (collision-aware, measured on open).
  */
 export function UserMenu({ user, onNavigate }: UserMenuProps) {
   const t = useTranslations('nav');
@@ -29,6 +36,7 @@ export function UserMenu({ user, onNavigate }: UserMenuProps) {
   const tLogout = useTranslations('auth.logout');
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [dropUp, setDropUp] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const menuId = useId();
@@ -45,6 +53,18 @@ export function UserMenu({ user, onNavigate }: UserMenuProps) {
     setOpen(false);
     if (restoreFocus) triggerRef.current?.focus();
   }, []);
+
+  /** Toggle the menu; when opening, pick the flip direction from the space
+   * below the trigger so the panel never overflows the viewport bottom. */
+  const toggle = useCallback(() => {
+    if (!open) {
+      const rect = triggerRef.current?.getBoundingClientRect();
+      if (rect) {
+        setDropUp(window.innerHeight - rect.bottom < MENU_ESTIMATED_HEIGHT_PX);
+      }
+    }
+    setOpen((v) => !v);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -77,7 +97,7 @@ export function UserMenu({ user, onNavigate }: UserMenuProps) {
         aria-controls={menuId}
         aria-label={t('account')}
         disabled={isPending}
-        onClick={() => setOpen((v) => !v)}
+        onClick={toggle}
         className="gap-2 px-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
         leftIcon={
           <span
@@ -114,7 +134,10 @@ export function UserMenu({ user, onNavigate }: UserMenuProps) {
               close(true);
             }
           }}
-          className="absolute right-0 top-[calc(100%+0.5rem)] z-50 min-w-[14rem] overflow-hidden rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-fill-strong)] p-1 shadow-[0_16px_48px_-16px_rgba(0,0,0,0.5)] backdrop-blur-2xl"
+          className={cn(
+            'absolute right-0 z-50 min-w-[14rem] overflow-hidden rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-fill-strong)] p-1 shadow-[0_16px_48px_-16px_rgba(0,0,0,0.5)] backdrop-blur-2xl',
+            dropUp ? 'bottom-[calc(100%+0.5rem)]' : 'top-[calc(100%+0.5rem)]',
+          )}
         >
           <div className="flex flex-col gap-1 px-3 py-2">
             <p className="truncate text-xs text-[var(--color-text-subtle)]" title={user.email}>
