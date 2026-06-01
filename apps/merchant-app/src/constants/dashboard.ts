@@ -33,7 +33,7 @@ export const DASHBOARD_NAV: ReadonlyArray<DashboardNavItem> = [
   { key: 'wallet', route: ROUTES.DASHBOARD, icon: 'wallet', backed: true },
   { key: 'transactions', route: ROUTES.TRANSACTIONS, icon: 'transactions', backed: true },
   { key: 'orders', route: ROUTES.ORDERS, icon: 'orders', backed: true },
-  { key: 'paySettings', route: ROUTES.PAY_SETTINGS, icon: 'paySettings', backed: false },
+  { key: 'paySettings', route: ROUTES.PAY_SETTINGS, icon: 'paySettings', backed: true },
   { key: 'integrations', route: ROUTES.INTEGRATIONS, icon: 'integrations', backed: true },
   { key: 'invoicing', route: ROUTES.INVOICING, icon: 'invoicing', backed: false },
   { key: 'quickPos', route: ROUTES.QUICK_POS, icon: 'quickPos', backed: false },
@@ -48,9 +48,10 @@ export const ZERO_CRYPTO = '0.00000000' as const;
 export const ZERO_FIAT = '0.00' as const;
 
 /**
- * Whether to surface the "verify your account" banner. Wired later to
- * `user.emailVerified` from `/user/me`; static `true` for the UI phase so
- * the gated layout is exercised.
+ * Master switch for the "verify your account" banner. The shell ANDs this
+ * with the live `user.emailVerified` state (from `/user/me` via the protected
+ * layout), so the banner only shows for unverified accounts. Flip to `false`
+ * to suppress it entirely regardless of verification state.
  */
 export const SHOW_VERIFY_BANNER = true as const;
 

@@ -1,5 +1,7 @@
 'use server';
 
+import { TWO_FA_LOGIN_CODES } from '@/constants/security';
+
 import { backendLogin, backendLogout, backendRefresh, backendRegister } from './backend';
 import {
   clearSession,
@@ -41,6 +43,12 @@ export async function loginAction(input: unknown): Promise<LoginActionResult> {
     return { ok: true, displayName };
   } catch (err) {
     if (err instanceof AuthError) {
+      // 2FA challenge: the account has 2FA on but the submitted token2fa was
+      // missing or wrong. The form flips to step 2 and re-submits with the
+      // code filled in. `token2fa: ''` is the step-1 case.
+      if (err.code && TWO_FA_LOGIN_CODES.has(err.code)) {
+        return { ok: false, reason: 'twoFaRequired' };
+      }
       return { ok: false, reason: 'invalid' };
     }
     // Transport failure (tunnel down), 5xx, or unexpected response shape.
@@ -109,5 +117,9 @@ export async function currentUserAction(): Promise<HeaderUser | null> {
   const user = await getCurrentUser();
   if (!user?.email) return null;
   const displayName = user.name ?? user.userName ?? user.email.split('@')[0] ?? user.email;
-  return { email: user.email, displayName };
+  return {
+    email: user.email,
+    displayName,
+    emailVerified: Boolean(user.emailVerified),
+  };
 }

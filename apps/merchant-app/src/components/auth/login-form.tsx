@@ -11,15 +11,26 @@ import { Button } from '@nextpayments/ui/components/button';
 
 import { Link, useRouter } from '@/i18n/routing';
 import { ROUTES } from '@/constants/routes';
-import { AUTH_FIELD_PLACEHOLDERS, PASSWORD_MIN_LENGTH } from '@/constants/auth';
+import {
+  AUTH_FIELD_PLACEHOLDERS,
+  PASSWORD_MIN_LENGTH,
+  TWO_FA_CODE_LENGTH,
+  TWO_FA_CODE_PATTERN,
+} from '@/constants/auth';
 import { loginAction } from '@/lib/auth/actions';
 import { TextField } from '@/components/shared/text-field';
 import { PasswordToggle } from '@/components/auth/password-toggle';
+
+type Step = 'credentials' | 'twoFa';
 
 export function LoginForm() {
   const t = useTranslations('auth.login');
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [step, setStep] = useState<Step>('credentials');
+  const [twoFaCode, setTwoFaCode] = useState('');
+  const [twoFaError, setTwoFaError] = useState<string | null>(null);
+  const [twoFaSubmitting, setTwoFaSubmitting] = useState(false);
 
   // Schema built inside the component so validation messages follow the locale.
   const schema = z.object({
@@ -39,6 +50,8 @@ export function LoginForm() {
     register,
     handleSubmit,
     setError,
+    getValues,
+    resetField,
     formState: { errors, isSubmitting },
   } = useForm<LoginValues>({
     resolver: zodResolver(schema),
@@ -47,13 +60,24 @@ export function LoginForm() {
     defaultValues: { email: '', password: '' },
   });
 
-  const onSubmit = async (values: LoginValues) => {
-    const result = await loginAction(values);
+  const finishSuccess = (displayName: string) => {
+    toast.success(t('successWelcome', { name: displayName }));
+    router.push(ROUTES.HOME);
+    router.refresh(); // let server components observe the new session cookie
+  };
+
+  const onCredentialsSubmit = async (values: LoginValues) => {
+    const result = await loginAction({ ...values, token2fa: '' });
 
     if (result.ok) {
-      toast.success(t('successWelcome', { name: result.displayName }));
-      router.push(ROUTES.HOME);
-      router.refresh(); // let server components observe the new session cookie
+      finishSuccess(result.displayName);
+      return;
+    }
+
+    if (result.reason === 'twoFaRequired') {
+      setTwoFaCode('');
+      setTwoFaError(null);
+      setStep('twoFa');
       return;
     }
 
@@ -69,8 +93,100 @@ export function LoginForm() {
     toast.error(t('errors.serverError'));
   };
 
+  const onTwoFaSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!TWO_FA_CODE_PATTERN.test(twoFaCode)) {
+      setTwoFaError(t('errors.twoFaCodeInvalid'));
+      return;
+    }
+    setTwoFaSubmitting(true);
+    try {
+      const { email, password } = getValues();
+      const result = await loginAction({ email, password, token2fa: twoFaCode });
+
+      if (result.ok) {
+        finishSuccess(result.displayName);
+        return;
+      }
+
+      if (result.reason === 'twoFaRequired') {
+        setTwoFaError(t('errors.twoFaCodeInvalid'));
+        return;
+      }
+
+      if (result.reason === 'invalid') {
+        const message = t('errors.invalidCredentials');
+        setError('email', { message });
+        setError('password', { message });
+        toast.error(message);
+        setStep('credentials');
+        resetField('password');
+        return;
+      }
+
+      toast.error(t('errors.serverError'));
+    } finally {
+      setTwoFaSubmitting(false);
+    }
+  };
+
+  const cancelTwoFa = () => {
+    setStep('credentials');
+    setTwoFaCode('');
+    setTwoFaError(null);
+    resetField('password');
+  };
+
+  if (step === 'twoFa') {
+    return (
+      <form onSubmit={onTwoFaSubmit} noValidate className="flex flex-col gap-5">
+        <div className="flex flex-col gap-1">
+          <p className="text-sm text-[var(--color-text-muted)]">{t('twoFaPrompt')}</p>
+        </div>
+
+        <TextField
+          id="twoFaCode"
+          type="text"
+          inputMode="numeric"
+          autoComplete="one-time-code"
+          maxLength={TWO_FA_CODE_LENGTH}
+          label={t('twoFaCode')}
+          placeholder={t('twoFaCodePlaceholder')}
+          value={twoFaCode}
+          onChange={(event) => {
+            const next = event.target.value.replace(/\D/g, '').slice(0, TWO_FA_CODE_LENGTH);
+            setTwoFaCode(next);
+            if (twoFaError) setTwoFaError(null);
+          }}
+          error={twoFaError ?? undefined}
+          autoFocus
+        />
+
+        <div className="flex flex-col gap-2">
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            fullWidth
+            loading={twoFaSubmitting}
+            disabled={twoFaCode.length !== TWO_FA_CODE_LENGTH}
+          >
+            {twoFaSubmitting ? t('twoFaSubmitting') : t('twoFaSubmit')}
+          </Button>
+          <Button type="button" variant="outline" size="lg" fullWidth onClick={cancelTwoFa}>
+            {t('twoFaCancel')}
+          </Button>
+        </div>
+      </form>
+    );
+  }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
+    <form
+      onSubmit={handleSubmit(onCredentialsSubmit)}
+      noValidate
+      className="flex flex-col gap-5"
+    >
       <TextField
         id="email"
         type="email"
