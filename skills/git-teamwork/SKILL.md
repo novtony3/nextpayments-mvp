@@ -49,6 +49,11 @@ Never start a new feature on top of stale `main` or an unrelated branch.
 - `git branch --show-current` → a properly named feature branch, not protected?
 - For a new feature: was it branched from freshly pulled `main`?
 - One coherent scope per branch/PR.
+- **Output validation gate is GREEN** — typecheck, lint, format, i18n parity (+ build when broad).
+  See **nextpayments-conventions §6**. Never commit unformatted or failing code; run the gate
+  before **every** commit, not just at task end.
+- Staged diff reviewed (`git diff --cached`) — only intentional changes, no stray reformatting.
 
 > Note: this agent does not push or open PRs unless explicitly asked. These
-> rules still govern which branch local commits land on.
+> rules still govern which branch local commits land on. Before a push, the
+> validation gate must have passed on the exact commits being pushed.

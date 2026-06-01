@@ -31,15 +31,15 @@ parseable by any other agent or script.
 
 ## Skills
 
-| Skill                         | Use when                                                                                                         |
-| ----------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `nextpayments-conventions`    | Any change in this monorepo — no-hardcoding, design system, i18n, routing, naming                                |
-| `component-reuse`             | Start of any UI task — reuse existing shared components before building new; new ones must follow the UI concept |
-| `frontend-clean-architecture` | Structuring features/modules, deciding where code lives, reviewing separation/reuse                              |
-| `react-nextjs-best-practices` | Writing React 19 / Next.js 15 App Router code                                                                    |
-| `code-formatting`             | Before finishing any file change — Prettier-format to the repo config; never hand-format                         |
-| `type-safety`                 | Writing/editing any TS/TSX — full explicit types/interfaces, no `any`, no unsafe casts                           |
-| `git-teamwork`                | Before any change/commit — feature-branch only, branch naming, start new features from fresh main                |
+| Skill                         | Use when                                                                                                                                     |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `nextpayments-conventions`    | Any change in this monorepo — no-hardcoding, design system, i18n, routing, naming, + the output validation gate (§6) run before every commit |
+| `component-reuse`             | Start of any UI task — reuse existing shared components before building new; new ones must follow the UI concept                             |
+| `frontend-clean-architecture` | Structuring features/modules, deciding where code lives, reviewing separation/reuse                                                          |
+| `react-nextjs-best-practices` | Writing React 19 / Next.js 15 App Router code                                                                                                |
+| `code-formatting`             | Before every commit (gate step 3) and any file change — Prettier-format to the repo config; never hand-format                                |
+| `type-safety`                 | Writing/editing any TS/TSX — full explicit types/interfaces, no `any`, no unsafe casts                                                       |
+| `git-teamwork`                | Before any change/commit/push — feature-branch only, branch naming, fresh main; commit only when the validation gate is green                |
 
 ## Wiring an agent to these skills (dynamic link)
 
