@@ -1,6 +1,7 @@
 'use client';
 
 import { Menu, X } from 'lucide-react';
+import { useScroll, useMotionValueEvent, useReducedMotion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
@@ -14,28 +15,48 @@ import { ThemeToggle } from './theme-toggle';
 
 const NAV_KEYS = ['features', 'coins', 'pricing', 'docs'] as const;
 
+/** Scroll past this (px) collapses the bar into the floating pill. */
+const SCROLL_COLLAPSE_THRESHOLD_PX = 24;
+
 export function Header() {
   const t = useTranslations('nav');
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const reduceMotion = useReducedMotion();
 
+  // Drive the collapse off Motion's batched scroll value (no raw window
+  // listener / layout thrash), mirroring the snapvow landing nav.
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, 'change', (y) => {
+    setScrolled(y > SCROLL_COLLAPSE_THRESHOLD_PX);
+  });
+
+  // Lock the page behind the full-screen mobile menu so only the overlay
+  // scrolls (restores the prior value on close / unmount).
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    if (!mobileOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [mobileOpen]);
+
+  // Collapsed pill only when scrolled and the mobile sheet is closed (the
+  // open menu uses the full-width flat bar to dock its close button).
+  const collapsed = scrolled && !mobileOpen;
 
   return (
-    <header
-      className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-all duration-300',
-        scrolled
-          ? 'bg-[color-mix(in_oklab,var(--color-bg)_60%,transparent)] backdrop-blur-2xl'
-          : 'bg-transparent',
-      )}
-    >
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5 sm:px-6">
+    <header className="fixed inset-x-0 top-0 z-50">
+      <div
+        className={cn(
+          'relative z-50 mx-auto flex h-14 items-center justify-between px-5 sm:px-6',
+          !reduceMotion && 'transition-all duration-500 ease-[var(--interaction-easing)]',
+          collapsed
+            ? 'mt-3 max-w-5xl rounded-full border border-[var(--glass-border)] bg-[var(--glass-fill-strong)] shadow-[0_10px_36px_-14px_rgba(0,0,0,0.55)] backdrop-blur-2xl'
+            : 'mt-0 max-w-6xl border border-transparent bg-transparent',
+        )}
+      >
         <Link href="/" className="shrink-0">
           <Logo />
         </Link>
@@ -70,24 +91,25 @@ export function Header() {
       </div>
 
       {mobileOpen && (
-        <div className="bg-[var(--color-bg)] md:hidden">
-          <div className="mx-auto flex max-w-6xl flex-col gap-1 px-5 py-3">
+        <div className="fixed inset-0 z-40 flex flex-col bg-[color-mix(in_oklab,var(--color-bg)_94%,transparent)] px-6 pb-10 pt-24 backdrop-blur-2xl md:hidden">
+          <nav className="flex flex-col">
             {NAV_KEYS.map((key) => (
               <a
                 key={key}
                 href={`#${key}`}
                 onClick={() => setMobileOpen(false)}
-                className="rounded-full px-3 py-2.5 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+                className="border-b border-[var(--color-border)] py-5 text-2xl font-medium text-[var(--color-text)] transition-colors hover:text-[var(--color-accent)]"
               >
                 {t(key)}
               </a>
             ))}
-            <div className="mt-2 flex items-center gap-2 pt-3">
-              <LanguageSwitcher />
-              <ThemeToggle />
-              <div className="ml-auto">
-                <AuthControls onNavigate={() => setMobileOpen(false)} />
-              </div>
+          </nav>
+
+          <div className="mt-auto flex items-center gap-2 pt-8">
+            <LanguageSwitcher />
+            <ThemeToggle />
+            <div className="ml-auto">
+              <AuthControls onNavigate={() => setMobileOpen(false)} />
             </div>
           </div>
         </div>
