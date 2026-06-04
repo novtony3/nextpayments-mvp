@@ -241,17 +241,67 @@
       "message": "Please verify your account to enable all currencies and features.",
       "cta": "Complete Verification"
     },
+    "wallet": {
+      "title": "Wallet",
+      "subtitle": "Top up your balance or withdraw funds.",
+      "deposit": {
+        "title": "Top up",
+        "subtitle": "Send crypto to your deposit address to credit your balance.",
+        "asset": "Coin / Network",
+        "assetOption": "{coin} · {network}",
+        "getAddress": "Get deposit address",
+        "addressLabel": "{coin} deposit address ({network})",
+        "memoLabel": "Memo / Tag",
+        "copy": "Copy",
+        "qrAlt": "QR code of your deposit address",
+        "confirmationsNote": "Funds are credited after the network confirms the transfer. Only send {coin} on the {network} network.",
+        "unavailable": "Deposits for {coin} on {network} are temporarily unavailable. Please try another coin or check back soon.",
+        "error": "Couldn't get a deposit address. The service may be unavailable — try again shortly."
+      },
+      "withdraw": {
+        "trigger": "Withdraw",
+        "title": "Withdraw funds",
+        "close": "Close withdraw",
+        "asset": "Coin / Network",
+        "assetOption": "{coin} · {network}",
+        "address": "Destination address",
+        "addressPlaceholder": "0x…",
+        "amount": "Amount",
+        "amountPlaceholder": "0.00",
+        "memo": "Memo / Tag (optional)",
+        "memoPlaceholder": "Leave empty if not required",
+        "token2fa": "2FA code",
+        "token2faPlaceholder": "6-digit code",
+        "cancel": "Cancel",
+        "submit": "Request withdrawal",
+        "submitting": "Requesting…",
+        "done": "Done",
+        "emailSentTitle": "Check your email",
+        "emailSentBody": "We've emailed you a link to approve this withdrawal. It won't be sent until you confirm from that link.",
+        "errors": {
+          "address": "Enter a valid EVM address (0x followed by 40 hex characters).",
+          "amount": "Enter an amount greater than 0.",
+          "token2fa": "Enter your 6-digit 2FA code.",
+          "asset": "This coin or network isn't valid.",
+          "unsupported": "Withdrawals for {coin} on {network} are temporarily unavailable.",
+          "generic": "Couldn't request the withdrawal. Please try again shortly."
+        }
+      }
+    },
     "balances": {
       "title": "Balances",
       "searchPlaceholder": "Search",
       "filterAll": "Show All Coins",
       "estimatedBalance": "Estimated balance",
+      "fiatUnavailable": "Balances are shown in crypto — fiat conversion is unavailable.",
       "autoAccept": "Auto-Accept Incorrect Deposits into Primary Balances",
       "locked": "Verify your account to enable {ticker}",
       "send": "Send",
       "receive": "Receive",
       "convert": "Convert",
-      "empty": "No coins match your search."
+      "empty": "No coins match your search.",
+      "noBalances": "No balances yet. Top up to get started.",
+      "error": "Couldn't load balances. The service may be unavailable — try again shortly."
     },
     "orderStats": {
       "title": "Order Stats",

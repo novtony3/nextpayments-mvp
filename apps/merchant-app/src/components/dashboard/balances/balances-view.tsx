@@ -1,19 +1,30 @@
 'use client';
 
-import { ArrowDownLeft, ArrowUpRight, Lock, Repeat } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { ArrowDownLeft, ArrowUpRight } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 
 import { Card } from '@nextpayments/ui/components/card';
 import { IconButton } from '@nextpayments/ui/components/icon-button';
 import { SearchInput } from '@nextpayments/ui/components/search-input';
-import { SelectField } from '@nextpayments/ui/components/select-field';
-import { ToggleSwitch } from '@nextpayments/ui/components/toggle-switch';
 
-import { MOCK_BALANCES, type BalanceRow } from '@/constants/balances';
-import { FIAT, ZERO_FIAT } from '@/constants/dashboard';
+import { COIN_TILES } from '@/constants/coins';
+import { ZERO_CRYPTO } from '@/constants/dashboard';
+import type { BalanceRow } from '@/lib/fund/types';
 
-function CoinAvatar({ row }: { row: BalanceRow }) {
+/** Neutral tile when the coin isn't in the shared {@link COIN_TILES} list. */
+const FALLBACK_GRADIENT = 'linear-gradient(135deg,#5a6772,#8a94a3)';
+const MAX_CRYPTO_FRACTION_DIGITS = 8;
+
+/** Display shape derived from a loose backend balance row + coin metadata. */
+type DisplayBalance = {
+  ticker: string;
+  name: string;
+  gradient: string;
+  amount: string;
+};
+
+function CoinAvatar({ row }: { row: DisplayBalance }) {
   return (
     <span
       aria-hidden="true"
@@ -25,63 +36,83 @@ function CoinAvatar({ row }: { row: BalanceRow }) {
   );
 }
 
+type BalancesViewProps = {
+  /** Live rows from `GET /fund/balance` (loose shape; read defensively). */
+  balances: BalanceRow[];
+  /** False when the balance read failed (tunnel down / not authed). */
+  ok: boolean;
+  /** Open the deposit panel for a coin (balance row "Receive"). */
+  onReceive: (coin: string) => void;
+  /** Open the withdraw sheet for a coin (balance row "Send"). */
+  onSend: (coin: string) => void;
+};
+
 /**
- * Wallet balances list. Client-side search/filter only (UI phase); rows come
- * from the shared mock data and are replaced by `GET /api/fund/balance` when
- * Fund is wired. Single-accent Gemini styling, theme-aware tokens throughout.
+ * Wallet balances list — wired to `GET /fund/balance`. Rows are a loose
+ * backend shape, so coin/amount are read defensively and display metadata
+ * (name, tile color) is joined from the shared {@link COIN_TILES}. No fiat is
+ * shown: the balance endpoint carries no price, so a fabricated value would be
+ * misleading — the crypto amount is the source of truth.
  */
-export function BalancesView() {
+export function BalancesView({ balances, ok, onReceive, onSend }: BalancesViewProps) {
   const t = useTranslations('dashboard.balances');
+  const locale = useLocale();
   const [query, setQuery] = useState('');
-  const [autoAccept, setAutoAccept] = useState(false);
+
+  const display = useMemo<DisplayBalance[]>(() => {
+    const fmt = new Intl.NumberFormat(locale, {
+      maximumFractionDigits: MAX_CRYPTO_FRACTION_DIGITS,
+    });
+    return balances.map((row) => {
+      const ticker =
+        typeof row.coin === 'string'
+          ? row.coin
+          : typeof row.currency === 'string'
+            ? row.currency
+            : typeof row.ticker === 'string'
+              ? row.ticker
+              : '—';
+      const tile = COIN_TILES.find((c) => c.ticker === ticker);
+      const raw = row.amount;
+      const num = typeof raw === 'number' ? raw : typeof raw === 'string' ? Number(raw) : NaN;
+      return {
+        ticker,
+        name: tile?.name ?? ticker,
+        gradient: tile?.gradient ?? FALLBACK_GRADIENT,
+        amount: Number.isFinite(num) ? fmt.format(num) : ZERO_CRYPTO,
+      };
+    });
+  }, [balances, locale]);
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return MOCK_BALANCES;
-    return MOCK_BALANCES.filter(
+    if (!q) return display;
+    return display.filter(
       (row) => row.name.toLowerCase().includes(q) || row.ticker.toLowerCase().includes(q),
     );
-  }, [query]);
+  }, [display, query]);
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <h2 className="text-lg font-semibold text-[var(--color-text)]">{t('title')}</h2>
         <SearchInput
           aria-label={t('searchPlaceholder')}
           placeholder={t('searchPlaceholder')}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full sm:max-w-xs"
+          className="w-full sm:ml-auto sm:max-w-xs"
         />
-        <SelectField
-          aria-label={t('filterAll')}
-          defaultValue="all"
-          options={[{ value: 'all', label: t('filterAll') }]}
-        />
-        <div className="sm:ml-auto sm:text-right">
-          <p className="text-xs uppercase tracking-wide text-[var(--color-text-subtle)]">
-            {t('estimatedBalance')}
-          </p>
-          <p className="text-2xl font-semibold text-[var(--color-text)]">
-            {FIAT.symbol}
-            {ZERO_FIAT} {FIAT.code}
-          </p>
-        </div>
       </div>
 
-      <label className="flex w-fit items-center gap-3 text-sm text-[var(--color-text-muted)]">
-        <ToggleSwitch
-          aria-label={t('autoAccept')}
-          checked={autoAccept}
-          onCheckedChange={setAutoAccept}
-        />
-        {t('autoAccept')}
-      </label>
+      <p className="text-xs text-[var(--color-text-subtle)]">{t('fiatUnavailable')}</p>
 
       <Card glow={false} className="divide-y divide-[var(--color-border)]">
-        {rows.length === 0 ? (
+        {!ok ? (
+          <p className="px-5 py-10 text-center text-sm text-[var(--color-danger)]">{t('error')}</p>
+        ) : rows.length === 0 ? (
           <p className="px-5 py-10 text-center text-sm text-[var(--color-text-muted)]">
-            {t('empty')}
+            {query ? t('empty') : t('noBalances')}
           </p>
         ) : (
           rows.map((row) => (
@@ -95,39 +126,20 @@ export function BalancesView() {
                 <p className="text-sm font-medium text-[var(--color-text)]">
                   {row.amount} {row.ticker}
                 </p>
-                <p className="text-xs text-[var(--color-text-subtle)]">
-                  {FIAT.symbol}
-                  {row.fiat} {FIAT.code}
-                </p>
               </div>
               <div className="flex shrink-0 items-center gap-1">
-                {row.locked ? (
-                  <span
-                    className="flex h-9 w-9 items-center justify-center rounded-full text-[var(--color-text-subtle)]"
-                    title={t('locked', { ticker: row.ticker })}
-                  >
-                    <Lock className="h-4 w-4" aria-hidden="true" />
-                    <span className="sr-only">{t('locked', { ticker: row.ticker })}</span>
-                  </span>
-                ) : (
-                  <>
-                    <IconButton
-                      aria-label={`${t('send')} ${row.ticker}`}
-                      variant="subtle"
-                      icon={<ArrowUpRight className="h-4 w-4" />}
-                    />
-                    <IconButton
-                      aria-label={`${t('receive')} ${row.ticker}`}
-                      variant="subtle"
-                      icon={<ArrowDownLeft className="h-4 w-4" />}
-                    />
-                    <IconButton
-                      aria-label={`${t('convert')} ${row.ticker}`}
-                      variant="subtle"
-                      icon={<Repeat className="h-4 w-4" />}
-                    />
-                  </>
-                )}
+                <IconButton
+                  aria-label={`${t('receive')} ${row.ticker}`}
+                  variant="subtle"
+                  icon={<ArrowDownLeft className="h-4 w-4" />}
+                  onClick={() => onReceive(row.ticker)}
+                />
+                <IconButton
+                  aria-label={`${t('send')} ${row.ticker}`}
+                  variant="subtle"
+                  icon={<ArrowUpRight className="h-4 w-4" />}
+                  onClick={() => onSend(row.ticker)}
+                />
               </div>
             </div>
           ))
