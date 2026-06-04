@@ -9,7 +9,7 @@ services:
     container_name: crypto-payment-admin-dashboard
     restart: unless-stopped
     ports:
-      - "127.0.0.1:5002:5002"
+      - "0.0.0.0:5002:5002"
     networks:
       - backend
     healthcheck:
