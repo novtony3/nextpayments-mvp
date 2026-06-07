@@ -19,11 +19,15 @@ type TransactionsViewProps = {
 
 function Notice({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <Card glow={false} className="flex items-start gap-3 bg-[var(--glass-fill)] px-5 py-4">
-      <span className="mt-0.5 shrink-0 text-[var(--color-text-subtle)]" aria-hidden="true">
-        {icon}
-      </span>
-      <p className="text-sm text-[var(--color-text-muted)]">{children}</p>
+    <Card glow={false} className="bg-[var(--glass-fill)] px-5 py-4">
+      {/* Card renders children inside a non-flex wrapper, so the row lives here
+          to keep the icon and text aligned on one line. */}
+      <div className="flex items-center gap-3">
+        <span className="shrink-0 text-[var(--color-text-subtle)]" aria-hidden="true">
+          {icon}
+        </span>
+        <p className="text-sm text-[var(--color-text-muted)]">{children}</p>
+      </div>
     </Card>
   );
 }
