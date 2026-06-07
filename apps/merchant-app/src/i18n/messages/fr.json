@@ -722,13 +722,10 @@
     "downline": {
       "title": "Downline",
       "description": "Utilisateurs ayant rejoint via votre lien de parrainage.",
-      "levelFilter": "Niveau",
-      "allLevels": "Tous",
-      "empty": "Aucun downline à ce niveau pour l'instant.",
+      "empty": "Aucun downline pour l'instant.",
       "error": "Impossible de charger le downline. Réessayez dans un instant.",
       "headers": {
         "email": "E-mail",
-        "level": "Niveau",
         "joined": "Inscription"
       }
     },

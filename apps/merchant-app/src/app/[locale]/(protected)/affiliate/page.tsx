@@ -4,8 +4,7 @@ import {
   AFFILIATE_COMMISSIONS_PAGE_PARAM,
   AFFILIATE_DOWNLINE_PAGE_PARAM,
   AFFILIATE_FIRST_PAGE,
-  AFFILIATE_LEVELS,
-  AFFILIATE_LEVEL_PARAM,
+  AFFILIATE_ONLY_LEVEL,
   AFFILIATE_PAGE_LIMIT,
 } from '@/constants/affiliate';
 import { CommissionsTable } from '@/components/dashboard/affiliate/commissions-table';
@@ -30,14 +29,6 @@ function parsePage(raw: string | undefined): number {
   return Number.isFinite(n) && n >= AFFILIATE_FIRST_PAGE ? n : AFFILIATE_FIRST_PAGE;
 }
 
-/** Validate the level against the allowed set so a hand-typed URL can't
- * tunnel arbitrary integers into the query. */
-function parseLevel(raw: string | undefined): number | null {
-  if (!raw) return null;
-  const n = Number.parseInt(raw, 10);
-  return (AFFILIATE_LEVELS as readonly number[]).includes(n) ? n : null;
-}
-
 /**
  * Affiliate dashboard — a top-level merchant nav entry. Totals (per-coin
  * commission strip) at the top, then two paginated tables: downline
@@ -56,14 +47,13 @@ export default async function AffiliatePage({ params, searchParams }: AffiliateP
 
   const downlinePage = parsePage(firstParam(search[AFFILIATE_DOWNLINE_PAGE_PARAM]));
   const commissionsPage = parsePage(firstParam(search[AFFILIATE_COMMISSIONS_PAGE_PARAM]));
-  const level = parseLevel(firstParam(search[AFFILIATE_LEVEL_PARAM]));
 
   const [totals, downline, commissions] = await Promise.all([
     loadAffiliateTotals(),
     loadDownline({
       page: downlinePage,
       limit: AFFILIATE_PAGE_LIMIT,
-      level: level ?? undefined,
+      level: AFFILIATE_ONLY_LEVEL,
     }),
     loadCommissions({
       page: commissionsPage,
@@ -78,12 +68,10 @@ export default async function AffiliatePage({ params, searchParams }: AffiliateP
   const downlinePreserved: Record<string, string | undefined> = {
     [AFFILIATE_COMMISSIONS_PAGE_PARAM]:
       commissionsPage !== AFFILIATE_FIRST_PAGE ? String(commissionsPage) : undefined,
-    [AFFILIATE_LEVEL_PARAM]: level !== null ? String(level) : undefined,
   };
   const commissionsPreserved: Record<string, string | undefined> = {
     [AFFILIATE_DOWNLINE_PAGE_PARAM]:
       downlinePage !== AFFILIATE_FIRST_PAGE ? String(downlinePage) : undefined,
-    [AFFILIATE_LEVEL_PARAM]: level !== null ? String(level) : undefined,
   };
 
   return (
@@ -96,7 +84,6 @@ export default async function AffiliatePage({ params, searchParams }: AffiliateP
       <TotalsStrip result={totals} />
       <DownlineTable
         result={downline}
-        level={level}
         pageParam={AFFILIATE_DOWNLINE_PAGE_PARAM}
         preservedParams={downlinePreserved}
       />

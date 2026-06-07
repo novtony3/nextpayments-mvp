@@ -722,13 +722,10 @@
     "downline": {
       "title": "Downline",
       "description": "Users who joined through your referral link.",
-      "levelFilter": "Level",
-      "allLevels": "All",
-      "empty": "No downline at this level yet.",
+      "empty": "No downline yet.",
       "error": "Couldn't load the downline. Try again in a moment.",
       "headers": {
         "email": "Email",
-        "level": "Level",
         "joined": "Joined"
       }
     },
