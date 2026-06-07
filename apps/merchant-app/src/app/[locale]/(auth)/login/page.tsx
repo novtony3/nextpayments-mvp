@@ -1,7 +1,9 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
+import { RETURN_TO_PARAM } from '@/constants/auth';
 import { ROUTES } from '@/constants/routes';
 import { Link, redirect } from '@/i18n/routing';
+import { safeReturnTo } from '@/lib/auth/return-to';
 import { getRefreshToken, isAuthenticated } from '@/lib/auth/session';
 import { Logo } from '@/components/shared/logo';
 import { BlueAccent } from '@/components/shared/blue-accent';
@@ -11,15 +13,22 @@ import { SocialButtons } from '@/components/auth/social-buttons';
 
 type LoginPageProps = {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-export default async function LoginPage({ params }: LoginPageProps) {
+export default async function LoginPage({ params, searchParams }: LoginPageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
+  // Where to land after sign-in / silent recovery (the page the guard bounced
+  // from), validated to an internal path. `undefined` → default destination.
+  const sp = await searchParams;
+  const rawReturn = sp[RETURN_TO_PARAM];
+  const returnTo = safeReturnTo(Array.isArray(rawReturn) ? rawReturn[0] : rawReturn);
+
   // Already signed in → don't show the login screen.
   if (await isAuthenticated()) {
-    redirect({ href: ROUTES.HOME, locale });
+    redirect({ href: returnTo ?? ROUTES.HOME, locale });
   }
 
   // Access cookie gone but a refresh cookie remains → attempt silent recovery.
@@ -31,7 +40,7 @@ export default async function LoginPage({ params }: LoginPageProps) {
       {/* Gemini Desktop signature: deep blue aurora rising from the floor. */}
       <BlueAccent intensity="bold" feather={false} />
 
-      {canRecover && <SessionRecover />}
+      {canRecover && <SessionRecover returnTo={returnTo} />}
 
       <div className="relative z-10 w-full max-w-[400px]">
         <div className="mb-10 flex flex-col items-center text-center">
@@ -44,7 +53,7 @@ export default async function LoginPage({ params }: LoginPageProps) {
           <p className="mt-3 text-sm text-[var(--color-text-muted)]">{t('subtitle')}</p>
         </div>
 
-        <LoginForm />
+        <LoginForm returnTo={returnTo} />
 
         <div className="mt-6">
           <SocialButtons />
