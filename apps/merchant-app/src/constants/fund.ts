@@ -40,6 +40,15 @@ export function fundAssetValue({ network, coin }: FundAsset): string {
   return `${network}:${coin}`;
 }
 
+/**
+ * Coins the Wallet queries fee-balance for (`GET /fund/fee-balance?coin=`).
+ * Derived from {@link FUND_ASSETS} (unique tickers) so adding a pair there
+ * automatically expands the balance query — no fixed coin hardcoded.
+ */
+export const FUND_BALANCE_COINS: ReadonlyArray<string> = [
+  ...new Set(FUND_ASSETS.map((a) => a.coin)),
+];
+
 /** EVM (`0x` + 40 hex) address gate — the real client-side check for ETH/BSC
  * withdrawals; the backend `validate-address` is only a soft pre-check. */
 export const EVM_ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;

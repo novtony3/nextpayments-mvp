@@ -28,6 +28,7 @@ export const API_ROUTES = {
   USER_ENABLE_2FA: '/user/enable-2fa',
   USER_DISABLE_2FA: '/user/disable-2fa',
   FUND_BALANCE: '/fund/balance',
+  FUND_FEE_BALANCE: '/fund/fee-balance',
   FUND_GET_ADDRESS: '/fund/get-address',
   FUND_GET_FEE_ADDRESS: '/fund/get-fee-address',
   FUND_VALIDATE_ADDRESS: '/fund/validate-address',

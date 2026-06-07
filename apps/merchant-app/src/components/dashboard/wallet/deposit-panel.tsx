@@ -32,8 +32,8 @@ function assetFromValue(value: string): FundAsset {
 
 /**
  * Topup / Deposit — the primary Wallet surface. Pick a (network, coin) and
- * fetch the user's deposit address (`POST /fund/get-address`, type "user")
- * with a scannable QR. Degrades calmly when the backend reports the pair is
+ * fetch the deposit address (`POST /fund/get-fee-address`) with a scannable
+ * QR. Degrades calmly when the backend reports the pair is
  * not enabled (`FUER006`): a notice instead of an address. No live polling —
  * deposits credit the balance only after on-chain confirmations (webhook), so
  * the panel states that rather than faking a status.
@@ -98,7 +98,7 @@ export function DepositPanel({ asset, onAssetChange }: DepositPanelProps) {
       </div>
 
       {status.kind === 'ready' && (
-        <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
+        <div className="mt-1 flex flex-col items-center gap-4 pt-2 sm:flex-row sm:items-start">
           <div className="shrink-0 rounded-2xl bg-white p-3">
             <QRCodeSVG
               value={status.address}
