@@ -4,9 +4,8 @@ import { Menu } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { IconButton } from '@nextpayments/ui/components/icon-button';
-import { SelectField } from '@nextpayments/ui/components/select-field';
 
-import { DASHBOARD_NAV, FIAT } from '@/constants/dashboard';
+import { DASHBOARD_NAV } from '@/constants/dashboard';
 import { usePathname } from '@/i18n/routing';
 import type { HeaderUser } from '@/lib/auth/types';
 import { AuthControls } from '@/components/auth/auth-controls';
@@ -62,12 +61,14 @@ export function DashboardTopbar({ user, onMenuClick }: DashboardTopbarProps) {
         </h1>
 
         <div className="ml-auto flex items-center gap-1.5">
+          {/* TODO: re-enable — display-currency ($ USD) selector temporarily hidden.
           <SelectField
             aria-label={t('fiatSelector')}
             defaultValue={FIAT.code}
             options={[{ value: FIAT.code, label: `${FIAT.symbol} ${FIAT.code}` }]}
             className="hidden sm:inline-flex"
           />
+          */}
           <LanguageSwitcher />
           <ThemeToggle />
           <AuthControls user={user} />
