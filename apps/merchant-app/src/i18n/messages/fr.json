@@ -3,7 +3,13 @@
     "appName": "Nextpayments",
     "tagline": "Passerelle de paiement crypto pour les entreprises",
     "loading": "Chargement...",
-    "comingSoon": "Bientôt disponible"
+    "comingSoon": "Bientôt disponible",
+    "pagination": {
+      "nav": "Pagination",
+      "prev": "Préc.",
+      "next": "Suiv.",
+      "page": "Page {page}"
+    }
   },
   "nav": {
     "features": "Fonctionnalités",
@@ -339,12 +345,6 @@
       "viewDetail": "Voir la commande {reference}",
       "empty": "Aucune commande pour le moment.",
       "error": "Impossible de charger les commandes. Le service est peut-être indisponible — réessayez plus tard.",
-      "pagination": {
-        "nav": "Pages de commandes",
-        "prev": "Préc.",
-        "next": "Suiv.",
-        "page": "Page {page}"
-      },
       "detail": {
         "eyebrow": "Commande",
         "back": "Retour aux commandes",

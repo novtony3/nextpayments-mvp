@@ -3,12 +3,14 @@
 import { useLocale, useTranslations } from 'next-intl';
 
 import { Card } from '@nextpayments/ui/components/card';
-import { Pagination } from '@nextpayments/ui/components/pagination';
 
 import { ORDERS_PARAM, ORDER_STATUS_FILTER_ALL, type OrderStatusFilter } from '@/constants/orders';
 import { ROUTES } from '@/constants/routes';
 import { Link, usePathname, useRouter } from '@/i18n/routing';
 import type { OrderRow, OrderListPage } from '@/lib/orders/types';
+import { TablePagination } from '@/components/shared/table-pagination';
+
+import { OrderStatusBadge } from './order-status-badge';
 
 type OrdersTableProps = {
   data: OrderListPage;
@@ -119,7 +121,9 @@ export function OrdersTable({ data, status, integrationId }: OrdersTableProps) {
                   </td>
                   <td className="px-4 py-3">{cell(row.coin)}</td>
                   <td className="px-4 py-3">{amount(row, locale)}</td>
-                  <td className="px-4 py-3">{row.status ? t(`status.${row.status}`) : '—'}</td>
+                  <td className="px-4 py-3">
+                    {row.status ? <OrderStatusBadge status={row.status} /> : '—'}
+                  </td>
                   <td className="px-4 py-3 text-[var(--color-text-muted)]">
                     {formatDate(row.createdAt)}
                   </td>
@@ -130,19 +134,7 @@ export function OrdersTable({ data, status, integrationId }: OrdersTableProps) {
         </table>
       </Card>
 
-      {data.totalPages > 1 && (
-        <Pagination
-          page={data.page}
-          totalPages={data.totalPages}
-          onPageChange={goToPage}
-          labels={{
-            nav: t('pagination.nav'),
-            prev: t('pagination.prev'),
-            next: t('pagination.next'),
-            page: (p) => t('pagination.page', { page: p }),
-          }}
-        />
-      )}
+      <TablePagination page={data.page} totalPages={data.totalPages} onPageChange={goToPage} />
     </div>
   );
 }

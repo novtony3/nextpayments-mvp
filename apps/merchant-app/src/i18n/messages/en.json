@@ -3,7 +3,13 @@
     "appName": "Nextpayments",
     "tagline": "Crypto payment gateway for businesses",
     "loading": "Loading...",
-    "comingSoon": "Coming soon"
+    "comingSoon": "Coming soon",
+    "pagination": {
+      "nav": "Pagination",
+      "prev": "Prev",
+      "next": "Next",
+      "page": "Page {page}"
+    }
   },
   "nav": {
     "features": "Features",
@@ -339,12 +345,6 @@
       "viewDetail": "View order {reference}",
       "empty": "No orders yet.",
       "error": "Couldn't load orders. The service may be unavailable — try again shortly.",
-      "pagination": {
-        "nav": "Orders pages",
-        "prev": "Prev",
-        "next": "Next",
-        "page": "Page {page}"
-      },
       "detail": {
         "eyebrow": "Order",
         "back": "Back to orders",
