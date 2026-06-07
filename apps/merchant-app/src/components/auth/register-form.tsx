@@ -36,6 +36,8 @@ export function RegisterForm() {
         .min(1, { message: t('errors.passwordRequired') })
         .min(PASSWORD_MIN_LENGTH, { message: t('errors.passwordTooShort') }),
       confirmPassword: z.string().min(1, { message: t('errors.confirmRequired') }),
+      // Optional referral code (upline id); only sent to the backend when filled.
+      referral: z.string().optional(),
     })
     .refine((v) => v.password === v.confirmPassword, {
       path: ['confirmPassword'],
@@ -53,7 +55,7 @@ export function RegisterForm() {
     resolver: zodResolver(schema),
     mode: 'onBlur',
     reValidateMode: 'onChange',
-    defaultValues: { name: '', email: '', password: '', confirmPassword: '' },
+    defaultValues: { name: '', email: '', password: '', confirmPassword: '', referral: '' },
   });
 
   const onSubmit = async (values: RegisterValues) => {
@@ -61,6 +63,8 @@ export function RegisterForm() {
       userName: values.name,
       email: values.email,
       password: values.password,
+      // Trim and drop empty so the backend never sees "" (USER005).
+      referralId: values.referral?.trim() || undefined,
     });
 
     if (result.ok) {
@@ -151,6 +155,16 @@ export function RegisterForm() {
         placeholder={AUTH_FIELD_PLACEHOLDERS.PASSWORD}
         error={errors.confirmPassword?.message}
         {...register('confirmPassword')}
+      />
+
+      <TextField
+        id="referral"
+        type="text"
+        autoComplete="off"
+        label={t('referral')}
+        placeholder={t('referralPlaceholder')}
+        error={errors.referral?.message}
+        {...register('referral')}
       />
 
       <Button type="submit" variant="primary" size="lg" fullWidth loading={isSubmitting}>

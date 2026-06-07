@@ -9,7 +9,8 @@ import { Logo } from '@/components/shared/logo';
 import { BlueAccent } from '@/components/shared/blue-accent';
 import { LoginForm } from '@/components/auth/login-form';
 import { SessionRecover } from '@/components/auth/session-recover';
-import { SocialButtons } from '@/components/auth/social-buttons';
+// TODO: re-enable Google sign-in — temporarily disabled.
+// import { SocialButtons } from '@/components/auth/social-buttons';
 
 type LoginPageProps = {
   params: Promise<{ locale: string }>;
@@ -55,9 +56,11 @@ export default async function LoginPage({ params, searchParams }: LoginPageProps
 
         <LoginForm returnTo={returnTo} />
 
+        {/* Google sign-in temporarily disabled.
         <div className="mt-6">
           <SocialButtons />
         </div>
+        */}
 
         <p className="mt-8 text-center text-sm text-[var(--color-text-muted)]">
           {t('noAccount')}{' '}

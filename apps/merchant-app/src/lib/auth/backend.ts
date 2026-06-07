@@ -67,11 +67,12 @@ export async function backendRegister(credentials: RegisterCredentials): Promise
   const res = await backendFetch(API_ROUTES.USER_REGISTER, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    // referralId intentionally omitted — backend rejects null and "" (USER005).
+    // referralId only sent when present — backend rejects null and "" (USER005).
     body: JSON.stringify({
       userName: credentials.userName,
       email: credentials.email,
       password: credentials.password,
+      ...(credentials.referralId ? { referralId: credentials.referralId } : {}),
     }),
   });
 

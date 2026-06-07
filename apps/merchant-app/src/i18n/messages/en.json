@@ -10,7 +10,7 @@
     "pricing": "Pricing",
     "docs": "Docs",
     "coins": "Coins",
-    "login": "Log in",
+    "login": "Sign in",
     "getStarted": "Get started",
     "themeLight": "Light mode",
     "themeDark": "Dark mode",
@@ -183,6 +183,8 @@
       "email": "Email",
       "password": "Password",
       "confirmPassword": "Confirm password",
+      "referral": "Referral code (optional)",
+      "referralPlaceholder": "Enter a referral code",
       "submit": "Create account",
       "submitting": "Creating account...",
       "or": "OR",
@@ -212,7 +214,7 @@
       }
     },
     "logout": {
-      "button": "Log out",
+      "button": "Sign out",
       "success": "Signed out"
     },
     "account": {

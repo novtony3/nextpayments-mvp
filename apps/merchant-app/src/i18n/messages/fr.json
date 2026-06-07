@@ -183,6 +183,8 @@
       "email": "E-mail",
       "password": "Mot de passe",
       "confirmPassword": "Confirmer le mot de passe",
+      "referral": "Code de parrainage (facultatif)",
+      "referralPlaceholder": "Saisissez un code de parrainage",
       "submit": "Créer un compte",
       "submitting": "Création du compte...",
       "or": "OU",
