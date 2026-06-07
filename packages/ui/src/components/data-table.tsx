@@ -58,7 +58,7 @@ export function DataTable<Row>({
           {rows.map((row, index) => (
             <tr
               key={getRowKey(row, index)}
-              className="border-t border-[var(--color-border)] align-middle"
+              className="row-interactive border-t border-[var(--color-border)] align-middle"
             >
               {columns.map((col) => (
                 <td key={col.key} className={cn('px-4 py-3', col.cellClassName)}>
