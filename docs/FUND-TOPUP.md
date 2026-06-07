@@ -11,16 +11,16 @@ sheet. Order stats moved beneath the fund sections.
 
 ## Shipped
 
-| Layer | Files |
-| --- | --- |
-| Routes | `src/constants/api.ts` — added `FUND_BALANCE`, `FUND_GET_ADDRESS`, `FUND_GET_FEE_ADDRESS`, `FUND_VALIDATE_ADDRESS`, `FUND_WITHDRAW` |
-| Config | `src/constants/fund.ts` — default **ETH/ETH**, `FUND_ASSETS`, `EVM_ADDRESS_REGEX`, `FUND_QR_SIZE_PX`, `FUND_ERROR_CODE` (FUER00x) |
-| Types (zod, loose) | `src/lib/fund/types.ts` — `balanceResponseSchema`/`BalancesResult`, `getAddressResponseSchema`/`GetAddressResult`, `withdrawInputSchema`/`WithdrawResult` |
-| Backend (server‑only) | `src/lib/fund/backend.ts` — `backendFundBalance`, `loadFundBalance` (never‑throw reader), `backendGetDepositAddress`, `backendWithdraw`, `ensureOk` |
-| Actions (`'use server'`) | `src/lib/fund/actions.ts` — `getDepositAddressAction`, `requestWithdrawAction` (map FUER → field / banner) |
-| UI | `src/components/dashboard/wallet/{wallet-view,deposit-panel,withdraw-sheet}.tsx`; rewired `src/components/dashboard/balances/balances-view.tsx` (real data) |
-| Page | `src/app/[locale]/(protected)/dashboard/page.tsx` — Topup‑first, parallel reads |
-| i18n | `dashboard.wallet.*` + extended `dashboard.balances.*` in `en.json` + `fr.json` (parity verified) |
+| Layer                    | Files                                                                                                                                                       |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Routes                   | `src/constants/api.ts` — added `FUND_BALANCE`, `FUND_GET_ADDRESS`, `FUND_GET_FEE_ADDRESS`, `FUND_VALIDATE_ADDRESS`, `FUND_WITHDRAW`                         |
+| Config                   | `src/constants/fund.ts` — default **ETH/ETH**, `FUND_ASSETS`, `EVM_ADDRESS_REGEX`, `FUND_QR_SIZE_PX`, `FUND_ERROR_CODE` (FUER00x)                           |
+| Types (zod, loose)       | `src/lib/fund/types.ts` — `balanceResponseSchema`/`BalancesResult`, `getAddressResponseSchema`/`GetAddressResult`, `withdrawInputSchema`/`WithdrawResult`   |
+| Backend (server‑only)    | `src/lib/fund/backend.ts` — `backendFundBalance`, `loadFundBalance` (never‑throw reader), `backendGetDepositAddress`, `backendWithdraw`, `ensureOk`         |
+| Actions (`'use server'`) | `src/lib/fund/actions.ts` — `getDepositAddressAction`, `requestWithdrawAction` (map FUER → field / banner)                                                  |
+| UI                       | `src/components/dashboard/wallet/{wallet-view,deposit-panel,withdraw-sheet}.tsx`; rewired `src/components/dashboard/balances/balances-view.tsx` (real data) |
+| Page                     | `src/app/[locale]/(protected)/dashboard/page.tsx` — Topup‑first, parallel reads                                                                             |
+| i18n                     | `dashboard.wallet.*` + extended `dashboard.balances.*` in `en.json` + `fr.json` (parity verified)                                                           |
 
 **Crypto business logic baked in:** topup uses `get-address` (`type:"user"`, credits
 balance — chosen over the fee address); EVM `0x…` addresses (ETH/Sepolia); deposits
@@ -34,14 +34,14 @@ fiat** (balance carries no price); withdraw `token2fa` is required only when
 
 ## Verified vs blocked
 
-| Flow | Status |
-| --- | --- |
-| Deposit address ETH/ETH | ✅ **Works** — real `type:"user"` address + QR (curl + UI) |
-| Balance read | ✅ Wired; empty‑state correct (probed account has no balance) |
-| History | ✅ Already done pre‑existing (`transactions` page) |
-| Withdraw form / validation / FUER mapping | ✅ Verified (amount=0→FUER005, bad address→client EVM error, FUER006→banner) |
-| Withdraw full happy‑path | ⚠️ **Needs a funded balance to test end‑to‑end** |
-| USDT (ETH/BSC) deposit/withdraw | ⚠️ Backend returns **FUER006** (catalog not enabled) → graceful "temporarily unavailable" banner |
+| Flow                                      | Status                                                                                           |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Deposit address ETH/ETH                   | ✅ **Works** — real `type:"user"` address + QR (curl + UI)                                       |
+| Balance read                              | ✅ Wired; empty‑state correct (probed account has no balance)                                    |
+| History                                   | ✅ Already done pre‑existing (`transactions` page)                                               |
+| Withdraw form / validation / FUER mapping | ✅ Verified (amount=0→FUER005, bad address→client EVM error, FUER006→banner)                     |
+| Withdraw full happy‑path                  | ⚠️ **Needs a funded balance to test end‑to‑end**                                                 |
+| USDT (ETH/BSC) deposit/withdraw           | ⚠️ Backend returns **FUER006** (catalog not enabled) → graceful "temporarily unavailable" banner |
 
 ---
 
