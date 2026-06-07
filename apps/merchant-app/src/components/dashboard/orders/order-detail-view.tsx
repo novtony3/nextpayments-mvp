@@ -1,7 +1,8 @@
-import { AlertTriangle, ArrowLeft, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 
 import { Card } from '@nextpayments/ui/components/card';
+import { Notice } from '@nextpayments/ui/components/notice';
 
 import { ROUTES } from '@/constants/routes';
 import { Link } from '@/i18n/routing';
@@ -57,15 +58,7 @@ export function OrderDetailView({ orderId, result }: OrderDetailViewProps) {
     return (
       <div className="mx-auto flex max-w-3xl flex-col gap-6">
         {backLink}
-        <Card glow={false} className="flex items-start gap-3 bg-[var(--glass-fill)] px-5 py-4">
-          <AlertTriangle
-            className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-danger)]"
-            aria-hidden="true"
-          />
-          <p className="text-sm text-[var(--color-text-muted)]">
-            {t(isNotFound ? 'notFound' : 'error', { orderId })}
-          </p>
-        </Card>
+        <Notice tone="danger">{t(isNotFound ? 'notFound' : 'error', { orderId })}</Notice>
       </div>
     );
   }

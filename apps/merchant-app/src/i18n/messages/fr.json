@@ -598,13 +598,7 @@
       },
       "empty": "Aucune transaction pour le moment.",
       "error": "Impossible de charger les transactions. Le service est peut-être indisponible — réessayez bientôt.",
-      "tabUnavailable": "{tab} ne sont pas encore disponibles. Cet onglet s'activera une fois son backend connecté.",
-      "pagination": {
-        "nav": "Pages des transactions",
-        "prev": "Préc.",
-        "next": "Suiv.",
-        "page": "Page {page}"
-      }
+      "tabUnavailable": "{tab} ne sont pas encore disponibles. Cet onglet s'activera une fois son backend connecté."
     }
   },
   "notFound": {
@@ -738,7 +732,6 @@
         "date": "Date",
         "coin": "Monnaie",
         "amount": "Montant",
-        "level": "Niveau",
         "from": "De"
       }
     },

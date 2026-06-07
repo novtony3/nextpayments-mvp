@@ -3,11 +3,13 @@
 import { useLocale, useTranslations } from 'next-intl';
 
 import { Card } from '@nextpayments/ui/components/card';
-import { Pagination } from '@nextpayments/ui/components/pagination';
+import { DataTable, type DataTableColumn } from '@nextpayments/ui/components/data-table';
+import { EmptyState } from '@nextpayments/ui/components/empty-state';
 
 import { CURRENCY_FILTER_ALL, TX_PARAM } from '@/constants/transactions';
 import { usePathname, useRouter } from '@/i18n/routing';
 import type { TransactionRow, TransactionsPage, TransactionTab } from '@/lib/fund/types';
+import { TablePagination } from '@/components/shared/table-pagination';
 
 type TransactionsTableProps = {
   data: TransactionsPage;
@@ -57,59 +59,54 @@ export function TransactionsTable({ data, tab, coin }: TransactionsTableProps) {
   if (data.rows.length === 0) {
     return (
       <Card glow={false}>
-        <p className="px-5 py-16 text-center text-sm text-[var(--color-text-muted)]">
-          {t('empty')}
-        </p>
+        <EmptyState title={t('empty')} />
       </Card>
     );
   }
 
+  const columns: DataTableColumn<TransactionRow>[] = [
+    {
+      key: 'coin',
+      header: t('columns.coin'),
+      cellClassName: 'font-medium',
+      render: (row) => cell(row.coin),
+    },
+    { key: 'amount', header: t('columns.amount'), render: (row) => cell(row.amount) },
+    {
+      key: 'status',
+      header: t('columns.status'),
+      render: (row) => (
+        <span className="rounded-full bg-[var(--color-accent-soft)] px-2.5 py-1 text-xs font-medium text-[var(--color-accent)]">
+          {cell(row.status)}
+        </span>
+      ),
+    },
+    {
+      key: 'date',
+      header: t('columns.date'),
+      cellClassName: 'text-[var(--color-text-muted)]',
+      render: (row) => formatDate(row.createdAt),
+    },
+    {
+      key: 'reference',
+      header: t('columns.reference'),
+      cellClassName: 'max-w-[16rem] truncate font-mono text-xs text-[var(--color-text-subtle)]',
+      render: (row) => reference(row),
+    },
+  ];
+
   return (
     <div className="flex flex-col gap-6">
-      <Card glow={false} className="overflow-x-auto">
-        <table className="w-full min-w-[40rem] text-sm">
-          <thead>
-            <tr className="border-b border-[var(--color-border)] text-left text-xs uppercase tracking-wide text-[var(--color-text-subtle)]">
-              <th className="px-5 py-3 font-medium">{t('columns.coin')}</th>
-              <th className="px-5 py-3 font-medium">{t('columns.amount')}</th>
-              <th className="px-5 py-3 font-medium">{t('columns.status')}</th>
-              <th className="px-5 py-3 font-medium">{t('columns.date')}</th>
-              <th className="px-5 py-3 font-medium">{t('columns.reference')}</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[var(--color-border)]">
-            {data.rows.map((row, i) => (
-              <tr key={rowKey(row, i)} className="row-interactive">
-                <td className="px-5 py-4 font-medium text-[var(--color-text)]">{cell(row.coin)}</td>
-                <td className="px-5 py-4 text-[var(--color-text)]">{cell(row.amount)}</td>
-                <td className="px-5 py-4">
-                  <span className="rounded-full bg-[var(--color-accent-soft)] px-2.5 py-1 text-xs font-medium text-[var(--color-accent)]">
-                    {cell(row.status)}
-                  </span>
-                </td>
-                <td className="px-5 py-4 text-[var(--color-text-muted)]">
-                  {formatDate(row.createdAt)}
-                </td>
-                <td className="max-w-[16rem] truncate px-5 py-4 font-mono text-xs text-[var(--color-text-subtle)]">
-                  {reference(row)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <Card glow={false} className="p-0">
+        <DataTable
+          columns={columns}
+          rows={data.rows}
+          getRowKey={rowKey}
+          minWidthClassName="min-w-[40rem]"
+        />
       </Card>
 
-      <Pagination
-        page={data.page}
-        totalPages={Math.max(data.totalPages, 1)}
-        onPageChange={goToPage}
-        labels={{
-          nav: t('pagination.nav'),
-          prev: t('pagination.prev'),
-          next: t('pagination.next'),
-          page: (n) => t('pagination.page', { page: n }),
-        }}
-      />
+      <TablePagination page={data.page} totalPages={data.totalPages} onPageChange={goToPage} />
     </div>
   );
 }

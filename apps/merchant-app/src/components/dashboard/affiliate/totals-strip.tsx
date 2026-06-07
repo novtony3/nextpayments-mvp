@@ -1,7 +1,8 @@
 import { useLocale, useTranslations } from 'next-intl';
-import { AlertTriangle, Coins } from 'lucide-react';
+import { Coins } from 'lucide-react';
 
 import { Card } from '@nextpayments/ui/components/card';
+import { Notice } from '@nextpayments/ui/components/notice';
 
 import type { TotalsResult } from '@/lib/affiliate/types';
 
@@ -30,17 +31,7 @@ export function TotalsStrip({ result }: TotalsStripProps) {
   const locale = useLocale();
 
   if (!result.ok) {
-    return (
-      <Card glow={false} className="bg-[var(--glass-fill)] px-5 py-4">
-        <div className="flex items-center gap-3">
-          <AlertTriangle
-            className="h-4 w-4 shrink-0 text-[var(--color-danger)]"
-            aria-hidden="true"
-          />
-          <p className="text-sm text-[var(--color-text-muted)]">{t('error')}</p>
-        </div>
-      </Card>
-    );
+    return <Notice tone="danger">{t('error')}</Notice>;
   }
 
   if (result.data.length === 0) {

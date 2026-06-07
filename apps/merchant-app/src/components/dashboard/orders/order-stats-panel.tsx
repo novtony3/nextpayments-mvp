@@ -1,7 +1,7 @@
-import { AlertTriangle } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 
 import { Card } from '@nextpayments/ui/components/card';
+import { Notice } from '@nextpayments/ui/components/notice';
 
 import { FIAT } from '@/constants/dashboard';
 import type { OrderStatsResult } from '@/lib/orders/types';
@@ -39,15 +39,7 @@ export function OrderStatsPanel({ result }: OrderStatsPanelProps) {
   const locale = useLocale();
 
   if (!result.ok) {
-    return (
-      <Card glow={false} className="flex items-start gap-3 bg-[var(--glass-fill)] px-5 py-4">
-        <AlertTriangle
-          className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-danger)]"
-          aria-hidden="true"
-        />
-        <p className="text-sm text-[var(--color-text-muted)]">{t('error')}</p>
-      </Card>
-    );
+    return <Notice tone="danger">{t('error')}</Notice>;
   }
 
   const { totalOrders, paidOrders, totalUsdt, byCoin } = result.data;
@@ -104,15 +96,7 @@ export function OrderStatsPanel({ result }: OrderStatsPanelProps) {
       )}
 
       {unpricedCoins.length > 0 && (
-        <Card glow={false} className="flex items-start gap-3 bg-[var(--glass-fill)] px-5 py-4">
-          <AlertTriangle
-            className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-text-subtle)]"
-            aria-hidden="true"
-          />
-          <p className="text-sm text-[var(--color-text-muted)]">
-            {t('unpriced', { coins: unpricedCoins.join(', ') })}
-          </p>
-        </Card>
+        <Notice tone="info">{t('unpriced', { coins: unpricedCoins.join(', ') })}</Notice>
       )}
     </section>
   );

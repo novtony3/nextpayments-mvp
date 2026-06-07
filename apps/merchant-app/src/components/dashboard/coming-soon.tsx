@@ -2,6 +2,7 @@ import { Sparkles } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { Card } from '@nextpayments/ui/components/card';
+import { EmptyState } from '@nextpayments/ui/components/empty-state';
 
 import type { DashboardIconKey } from '@/constants/dashboard';
 
@@ -21,17 +22,12 @@ export function ComingSoon({ section }: ComingSoonProps) {
 
   return (
     <div className="mx-auto max-w-xl">
-      <Card className="flex flex-col items-center gap-3 px-8 py-16 text-center">
-        <span
-          aria-hidden="true"
-          className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--color-accent-soft)] text-[var(--color-accent)]"
-        >
-          <Sparkles className="h-5 w-5" />
-        </span>
-        <h2 className="text-lg font-semibold text-[var(--color-text)]">
-          {t('placeholder.title', { section: name })}
-        </h2>
-        <p className="text-sm text-[var(--color-text-muted)]">{t('placeholder.description')}</p>
+      <Card>
+        <EmptyState
+          icon={<Sparkles className="h-5 w-5" />}
+          title={t('placeholder.title', { section: name })}
+          description={t('placeholder.description')}
+        />
       </Card>
     </div>
   );

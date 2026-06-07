@@ -2,9 +2,11 @@ import { useLocale, useTranslations } from 'next-intl';
 import { AlertTriangle, UsersRound } from 'lucide-react';
 
 import { Card } from '@nextpayments/ui/components/card';
+import { DataTable, type DataTableColumn } from '@nextpayments/ui/components/data-table';
+import { EmptyState } from '@nextpayments/ui/components/empty-state';
 
 import { ROUTES } from '@/constants/routes';
-import type { DownlineResult } from '@/lib/affiliate/types';
+import type { AffiliateDownlineRow, DownlineResult } from '@/lib/affiliate/types';
 
 import { AffiliatePager } from './affiliate-pager';
 
@@ -35,6 +37,20 @@ export function DownlineTable({ result, pageParam, preservedParams }: DownlineTa
   const t = useTranslations('affiliate.downline');
   const locale = useLocale();
 
+  const columns: DataTableColumn<AffiliateDownlineRow>[] = [
+    {
+      key: 'email',
+      header: t('headers.email'),
+      render: (row) => row.email ?? row.userName ?? '—',
+    },
+    {
+      key: 'joined',
+      header: t('headers.joined'),
+      cellClassName: 'text-[var(--color-text-muted)]',
+      render: (row) => formatDate(row.joinedAt ?? row.createdAt, locale),
+    },
+  ];
+
   return (
     <Card glow={false} className="px-6 py-6">
       <div className="flex flex-col gap-5">
@@ -54,44 +70,15 @@ export function DownlineTable({ result, pageParam, preservedParams }: DownlineTa
         )}
 
         {result.ok && result.data.rows.length === 0 && (
-          <div className="flex min-h-[180px] flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-[var(--glass-border)] bg-[var(--glass-fill)] px-4 py-12 text-center">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[color-mix(in_oklab,var(--color-surface)_60%,transparent)]">
-              <UsersRound className="h-6 w-6 text-[var(--color-text-subtle)]" aria-hidden="true" />
-            </span>
-            <p className="text-sm text-[var(--color-text-muted)]">{t('empty')}</p>
-          </div>
+          <EmptyState icon={<UsersRound className="h-5 w-5" />} title={t('empty')} />
         )}
 
         {result.ok && result.data.rows.length > 0 && (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-left text-xs uppercase tracking-wide text-[var(--color-text-subtle)]">
-                  <th className="border-b border-[var(--glass-border)] py-2 pr-4 font-medium">
-                    {t('headers.email')}
-                  </th>
-                  <th className="border-b border-[var(--glass-border)] py-2 pr-4 font-medium">
-                    {t('headers.joined')}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {result.data.rows.map((row, index) => (
-                  <tr
-                    key={row._id ?? `${index}-${row.email ?? 'row'}`}
-                    className="border-b border-[var(--glass-border)] last:border-b-0"
-                  >
-                    <td className="py-3 pr-4 text-[var(--color-text)]">
-                      {row.email ?? row.userName ?? '—'}
-                    </td>
-                    <td className="py-3 pr-4 text-[var(--color-text-muted)]">
-                      {formatDate(row.joinedAt ?? row.createdAt, locale)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <DataTable
+            columns={columns}
+            rows={result.data.rows}
+            getRowKey={(row, index) => row._id ?? `${index}-${row.email ?? 'row'}`}
+          />
         )}
 
         {result.ok && (

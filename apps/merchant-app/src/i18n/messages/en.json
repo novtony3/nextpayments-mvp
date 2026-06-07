@@ -598,13 +598,7 @@
       },
       "empty": "No transactions yet.",
       "error": "Couldn't load transactions. The service may be unavailable — try again shortly.",
-      "tabUnavailable": "{tab} are not available yet. This tab will activate once its backend is connected.",
-      "pagination": {
-        "nav": "Transactions pages",
-        "prev": "Prev",
-        "next": "Next",
-        "page": "Page {page}"
-      }
+      "tabUnavailable": "{tab} are not available yet. This tab will activate once its backend is connected."
     }
   },
   "notFound": {
@@ -738,7 +732,6 @@
         "date": "Date",
         "coin": "Coin",
         "amount": "Amount",
-        "level": "Level",
         "from": "From"
       }
     },
