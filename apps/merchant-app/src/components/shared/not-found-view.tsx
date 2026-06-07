@@ -2,6 +2,7 @@ import { useTranslations } from 'next-intl';
 
 import { Button } from '@nextpayments/ui/components/button';
 
+import { BRAND_NAME } from '@/constants/site';
 import { ROUTES } from '@/constants/routes';
 import { Link } from '@/i18n/routing';
 import { TwinAuroras } from '@/components/shared/twin-auroras';
@@ -26,7 +27,7 @@ export function NotFoundView() {
 
       <Link
         href={ROUTES.HOME}
-        aria-label="Nextpayments"
+        aria-label={BRAND_NAME}
         className="absolute left-6 top-6 sm:left-8 sm:top-8"
       >
         <Logo />

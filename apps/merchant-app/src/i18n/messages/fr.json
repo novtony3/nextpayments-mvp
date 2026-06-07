@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Nextpayments",
+    "appName": "NextPayment",
     "tagline": "Passerelle de paiement crypto pour les entreprises",
     "loading": "Chargement...",
     "comingSoon": "Bientôt disponible",
@@ -10,6 +10,9 @@
       "next": "Suiv.",
       "page": "Page {page}"
     }
+  },
+  "meta": {
+    "description": "Acceptez les paiements crypto sur toutes les chaînes avec NextPayment. Intégrez la passerelle en quelques minutes : 300+ cryptos, sans KYC, des frais fixes de 0,5 % et 0,1 % de récompenses de parrainage."
   },
   "nav": {
     "features": "Fonctionnalités",
@@ -28,7 +31,7 @@
     "hero": {
       "headlineLead": "Les paiements crypto,",
       "headlineTrail": "aussi simples qu'un chat.",
-      "subhead": "Intégrez la passerelle de paiement crypto à votre site en quelques minutes. Sans KYC, sans frais cachés, conversion automatique en stablecoins.",
+      "subhead": "Intégrez la passerelle en quelques minutes. Acceptez 300+ cryptos sur toutes les chaînes, sans KYC et avec des frais fixes de 0,5 %.",
       "ctaPrimary": "Commencer gratuitement",
       "ctaSecondary": "Voir la démo",
       "demo": {
@@ -37,7 +40,12 @@
       }
     },
     "trustBar": {
-      "title": "Adopté par plus de 200 000 entreprises dans le monde"
+      "stats": {
+        "coins": { "value": "300+", "label": "Cryptomonnaies" },
+        "fee": { "value": "0,5 %", "label": "Frais fixes, toutes chaînes" },
+        "referral": { "value": "0,1 %", "label": "Récompenses de parrainage" },
+        "kyc": { "value": "Sans KYC", "label": "Opérationnel en minutes" }
+      }
     },
     "features": {
       "kicker": "Fonctionnalités",
@@ -58,7 +66,7 @@
         },
         "lowFee": {
           "title": "Frais les plus bas",
-          "description": "Seulement 0,5 % par transaction — sans frais d'installation, sans frais mensuels."
+          "description": "Seulement 0,5 % par transaction, le même taux fixe sur toutes les chaînes. Sans frais d'installation, sans frais mensuels."
         }
       }
     },
@@ -89,20 +97,21 @@
     },
     "pricing": {
       "kicker": "Tarifs",
-      "title": "Un seul prix. Aucune surprise.",
-      "subtitle": "Ne payez que ce que vous utilisez réellement. Aucun engagement de longue durée.",
+      "title": "Un seul prix. Toutes les chaînes.",
+      "subtitle": "Un taux fixe unique, le même sur toutes les chaînes. Ne payez que les transactions réussies, et gagnez sur chaque parrainage.",
+      "badge": "Toutes les chaînes, un taux fixe unique",
       "fee": "0,5 %",
-      "feeDescription": "par transaction réussie",
+      "feeDescription": "par transaction réussie, sur toutes les chaînes",
       "bullets": {
-        "noSetup": "Aucuns frais d'installation",
-        "noMonthly": "Aucuns frais mensuels",
-        "noKyc": "Aucun KYC requis"
+        "allChains": "0,5 % fixe, identique sur toutes les chaînes",
+        "noFees": "Aucuns frais d'installation, aucuns frais mensuels",
+        "referral": "Gagnez 0,1 % sur chaque paiement parrainé"
       },
       "cta": "Commencer à accepter la crypto"
     },
     "cta": {
       "title": "Prêt à accepter la crypto ?",
-      "subtitle": "Rejoignez les centaines de milliers de marchands qui grandissent avec Nextpayments.",
+      "subtitle": "Configurez votre passerelle et acceptez votre premier paiement crypto dès aujourd'hui. Sans KYC, sans frais mensuels.",
       "button": "Créer votre compte gratuit"
     },
     "footer": {
@@ -144,7 +153,7 @@
           }
         }
       },
-      "copyright": "© 2026 Nextpayments. Tous droits réservés."
+      "copyright": "© 2026 NextPayment. Tous droits réservés."
     }
   },
   "auth": {

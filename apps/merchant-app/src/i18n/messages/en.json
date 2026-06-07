@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Nextpayments",
+    "appName": "NextPayment",
     "tagline": "Crypto payment gateway for businesses",
     "loading": "Loading...",
     "comingSoon": "Coming soon",
@@ -10,6 +10,9 @@
       "next": "Next",
       "page": "Page {page}"
     }
+  },
+  "meta": {
+    "description": "Accept crypto payments on every chain with NextPayment. Integrate the gateway in minutes: 300+ coins, no KYC, one flat 0.5% fee, plus 0.1% referral rewards."
   },
   "nav": {
     "features": "Features",
@@ -28,7 +31,7 @@
     "hero": {
       "headlineLead": "Crypto payments,",
       "headlineTrail": "as simple as a chat.",
-      "subhead": "Integrate the crypto payment gateway into your website in minutes. No KYC, no hidden fees, auto-convert to stablecoins.",
+      "subhead": "Integrate the gateway in minutes. Accept 300+ coins on every chain, with no KYC and one flat 0.5% fee.",
       "ctaPrimary": "Get started free",
       "ctaSecondary": "View demo",
       "demo": {
@@ -37,7 +40,12 @@
       }
     },
     "trustBar": {
-      "title": "Trusted by 200,000+ businesses worldwide"
+      "stats": {
+        "coins": { "value": "300+", "label": "Cryptocurrencies" },
+        "fee": { "value": "0.5%", "label": "Flat fee, every chain" },
+        "referral": { "value": "0.1%", "label": "Referral rewards" },
+        "kyc": { "value": "No KYC", "label": "Live in minutes" }
+      }
     },
     "features": {
       "kicker": "Features",
@@ -58,7 +66,7 @@
         },
         "lowFee": {
           "title": "Lowest fees",
-          "description": "Just 0.5% per transaction — no setup fee, no monthly fee."
+          "description": "Just 0.5% per transaction, the same flat rate on every chain. No setup fee, no monthly fee."
         }
       }
     },
@@ -89,20 +97,21 @@
     },
     "pricing": {
       "kicker": "Pricing",
-      "title": "One price. No surprises.",
-      "subtitle": "Pay only for what you actually use. No long-term contracts.",
+      "title": "One price. Every chain.",
+      "subtitle": "One flat rate, the same on every chain. Pay only for transactions that succeed, and earn on every referral.",
+      "badge": "All chains, one flat rate",
       "fee": "0.5%",
-      "feeDescription": "per successful transaction",
+      "feeDescription": "per successful transaction, on every chain",
       "bullets": {
-        "noSetup": "No setup fees",
-        "noMonthly": "No monthly fees",
-        "noKyc": "No KYC required"
+        "allChains": "0.5% flat, identical on every chain",
+        "noFees": "No setup fees, no monthly fees",
+        "referral": "Earn 0.1% on every referred payment"
       },
       "cta": "Start accepting crypto"
     },
     "cta": {
       "title": "Ready to accept crypto?",
-      "subtitle": "Join hundreds of thousands of merchants growing with Nextpayments.",
+      "subtitle": "Set up your gateway and accept your first crypto payment today. No KYC, no monthly fees.",
       "button": "Create your free account"
     },
     "footer": {
@@ -144,7 +153,7 @@
           }
         }
       },
-      "copyright": "© 2026 Nextpayments. All rights reserved."
+      "copyright": "© 2026 NextPayment. All rights reserved."
     }
   },
   "auth": {
