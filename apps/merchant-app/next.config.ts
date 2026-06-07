@@ -13,6 +13,12 @@ const apiProxyTarget = process.env.API_PROXY_TARGET ?? DEFAULT_API_PROXY_TARGET;
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Build output dir. Defaults to `.next` (dev + production/CI). A verification
+  // build run WHILE `next dev` is live must NOT share `.next` — the build
+  // rewrites the manifests the running dev server reads, which spams
+  // `ENOENT app-build-manifest.json` and breaks the page. Set NEXT_DIST_DIR
+  // (e.g. `pnpm build:check`) to send such builds to a separate folder.
+  distDir: process.env.NEXT_DIST_DIR ?? '.next',
   // Produces a self-contained .next/standalone/ bundle for Docker (no full node_modules needed)
   output: 'standalone',
   transpilePackages: ['@nextpayments/ui'],

@@ -1,29 +1,15 @@
-import { AlertTriangle } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 
 import { Card } from '@nextpayments/ui/components/card';
+import { Notice } from '@nextpayments/ui/components/notice';
 
 import { FIAT } from '@/constants/dashboard';
+import { formatCount, formatCrypto, formatFiat } from '@/lib/format';
 import type { OrderStatsResult } from '@/lib/orders/types';
 
 type OrderStatsPanelProps = {
   result: OrderStatsResult;
 };
-
-function formatInt(value: number, locale: string): string {
-  return new Intl.NumberFormat(locale).format(value);
-}
-
-function formatUsdt(value: number, locale: string): string {
-  return new Intl.NumberFormat(locale, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
-}
-
-function formatCoinAmount(value: number, locale: string): string {
-  return new Intl.NumberFormat(locale, { maximumFractionDigits: 8 }).format(value);
-}
 
 /**
  * Dashboard stats fed by `GET /api/orders/me/stats`. Server Component so the
@@ -39,26 +25,18 @@ export function OrderStatsPanel({ result }: OrderStatsPanelProps) {
   const locale = useLocale();
 
   if (!result.ok) {
-    return (
-      <Card glow={false} className="flex items-start gap-3 bg-[var(--glass-fill)] px-5 py-4">
-        <AlertTriangle
-          className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-danger)]"
-          aria-hidden="true"
-        />
-        <p className="text-sm text-[var(--color-text-muted)]">{t('error')}</p>
-      </Card>
-    );
+    return <Notice tone="danger">{t('error')}</Notice>;
   }
 
   const { totalOrders, paidOrders, totalUsdt, byCoin } = result.data;
   const unpricedCoins = byCoin.filter((c) => c.priceUsd === 0).map((c) => c.coin);
 
   const cards = [
-    { key: 'totalOrders' as const, value: formatInt(totalOrders, locale) },
-    { key: 'paidOrders' as const, value: formatInt(paidOrders, locale) },
+    { key: 'totalOrders' as const, value: formatCount(totalOrders, locale) },
+    { key: 'paidOrders' as const, value: formatCount(paidOrders, locale) },
     {
       key: 'totalUsdt' as const,
-      value: `${FIAT.symbol}${formatUsdt(totalUsdt, locale)} USDT`,
+      value: `${FIAT.symbol}${formatFiat(totalUsdt, locale)} USDT`,
     },
   ];
 
@@ -93,8 +71,8 @@ export function OrderStatsPanel({ result }: OrderStatsPanelProps) {
                 <span className="font-medium">{row.coin}</span>
                 <span className="text-[var(--color-text-muted)]">
                   {t('byCoin.amount', {
-                    amount: formatCoinAmount(row.totalAmount, locale),
-                    count: formatInt(row.count, locale),
+                    amount: formatCrypto(row.totalAmount, locale),
+                    count: formatCount(row.count, locale),
                   })}
                 </span>
               </li>
@@ -104,15 +82,7 @@ export function OrderStatsPanel({ result }: OrderStatsPanelProps) {
       )}
 
       {unpricedCoins.length > 0 && (
-        <Card glow={false} className="flex items-start gap-3 bg-[var(--glass-fill)] px-5 py-4">
-          <AlertTriangle
-            className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-text-subtle)]"
-            aria-hidden="true"
-          />
-          <p className="text-sm text-[var(--color-text-muted)]">
-            {t('unpriced', { coins: unpricedCoins.join(', ') })}
-          </p>
-        </Card>
+        <Notice tone="info">{t('unpriced', { coins: unpricedCoins.join(', ') })}</Notice>
       )}
     </section>
   );

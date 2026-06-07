@@ -72,3 +72,10 @@ export const SESSION_MAX_AGE = {
   ACCESS: 60 * 15, // 15 minutes
   REFRESH: 60 * 60 * 24 * 7, // 7 days
 } as const;
+
+/**
+ * Query param the protected-route guard appends when bouncing to login, so the
+ * post-recovery redirect returns the user to the page they were on (not the
+ * landing page). Read back on the login page and validated as an internal path.
+ */
+export const RETURN_TO_PARAM = 'returnTo' as const;

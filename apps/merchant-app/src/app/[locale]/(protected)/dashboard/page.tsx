@@ -1,19 +1,30 @@
-import { BalancesView } from '@/components/dashboard/balances/balances-view';
-import { OrderStatsPanel } from '@/components/dashboard/orders/order-stats-panel';
+import { getCurrentUser } from '@/lib/auth/session';
+import { loadFundBalance } from '@/lib/fund/backend';
 import { loadOrderStats } from '@/lib/orders/backend';
+import { OrderStatsPanel } from '@/components/dashboard/orders/order-stats-panel';
+import { WalletView } from '@/components/dashboard/wallet/wallet-view';
 
 /**
- * Wallet dashboard — order stats (live, from `/api/orders/me/stats`) above
- * the wallet balances list (still UI-only mocks until Fund is wired).
- * Stats are aggregated across all the user's integrations.
+ * Wallet dashboard — Topup-first. The Fund wallet (deposit address + balances
+ * + withdraw) is the primary surface, fed by `GET /fund/balance` and the
+ * deposit/withdraw actions; order stats (`/orders/me/stats`) sit below. Reads
+ * run in parallel and never throw into the tree (degraded notices instead).
  */
 export default async function DashboardPage() {
-  const stats = await loadOrderStats({});
+  const [balanceResult, user, stats] = await Promise.all([
+    loadFundBalance(),
+    getCurrentUser(),
+    loadOrderStats({}),
+  ]);
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-8">
+      <WalletView
+        balances={balanceResult.ok ? balanceResult.balances : []}
+        balancesOk={balanceResult.ok}
+        gaEnabled={user?.gaEnabled ?? false}
+      />
       <OrderStatsPanel result={stats} />
-      <BalancesView />
     </div>
   );
 }

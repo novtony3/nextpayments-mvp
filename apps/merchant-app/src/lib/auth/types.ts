@@ -37,12 +37,14 @@ export const loginInputSchema = z.object({
 
 export type LoginCredentials = z.infer<typeof loginInputSchema>;
 
-/** Register input. Backend wants `userName`; `referralId` is intentionally
- * NOT sent (the backend rejects both null and "" with USER005). */
+/** Register input. Backend wants `userName`; `referralId` (the upline's id /
+ * referral code) is optional and only sent when non-empty — the backend
+ * rejects both null and "" with USER005. */
 export const registerInputSchema = z.object({
   userName: z.string().min(1),
   email: z.string().email(),
   password: z.string().min(PASSWORD_MIN_LENGTH),
+  referralId: z.string().min(1).optional(),
 });
 
 export type RegisterCredentials = z.infer<typeof registerInputSchema>;

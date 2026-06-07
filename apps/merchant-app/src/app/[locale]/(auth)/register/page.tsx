@@ -5,7 +5,8 @@ import { ROUTES } from '@/constants/routes';
 import { Logo } from '@/components/shared/logo';
 import { BlueAccent } from '@/components/shared/blue-accent';
 import { RegisterForm } from '@/components/auth/register-form';
-import { SocialButtons } from '@/components/auth/social-buttons';
+// TODO: re-enable Google sign-up — temporarily disabled.
+// import { SocialButtons } from '@/components/auth/social-buttons';
 
 export default function RegisterPage() {
   const t = useTranslations('auth.register');
@@ -28,9 +29,11 @@ export default function RegisterPage() {
 
         <RegisterForm />
 
+        {/* Google sign-up temporarily disabled.
         <div className="mt-6">
           <SocialButtons />
         </div>
+        */}
 
         <p className="mt-8 text-center text-sm text-[var(--color-text-muted)]">
           {t('haveAccount')}{' '}

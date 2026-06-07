@@ -1,7 +1,6 @@
-import { AlertTriangle, Info } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
-import { Card } from '@nextpayments/ui/components/card';
+import { Notice } from '@nextpayments/ui/components/notice';
 
 import type { TransactionTabKind } from '@/constants/transactions';
 import type { TransactionsResult, TransactionTab } from '@/lib/fund/types';
@@ -17,17 +16,6 @@ type TransactionsViewProps = {
   result?: TransactionsResult;
 };
 
-function Notice({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
-  return (
-    <Card glow={false} className="flex items-start gap-3 bg-[var(--glass-fill)] px-5 py-4">
-      <span className="mt-0.5 shrink-0 text-[var(--color-text-subtle)]" aria-hidden="true">
-        {icon}
-      </span>
-      <p className="text-sm text-[var(--color-text-muted)]">{children}</p>
-    </Card>
-  );
-}
-
 /**
  * Transactions section: the filter bar plus the tab's content — adaptive
  * table, the provisional "all" note, a localized placeholder for tabs with
@@ -41,18 +29,14 @@ export function TransactionsView({ tab, coin, kind, result }: TransactionsViewPr
       <TransactionsFilters tab={tab} coin={coin} />
 
       {kind === 'placeholder' ? (
-        <Notice icon={<Info className="h-4 w-4" />}>
-          {t('tabUnavailable', { tab: t(`tabs.${tab}`) })}
-        </Notice>
+        <Notice tone="info">{t('tabUnavailable', { tab: t(`tabs.${tab}`) })}</Notice>
       ) : result?.ok ? (
         <>
-          {tab === 'all' && <Notice icon={<Info className="h-4 w-4" />}>{t('allNote')}</Notice>}
+          {tab === 'all' && <Notice tone="info">{t('allNote')}</Notice>}
           <TransactionsTable data={result.data} tab={tab} coin={coin} />
         </>
       ) : (
-        <Notice icon={<AlertTriangle className="h-4 w-4 text-[var(--color-danger)]" />}>
-          {t('error')}
-        </Notice>
+        <Notice tone="danger">{t('error')}</Notice>
       )}
     </div>
   );

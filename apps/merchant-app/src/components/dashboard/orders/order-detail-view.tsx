@@ -1,10 +1,12 @@
-import { AlertTriangle, ArrowLeft, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 
 import { Card } from '@nextpayments/ui/components/card';
+import { Notice } from '@nextpayments/ui/components/notice';
 
 import { ROUTES } from '@/constants/routes';
 import { Link } from '@/i18n/routing';
+import { formatCrypto, parseAmount } from '@/lib/format';
 import type { OrderDetailResult, OrderRow } from '@/lib/orders/types';
 
 import { ReadOnlyField } from '../integrations/read-only-field';
@@ -22,9 +24,8 @@ function formatDate(value: unknown, locale: string): string {
 
 function formatAmount(value: OrderRow['amount'], locale: string): string {
   if (value === undefined || value === null || value === '') return '—';
-  const num = typeof value === 'number' ? value : Number(value);
-  if (Number.isNaN(num)) return String(value);
-  return new Intl.NumberFormat(locale, { maximumFractionDigits: 8 }).format(num);
+  const num = parseAmount(value);
+  return num === null ? String(value) : formatCrypto(num, locale);
 }
 
 function asString(value: unknown): string {
@@ -57,15 +58,7 @@ export function OrderDetailView({ orderId, result }: OrderDetailViewProps) {
     return (
       <div className="mx-auto flex max-w-3xl flex-col gap-6">
         {backLink}
-        <Card glow={false} className="flex items-start gap-3 bg-[var(--glass-fill)] px-5 py-4">
-          <AlertTriangle
-            className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-danger)]"
-            aria-hidden="true"
-          />
-          <p className="text-sm text-[var(--color-text-muted)]">
-            {t(isNotFound ? 'notFound' : 'error', { orderId })}
-          </p>
-        </Card>
+        <Notice tone="danger">{t(isNotFound ? 'notFound' : 'error', { orderId })}</Notice>
       </div>
     );
   }

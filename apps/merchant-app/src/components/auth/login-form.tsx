@@ -23,7 +23,12 @@ import { PasswordToggle } from '@/components/auth/password-toggle';
 
 type Step = 'credentials' | 'twoFa';
 
-export function LoginForm() {
+type LoginFormProps = {
+  /** Internal path to return to after sign-in (the guard's bounce origin). */
+  returnTo?: string;
+};
+
+export function LoginForm({ returnTo }: LoginFormProps) {
   const t = useTranslations('auth.login');
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
@@ -62,7 +67,7 @@ export function LoginForm() {
 
   const finishSuccess = (displayName: string) => {
     toast.success(t('successWelcome', { name: displayName }));
-    router.push(ROUTES.HOME);
+    router.push(returnTo ?? ROUTES.HOME);
     router.refresh(); // let server components observe the new session cookie
   };
 

@@ -1,16 +1,24 @@
 import 'server-only';
 
 import { API_ROUTES, type ApiRoute } from '@/constants/api';
+import { FUND_BALANCE_COINS } from '@/constants/fund';
 import { getAccessToken } from '@/lib/auth/session';
-import { envelopeSchema } from '@/lib/auth/types';
+import { AuthError, envelopeSchema } from '@/lib/auth/types';
 import { toPaginatedPage } from '@/lib/pagination';
 import { backendFetch } from '@/lib/server/backend-fetch';
 
 import {
+  balanceResponseSchema,
+  getAddressResponseSchema,
   paginatedTransactionsSchema,
+  withdrawInputSchema,
+  type BalanceRow,
+  type BalancesResult,
+  type GetAddressInput,
   type TransactionsQuery,
   type TransactionsResult,
   type TransactionTab,
+  type WithdrawInput,
 } from './types';
 
 /**
@@ -35,6 +43,19 @@ function parseJson(raw: string): unknown {
     return JSON.parse(raw) as unknown;
   } catch {
     return null;
+  }
+}
+
+/**
+ * Throw {@link AuthError} carrying the backend `error.code` (FUER00x) when the
+ * envelope is missing or `success:false` — mirrors `integrations/backend.ts`
+ * so deposit/withdraw write paths surface a mappable code to the caller.
+ */
+function ensureOk(ok: boolean, json: unknown, fallback: string): void {
+  const envelope = envelopeSchema.safeParse(json);
+  if (!ok || !envelope.success || !envelope.data.success) {
+    const err = envelope.success ? envelope.data.error : undefined;
+    throw new AuthError(err?.message ?? fallback, err?.code);
   }
 }
 
@@ -68,4 +89,96 @@ export async function backendFundHistory(
     // Transport failure (tunnel down) or unexpected response shape.
     return { ok: false, reason: 'error' };
   }
+}
+
+/* ------------------------------------------------------------------ *
+ * Balance / Deposit / Withdraw (run only in Server Components / Actions)
+ * ------------------------------------------------------------------ */
+
+/** GET /fund/fee-balance?coin= for one coin. Throws on a non-success envelope. */
+export async function backendFeeBalance(token: string, coin: string): Promise<BalanceRow[]> {
+  const res = await backendFetch(API_ROUTES.FUND_FEE_BALANCE, {
+    headers: { Authorization: `Bearer ${token}` },
+    query: { coin },
+  });
+  const json = parseJson(res.raw);
+  ensureOk(res.ok, json, 'Could not load balances');
+  return balanceResponseSchema.parse(json).data.balances;
+}
+
+/**
+ * Result-returning reader for the Wallet page — never throws into the RSC tree
+ * (tunnel-down / not-authed → `{ ok:false }`), like `loadIntegrationList`.
+ * Queries fee-balance for each configured coin ({@link FUND_BALANCE_COINS}, so
+ * the coin set is expandable, not fixed) in parallel and merges the rows; a
+ * single coin failing is tolerated as long as at least one succeeds.
+ */
+export async function loadFundBalance(
+  coins: ReadonlyArray<string> = FUND_BALANCE_COINS,
+): Promise<BalancesResult> {
+  const token = await getAccessToken();
+  if (!token) return { ok: false };
+
+  const settled = await Promise.allSettled(coins.map((coin) => backendFeeBalance(token, coin)));
+  const fulfilled = settled.filter(
+    (r): r is PromiseFulfilledResult<BalanceRow[]> => r.status === 'fulfilled',
+  );
+  if (fulfilled.length === 0) return { ok: false };
+  return { ok: true, balances: fulfilled.flatMap((r) => r.value) };
+}
+
+/** Pull a usable deposit address out of the loose `data` (string at
+ * `data.address`, or nested `data.address.address`). */
+function extractAddress(data: Record<string, unknown>): { address: string; memo?: string } | null {
+  const raw = data.address;
+  const memo = typeof data.memo === 'string' ? data.memo : undefined;
+  if (typeof raw === 'string' && raw) return { address: raw, memo };
+  if (raw && typeof raw === 'object') {
+    const nested = raw as Record<string, unknown>;
+    if (typeof nested.address === 'string' && nested.address) {
+      return {
+        address: nested.address,
+        memo: typeof nested.memo === 'string' ? nested.memo : memo,
+      };
+    }
+  }
+  return null;
+}
+
+/** POST /fund/get-fee-address. Throws `AuthError(code)` on FUER; returns the
+ * deposit address (+ memo for tag chains) on success. */
+export async function backendGetDepositAddress(
+  token: string,
+  input: GetAddressInput,
+): Promise<{ address: string; memo?: string }> {
+  const res = await backendFetch(API_ROUTES.FUND_GET_FEE_ADDRESS, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ network: input.network, coin: input.coin }),
+  });
+  const json = parseJson(res.raw);
+  ensureOk(res.ok, json, 'Could not get a deposit address');
+  const address = extractAddress(getAddressResponseSchema.parse(json).data);
+  if (!address) throw new AuthError('Deposit address missing from response');
+  return address;
+}
+
+/** POST /fund/withdraw — requests the withdrawal (backend emails an approval
+ * link). Throws `AuthError(code)` on FUER so the caller can map the field. */
+export async function backendWithdraw(token: string, input: WithdrawInput): Promise<void> {
+  const body = withdrawInputSchema.parse(input);
+  const res = await backendFetch(API_ROUTES.FUND_WITHDRAW, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({
+      network: body.network,
+      coin: body.coin,
+      address: body.address,
+      memo: body.memo ?? '',
+      amount: body.amount,
+      token2fa: body.token2fa ?? '',
+    }),
+  });
+  const json = parseJson(res.raw);
+  ensureOk(res.ok, json, 'Could not request the withdrawal');
 }

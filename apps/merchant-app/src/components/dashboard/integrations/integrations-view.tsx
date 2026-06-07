@@ -1,12 +1,13 @@
 'use client';
 
-import { AlertTriangle, Info, Plug, Plus } from 'lucide-react';
+import { Plug, Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState, type ReactNode } from 'react';
 
 import { Button } from '@nextpayments/ui/components/button';
 import { Card } from '@nextpayments/ui/components/card';
 import { EmptyState } from '@nextpayments/ui/components/empty-state';
+import { Notice } from '@nextpayments/ui/components/notice';
 import { Tabs } from '@nextpayments/ui/components/tabs';
 
 import { DOC_LINKS } from '@/constants/dashboard';
@@ -61,15 +62,7 @@ export function IntegrationsView({ list }: IntegrationsViewProps) {
 
   const renderActive = () => {
     if (!list.ok) {
-      return (
-        <Card glow={false} className="flex items-start gap-3 bg-[var(--glass-fill)] px-5 py-4">
-          <AlertTriangle
-            className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-danger)]"
-            aria-hidden="true"
-          />
-          <p className="text-sm text-[var(--color-text-muted)]">{t('error')}</p>
-        </Card>
-      );
+      return <Notice tone="danger">{t('error')}</Notice>;
     }
     if (list.data.rows.length === 0) {
       return (
@@ -93,18 +86,12 @@ export function IntegrationsView({ list }: IntegrationsViewProps) {
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6">
-      <Card glow={false} className="flex items-start gap-3 bg-[var(--glass-fill)] px-5 py-4">
-        <Info
-          className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-text-subtle)]"
-          aria-hidden="true"
-        />
-        <p className="text-sm text-[var(--color-text-muted)]">
-          {t.rich('help', {
-            docs: (chunks) => <DocLink href={DOC_LINKS.apiDocs}>{chunks}</DocLink>,
-            kb: (chunks) => <DocLink href={DOC_LINKS.knowledgeBase}>{chunks}</DocLink>,
-          })}
-        </p>
-      </Card>
+      <Notice tone="info">
+        {t.rich('help', {
+          docs: (chunks) => <DocLink href={DOC_LINKS.apiDocs}>{chunks}</DocLink>,
+          kb: (chunks) => <DocLink href={DOC_LINKS.knowledgeBase}>{chunks}</DocLink>,
+        })}
+      </Notice>
 
       <Tabs aria-label={t('title')} items={tabItems} value={tab} onValueChange={setTab} />
 

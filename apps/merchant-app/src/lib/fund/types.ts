@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { EVM_ADDRESS_REGEX } from '@/constants/fund';
 import { paginatedSchema, type PaginatedPage } from '@/lib/pagination';
 
 /**
@@ -58,3 +59,74 @@ export type TransactionsQuery = {
   /** Coin ticker filter (`?coin=`), when a currency is selected. */
   coin?: string;
 };
+
+/* ------------------------------------------------------------------ *
+ * Balance — GET /fund/balance → { data: { balances: [...] } }
+ * ------------------------------------------------------------------ */
+
+/**
+ * Balance row — intentionally loose. The probed account is empty so the real
+ * populated shape is unobserved; tight types would reject real rows. The UI
+ * reads `coin`/`amount` defensively and joins display metadata from
+ * {@link COIN_TILES}. Tighten once a funded balance surfaces.
+ */
+export const balanceRowSchema = z.record(z.string(), z.unknown());
+
+export type BalanceRow = z.infer<typeof balanceRowSchema>;
+
+export const balanceResponseSchema = z.object({
+  data: z.object({ balances: z.array(balanceRowSchema) }),
+});
+
+/** Never-throw reader result the Wallet page consumes. */
+export type BalancesResult = { ok: true; balances: BalanceRow[] } | { ok: false };
+
+/* ------------------------------------------------------------------ *
+ * Deposit — POST /fund/get-address → { data: { ... address ... } }
+ * ------------------------------------------------------------------ */
+
+/**
+ * Deposit-address response — loose/passthrough on `data`. The pair is
+ * `FUER006` on the probed backend so the success shape is unobserved; the
+ * backend reader extracts `address`/`memo` defensively from `data` (or a
+ * nested `data.address` object). Tighten once an address is observed.
+ */
+export const getAddressResponseSchema = z.object({
+  data: z.record(z.string(), z.unknown()),
+});
+
+/** Serializable Server-Action result — `unsupported` is the FUER006 path. */
+export type GetAddressResult =
+  | { ok: true; address: string; memo?: string }
+  | { ok: false; reason: 'unsupported' | 'invalid' | 'error'; code?: string };
+
+export type GetAddressInput = { network: string; coin: string };
+
+/* ------------------------------------------------------------------ *
+ * Withdraw — POST /fund/withdraw (email-approval flow; submit-only here)
+ * ------------------------------------------------------------------ */
+
+/**
+ * Withdraw input validated at the Server-Action boundary (never trust the
+ * client even though the form also validates). `address` must be a valid EVM
+ * address (ETH/BSC); `token2fa` is required only when the account has 2FA on,
+ * enforced in the form — the schema keeps it optional.
+ */
+export const withdrawInputSchema = z.object({
+  network: z.string().min(1),
+  coin: z.string().min(1),
+  address: z.string().regex(EVM_ADDRESS_REGEX),
+  amount: z.number().positive(),
+  memo: z.string().optional(),
+  token2fa: z.string().optional(),
+});
+
+export type WithdrawInput = z.infer<typeof withdrawInputSchema>;
+
+/**
+ * Withdraw result. `code` carries the backend `FUER00x` so the form maps it to
+ * a field (network/coin/amount) or the "temporarily unavailable" banner.
+ */
+export type WithdrawResult =
+  | { ok: true }
+  | { ok: false; reason: 'invalid' | 'error'; code?: string };

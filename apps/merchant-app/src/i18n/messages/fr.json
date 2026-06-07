@@ -3,7 +3,13 @@
     "appName": "Nextpayments",
     "tagline": "Passerelle de paiement crypto pour les entreprises",
     "loading": "Chargement...",
-    "comingSoon": "Bientôt disponible"
+    "comingSoon": "Bientôt disponible",
+    "pagination": {
+      "nav": "Pagination",
+      "prev": "Préc.",
+      "next": "Suiv.",
+      "page": "Page {page}"
+    }
   },
   "nav": {
     "features": "Fonctionnalités",
@@ -183,6 +189,8 @@
       "email": "E-mail",
       "password": "Mot de passe",
       "confirmPassword": "Confirmer le mot de passe",
+      "referral": "Code de parrainage (facultatif)",
+      "referralPlaceholder": "Saisissez un code de parrainage",
       "submit": "Créer un compte",
       "submitting": "Création du compte...",
       "or": "OU",
@@ -241,17 +249,67 @@
       "message": "Veuillez vérifier votre compte pour activer toutes les devises et fonctionnalités.",
       "cta": "Terminer la vérification"
     },
+    "wallet": {
+      "title": "Portefeuille",
+      "subtitle": "Rechargez votre solde ou retirez des fonds.",
+      "deposit": {
+        "title": "Recharger",
+        "subtitle": "Envoyez de la crypto à votre adresse de dépôt pour créditer votre solde.",
+        "asset": "Crypto / Réseau",
+        "assetOption": "{coin} · {network}",
+        "getAddress": "Obtenir l'adresse de dépôt",
+        "addressLabel": "Adresse de dépôt {coin} ({network})",
+        "memoLabel": "Mémo / Tag",
+        "copy": "Copier",
+        "qrAlt": "QR code de votre adresse de dépôt",
+        "confirmationsNote": "Les fonds sont crédités après confirmation du transfert par le réseau. N'envoyez que du {coin} sur le réseau {network}.",
+        "unavailable": "Les dépôts de {coin} sur {network} sont temporairement indisponibles. Essayez une autre crypto ou réessayez bientôt.",
+        "error": "Impossible d'obtenir une adresse de dépôt. Le service est peut-être indisponible — réessayez bientôt."
+      },
+      "withdraw": {
+        "trigger": "Retirer",
+        "title": "Retirer des fonds",
+        "close": "Fermer le retrait",
+        "asset": "Crypto / Réseau",
+        "assetOption": "{coin} · {network}",
+        "address": "Adresse de destination",
+        "addressPlaceholder": "0x…",
+        "amount": "Montant",
+        "amountPlaceholder": "0,00",
+        "memo": "Mémo / Tag (facultatif)",
+        "memoPlaceholder": "Laissez vide si non requis",
+        "token2fa": "Code 2FA",
+        "token2faPlaceholder": "Code à 6 chiffres",
+        "cancel": "Annuler",
+        "submit": "Demander le retrait",
+        "submitting": "Demande en cours…",
+        "done": "Terminé",
+        "emailSentTitle": "Vérifiez votre e-mail",
+        "emailSentBody": "Nous vous avons envoyé un lien pour approuver ce retrait. Il ne sera pas effectué tant que vous ne l'aurez pas confirmé depuis ce lien.",
+        "errors": {
+          "address": "Saisissez une adresse EVM valide (0x suivi de 40 caractères hexadécimaux).",
+          "amount": "Saisissez un montant supérieur à 0.",
+          "token2fa": "Saisissez votre code 2FA à 6 chiffres.",
+          "asset": "Cette crypto ou ce réseau n'est pas valide.",
+          "unsupported": "Les retraits de {coin} sur {network} sont temporairement indisponibles.",
+          "generic": "Impossible de demander le retrait. Réessayez bientôt."
+        }
+      }
+    },
     "balances": {
       "title": "Soldes",
       "searchPlaceholder": "Rechercher",
       "filterAll": "Afficher toutes les cryptos",
       "estimatedBalance": "Solde estimé",
+      "fiatUnavailable": "Les soldes sont affichés en crypto — la conversion en monnaie fiduciaire est indisponible.",
       "autoAccept": "Accepter automatiquement les dépôts incorrects sur les soldes principaux",
       "locked": "Vérifiez votre compte pour activer {ticker}",
       "send": "Envoyer",
       "receive": "Recevoir",
       "convert": "Convertir",
-      "empty": "Aucune crypto ne correspond à votre recherche."
+      "empty": "Aucune crypto ne correspond à votre recherche.",
+      "noBalances": "Aucun solde pour le moment. Rechargez pour commencer.",
+      "error": "Impossible de charger les soldes. Le service est peut-être indisponible — réessayez bientôt."
     },
     "orderStats": {
       "title": "Statistiques des commandes",
@@ -287,12 +345,6 @@
       "viewDetail": "Voir la commande {reference}",
       "empty": "Aucune commande pour le moment.",
       "error": "Impossible de charger les commandes. Le service est peut-être indisponible — réessayez plus tard.",
-      "pagination": {
-        "nav": "Pages de commandes",
-        "prev": "Préc.",
-        "next": "Suiv.",
-        "page": "Page {page}"
-      },
       "detail": {
         "eyebrow": "Commande",
         "back": "Retour aux commandes",
@@ -546,13 +598,7 @@
       },
       "empty": "Aucune transaction pour le moment.",
       "error": "Impossible de charger les transactions. Le service est peut-être indisponible — réessayez bientôt.",
-      "tabUnavailable": "{tab} ne sont pas encore disponibles. Cet onglet s'activera une fois son backend connecté.",
-      "pagination": {
-        "nav": "Pages des transactions",
-        "prev": "Préc.",
-        "next": "Suiv.",
-        "page": "Page {page}"
-      }
+      "tabUnavailable": "{tab} ne sont pas encore disponibles. Cet onglet s'activera une fois son backend connecté."
     }
   },
   "notFound": {
@@ -670,13 +716,10 @@
     "downline": {
       "title": "Downline",
       "description": "Utilisateurs ayant rejoint via votre lien de parrainage.",
-      "levelFilter": "Niveau",
-      "allLevels": "Tous",
-      "empty": "Aucun downline à ce niveau pour l'instant.",
+      "empty": "Aucun downline pour l'instant.",
       "error": "Impossible de charger le downline. Réessayez dans un instant.",
       "headers": {
         "email": "E-mail",
-        "level": "Niveau",
         "joined": "Inscription"
       }
     },
@@ -689,7 +732,6 @@
         "date": "Date",
         "coin": "Monnaie",
         "amount": "Montant",
-        "level": "Niveau",
         "from": "De"
       }
     },

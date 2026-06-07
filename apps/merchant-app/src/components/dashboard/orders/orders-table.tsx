@@ -3,12 +3,17 @@
 import { useLocale, useTranslations } from 'next-intl';
 
 import { Card } from '@nextpayments/ui/components/card';
-import { Pagination } from '@nextpayments/ui/components/pagination';
+import { DataTable, type DataTableColumn } from '@nextpayments/ui/components/data-table';
+import { EmptyState } from '@nextpayments/ui/components/empty-state';
 
 import { ORDERS_PARAM, ORDER_STATUS_FILTER_ALL, type OrderStatusFilter } from '@/constants/orders';
 import { ROUTES } from '@/constants/routes';
 import { Link, usePathname, useRouter } from '@/i18n/routing';
+import { formatCrypto, parseAmount } from '@/lib/format';
 import type { OrderRow, OrderListPage } from '@/lib/orders/types';
+import { TablePagination } from '@/components/shared/table-pagination';
+
+import { OrderStatusBadge } from './order-status-badge';
 
 type OrdersTableProps = {
   data: OrderListPage;
@@ -41,9 +46,8 @@ function detailHref(row: OrderRow, integrationId?: string): string | null {
 
 function amount(row: OrderRow, locale: string): string {
   if (row.amount === undefined || row.amount === null || row.amount === '') return '—';
-  const num = typeof row.amount === 'number' ? row.amount : Number(row.amount);
-  if (Number.isNaN(num)) return cell(row.amount);
-  return new Intl.NumberFormat(locale, { maximumFractionDigits: 8 }).format(num);
+  const num = parseAmount(row.amount);
+  return num === null ? cell(row.amount) : formatCrypto(num, locale);
 }
 
 /**
@@ -75,74 +79,59 @@ export function OrdersTable({ data, status, integrationId }: OrdersTableProps) {
   if (data.rows.length === 0) {
     return (
       <Card glow={false}>
-        <p className="px-5 py-16 text-center text-sm text-[var(--color-text-muted)]">
-          {t('empty')}
-        </p>
+        <EmptyState title={t('empty')} />
       </Card>
     );
   }
 
+  const columns: DataTableColumn<OrderRow>[] = [
+    {
+      key: 'reference',
+      header: t('columns.reference'),
+      cellClassName: 'font-mono text-xs',
+      render: (row) => {
+        const href = detailHref(row, integrationId);
+        const ref = reference(row);
+        return href ? (
+          <Link
+            href={href}
+            aria-label={t('viewDetail', { reference: ref })}
+            className="text-[var(--color-accent)] underline-offset-4 transition-colors hover:underline"
+          >
+            {ref}
+          </Link>
+        ) : (
+          <span className="text-[var(--color-text-muted)]">{ref}</span>
+        );
+      },
+    },
+    { key: 'coin', header: t('columns.coin'), render: (row) => cell(row.coin) },
+    { key: 'amount', header: t('columns.amount'), render: (row) => amount(row, locale) },
+    {
+      key: 'status',
+      header: t('columns.status'),
+      render: (row) => (row.status ? <OrderStatusBadge status={row.status} /> : '—'),
+    },
+    {
+      key: 'createdAt',
+      header: t('columns.createdAt'),
+      cellClassName: 'text-[var(--color-text-muted)]',
+      render: (row) => formatDate(row.createdAt),
+    },
+  ];
+
   return (
     <div className="flex flex-col gap-4">
-      <Card glow={false} className="overflow-x-auto p-0">
-        <table className="w-full min-w-[640px] border-collapse text-left text-sm">
-          <thead className="text-xs uppercase tracking-wide text-[var(--color-text-subtle)]">
-            <tr>
-              <th className="px-4 py-3 font-medium">{t('columns.reference')}</th>
-              <th className="px-4 py-3 font-medium">{t('columns.coin')}</th>
-              <th className="px-4 py-3 font-medium">{t('columns.amount')}</th>
-              <th className="px-4 py-3 font-medium">{t('columns.status')}</th>
-              <th className="px-4 py-3 font-medium">{t('columns.createdAt')}</th>
-            </tr>
-          </thead>
-          <tbody className="text-[var(--color-text)]">
-            {data.rows.map((row, i) => {
-              const href = detailHref(row, integrationId);
-              const ref = reference(row);
-              return (
-                <tr
-                  key={rowKey(row, i)}
-                  className="border-t border-[var(--color-border)] align-middle"
-                >
-                  <td className="px-4 py-3 font-mono text-xs">
-                    {href ? (
-                      <Link
-                        href={href}
-                        aria-label={t('viewDetail', { reference: ref })}
-                        className="text-[var(--color-accent)] underline-offset-4 transition-colors hover:underline"
-                      >
-                        {ref}
-                      </Link>
-                    ) : (
-                      <span className="text-[var(--color-text-muted)]">{ref}</span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3">{cell(row.coin)}</td>
-                  <td className="px-4 py-3">{amount(row, locale)}</td>
-                  <td className="px-4 py-3">{row.status ? t(`status.${row.status}`) : '—'}</td>
-                  <td className="px-4 py-3 text-[var(--color-text-muted)]">
-                    {formatDate(row.createdAt)}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      <Card glow={false} className="p-0">
+        <DataTable
+          columns={columns}
+          rows={data.rows}
+          getRowKey={rowKey}
+          minWidthClassName="min-w-[640px]"
+        />
       </Card>
 
-      {data.totalPages > 1 && (
-        <Pagination
-          page={data.page}
-          totalPages={data.totalPages}
-          onPageChange={goToPage}
-          labels={{
-            nav: t('pagination.nav'),
-            prev: t('pagination.prev'),
-            next: t('pagination.next'),
-            page: (p) => t('pagination.page', { page: p }),
-          }}
-        />
-      )}
+      <TablePagination page={data.page} totalPages={data.totalPages} onPageChange={goToPage} />
     </div>
   );
 }
