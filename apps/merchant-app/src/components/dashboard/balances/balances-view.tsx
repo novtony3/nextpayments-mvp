@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowDownLeft, ArrowUpRight } from 'lucide-react';
+import { ArrowDownLeft } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 
@@ -10,11 +10,11 @@ import { SearchInput } from '@nextpayments/ui/components/search-input';
 
 import { COIN_TILES } from '@/constants/coins';
 import { ZERO_CRYPTO } from '@/constants/dashboard';
+import { formatCrypto, parseAmount } from '@/lib/format';
 import type { BalanceRow } from '@/lib/fund/types';
 
 /** Neutral tile when the coin isn't in the shared {@link COIN_TILES} list. */
 const FALLBACK_GRADIENT = 'linear-gradient(135deg,#5a6772,#8a94a3)';
-const MAX_CRYPTO_FRACTION_DIGITS = 8;
 
 /** Display shape derived from a loose backend balance row + coin metadata. */
 type DisplayBalance = {
@@ -43,7 +43,8 @@ type BalancesViewProps = {
   ok: boolean;
   /** Open the deposit panel for a coin (balance row "Receive"). */
   onReceive: (coin: string) => void;
-  /** Open the withdraw sheet for a coin (balance row "Send"). */
+  /** Open the withdraw sheet for a coin (balance row "Send"). TODO: re-enable —
+   * the Send icon is temporarily commented out, so this is currently unused. */
   onSend: (coin: string) => void;
 };
 
@@ -54,15 +55,12 @@ type BalancesViewProps = {
  * shown: the balance endpoint carries no price, so a fabricated value would be
  * misleading — the crypto amount is the source of truth.
  */
-export function BalancesView({ balances, ok, onReceive, onSend }: BalancesViewProps) {
+export function BalancesView({ balances, ok, onReceive }: BalancesViewProps) {
   const t = useTranslations('dashboard.balances');
   const locale = useLocale();
   const [query, setQuery] = useState('');
 
   const display = useMemo<DisplayBalance[]>(() => {
-    const fmt = new Intl.NumberFormat(locale, {
-      maximumFractionDigits: MAX_CRYPTO_FRACTION_DIGITS,
-    });
     return balances.map((row) => {
       const ticker =
         typeof row.coin === 'string'
@@ -73,13 +71,12 @@ export function BalancesView({ balances, ok, onReceive, onSend }: BalancesViewPr
               ? row.ticker
               : '—';
       const tile = COIN_TILES.find((c) => c.ticker === ticker);
-      const raw = row.amount;
-      const num = typeof raw === 'number' ? raw : typeof raw === 'string' ? Number(raw) : NaN;
+      const num = parseAmount(row.amount);
       return {
         ticker,
         name: tile?.name ?? ticker,
         gradient: tile?.gradient ?? FALLBACK_GRADIENT,
-        amount: Number.isFinite(num) ? fmt.format(num) : ZERO_CRYPTO,
+        amount: num === null ? ZERO_CRYPTO : formatCrypto(num, locale),
       };
     });
   }, [balances, locale]);
@@ -134,12 +131,15 @@ export function BalancesView({ balances, ok, onReceive, onSend }: BalancesViewPr
                   icon={<ArrowDownLeft className="h-4 w-4" />}
                   onClick={() => onReceive(row.ticker)}
                 />
+                {/* TODO: re-enable withdraw — Send icon (opens the "Withdraw funds" sheet)
+                    temporarily disabled.
                 <IconButton
                   aria-label={`${t('send')} ${row.ticker}`}
                   variant="subtle"
                   icon={<ArrowUpRight className="h-4 w-4" />}
                   onClick={() => onSend(row.ticker)}
                 />
+                */}
               </div>
             </div>
           ))

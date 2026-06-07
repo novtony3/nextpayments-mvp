@@ -4,21 +4,12 @@ import { Coins } from 'lucide-react';
 import { Card } from '@nextpayments/ui/components/card';
 import { Notice } from '@nextpayments/ui/components/notice';
 
+import { formatCrypto, parseAmount } from '@/lib/format';
 import type { TotalsResult } from '@/lib/affiliate/types';
 
 type TotalsStripProps = {
   result: TotalsResult;
 };
-
-/** Coerce backend string/number into a finite number, or 0 fallback. */
-function toNumber(value: unknown): number {
-  const n = typeof value === 'string' ? Number(value) : typeof value === 'number' ? value : 0;
-  return Number.isFinite(n) ? n : 0;
-}
-
-function formatAmount(value: number, locale: string): string {
-  return new Intl.NumberFormat(locale, { maximumFractionDigits: 8 }).format(value);
-}
 
 /**
  * Per-coin commission totals laid out as a card grid. Echoes the dashboard's
@@ -60,7 +51,7 @@ export function TotalsStrip({ result }: TotalsStripProps) {
         </span>
         <ul className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 md:grid-cols-4">
           {result.data.map((entry, index) => {
-            const amount = toNumber(entry.total ?? entry.amount);
+            const amount = parseAmount(entry.total ?? entry.amount) ?? 0;
             const coin = entry.coin ?? '—';
             return (
               <li
@@ -71,7 +62,7 @@ export function TotalsStrip({ result }: TotalsStripProps) {
                   {coin}
                 </span>
                 <span className="text-lg font-medium text-[var(--color-text)]">
-                  {formatAmount(amount, locale)}
+                  {formatCrypto(amount, locale)}
                 </span>
                 {entry.count !== undefined && (
                   <span className="text-xs text-[var(--color-text-muted)]">

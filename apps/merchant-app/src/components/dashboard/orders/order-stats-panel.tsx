@@ -4,26 +4,12 @@ import { Card } from '@nextpayments/ui/components/card';
 import { Notice } from '@nextpayments/ui/components/notice';
 
 import { FIAT } from '@/constants/dashboard';
+import { formatCount, formatCrypto, formatFiat } from '@/lib/format';
 import type { OrderStatsResult } from '@/lib/orders/types';
 
 type OrderStatsPanelProps = {
   result: OrderStatsResult;
 };
-
-function formatInt(value: number, locale: string): string {
-  return new Intl.NumberFormat(locale).format(value);
-}
-
-function formatUsdt(value: number, locale: string): string {
-  return new Intl.NumberFormat(locale, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
-}
-
-function formatCoinAmount(value: number, locale: string): string {
-  return new Intl.NumberFormat(locale, { maximumFractionDigits: 8 }).format(value);
-}
 
 /**
  * Dashboard stats fed by `GET /api/orders/me/stats`. Server Component so the
@@ -46,11 +32,11 @@ export function OrderStatsPanel({ result }: OrderStatsPanelProps) {
   const unpricedCoins = byCoin.filter((c) => c.priceUsd === 0).map((c) => c.coin);
 
   const cards = [
-    { key: 'totalOrders' as const, value: formatInt(totalOrders, locale) },
-    { key: 'paidOrders' as const, value: formatInt(paidOrders, locale) },
+    { key: 'totalOrders' as const, value: formatCount(totalOrders, locale) },
+    { key: 'paidOrders' as const, value: formatCount(paidOrders, locale) },
     {
       key: 'totalUsdt' as const,
-      value: `${FIAT.symbol}${formatUsdt(totalUsdt, locale)} USDT`,
+      value: `${FIAT.symbol}${formatFiat(totalUsdt, locale)} USDT`,
     },
   ];
 
@@ -85,8 +71,8 @@ export function OrderStatsPanel({ result }: OrderStatsPanelProps) {
                 <span className="font-medium">{row.coin}</span>
                 <span className="text-[var(--color-text-muted)]">
                   {t('byCoin.amount', {
-                    amount: formatCoinAmount(row.totalAmount, locale),
-                    count: formatInt(row.count, locale),
+                    amount: formatCrypto(row.totalAmount, locale),
+                    count: formatCount(row.count, locale),
                   })}
                 </span>
               </li>

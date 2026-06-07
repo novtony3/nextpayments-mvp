@@ -9,6 +9,7 @@ import { EmptyState } from '@nextpayments/ui/components/empty-state';
 import { ORDERS_PARAM, ORDER_STATUS_FILTER_ALL, type OrderStatusFilter } from '@/constants/orders';
 import { ROUTES } from '@/constants/routes';
 import { Link, usePathname, useRouter } from '@/i18n/routing';
+import { formatCrypto, parseAmount } from '@/lib/format';
 import type { OrderRow, OrderListPage } from '@/lib/orders/types';
 import { TablePagination } from '@/components/shared/table-pagination';
 
@@ -45,9 +46,8 @@ function detailHref(row: OrderRow, integrationId?: string): string | null {
 
 function amount(row: OrderRow, locale: string): string {
   if (row.amount === undefined || row.amount === null || row.amount === '') return '—';
-  const num = typeof row.amount === 'number' ? row.amount : Number(row.amount);
-  if (Number.isNaN(num)) return cell(row.amount);
-  return new Intl.NumberFormat(locale, { maximumFractionDigits: 8 }).format(num);
+  const num = parseAmount(row.amount);
+  return num === null ? cell(row.amount) : formatCrypto(num, locale);
 }
 
 /**

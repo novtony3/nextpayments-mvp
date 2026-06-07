@@ -6,6 +6,7 @@ import { Notice } from '@nextpayments/ui/components/notice';
 
 import { ROUTES } from '@/constants/routes';
 import { Link } from '@/i18n/routing';
+import { formatCrypto, parseAmount } from '@/lib/format';
 import type { OrderDetailResult, OrderRow } from '@/lib/orders/types';
 
 import { ReadOnlyField } from '../integrations/read-only-field';
@@ -23,9 +24,8 @@ function formatDate(value: unknown, locale: string): string {
 
 function formatAmount(value: OrderRow['amount'], locale: string): string {
   if (value === undefined || value === null || value === '') return '—';
-  const num = typeof value === 'number' ? value : Number(value);
-  if (Number.isNaN(num)) return String(value);
-  return new Intl.NumberFormat(locale, { maximumFractionDigits: 8 }).format(num);
+  const num = parseAmount(value);
+  return num === null ? String(value) : formatCrypto(num, locale);
 }
 
 function asString(value: unknown): string {

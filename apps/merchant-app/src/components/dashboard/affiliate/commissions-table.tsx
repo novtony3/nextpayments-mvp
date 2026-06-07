@@ -8,6 +8,7 @@ import { DataTable, type DataTableColumn } from '@nextpayments/ui/components/dat
 import { EmptyState } from '@nextpayments/ui/components/empty-state';
 
 import { ROUTES } from '@/constants/routes';
+import { formatCrypto, parseAmount } from '@/lib/format';
 import type { AffiliateCommissionRow, CommissionResult } from '@/lib/affiliate/types';
 
 import { AffiliatePager } from './affiliate-pager';
@@ -18,15 +19,6 @@ type CommissionsTableProps = {
   /** Query params to preserve when paging (e.g. downline page + level). */
   preservedParams: Record<string, string | undefined>;
 };
-
-function toNumber(value: unknown): number {
-  const n = typeof value === 'string' ? Number(value) : typeof value === 'number' ? value : 0;
-  return Number.isFinite(n) ? n : 0;
-}
-
-function formatAmount(value: number, locale: string): string {
-  return new Intl.NumberFormat(locale, { maximumFractionDigits: 8 }).format(value);
-}
 
 function formatDate(value: string | undefined, locale: string): string {
   if (!value) return '—';
@@ -51,7 +43,7 @@ export function CommissionsTable({ result, pageParam, preservedParams }: Commiss
     {
       key: 'amount',
       header: t('headers.amount'),
-      render: (row) => formatAmount(toNumber(row.amount), locale),
+      render: (row) => formatCrypto(parseAmount(row.amount) ?? 0, locale),
     },
     {
       key: 'from',
