@@ -1,5 +1,7 @@
 import { cn } from '@nextpayments/ui/lib/utils';
 
+import { BRAND_GRADIENT_STOPS, BRAND_MONOGRAM, BRAND_NAME } from '@/constants/site';
+
 type LogoProps = {
   className?: string;
   textClassName?: string;
@@ -9,31 +11,49 @@ type LogoProps = {
   size?: number;
 };
 
+/** Stable gradient id — the mark may render several times per page (header,
+ * footer, hero); a fixed id keeps the markup small and renders identically
+ * each time, so duplicate-id paint is harmless. */
+const GRADIENT_ID = 'np-logo-gradient';
+
 /**
- * GeminiMark — 4-point sparkle with the signature multi-color gradient.
- * Same silhouette as the diamond in Gemini Desktop's title bar.
+ * NPMark — the "NP" monogram in a rounded-square tile filled with the
+ * signature cyan → blue → coral → gold sweep (the only gradient the design
+ * system allows besides the aurora). Drawn as SVG so it stays crisp at every
+ * size and mirrors the raster favicon / OG card, which share the same stops
+ * via `BRAND_GRADIENT_STOPS`.
  */
-function GeminiMark({ size = 22 }: { size?: number }) {
+function NPMark({ size = 22 }: { size?: number }) {
   return (
     <svg
       width={size}
       height={size}
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
-      aria-hidden
+      role="img"
+      aria-label={BRAND_NAME}
     >
       <defs>
-        <linearGradient id="gemini-sparkle" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#3ed0f1" />
-          <stop offset="35%" stopColor="#4796e3" />
-          <stop offset="70%" stopColor="#e87262" />
-          <stop offset="100%" stopColor="#f7c948" />
+        <linearGradient id={GRADIENT_ID} x1="0%" y1="0%" x2="100%" y2="100%">
+          {BRAND_GRADIENT_STOPS.map((stop) => (
+            <stop key={stop.offset} offset={`${stop.offset}%`} stopColor={stop.color} />
+          ))}
         </linearGradient>
       </defs>
-      <path
-        d="M12 2 C12 7.5 16.5 7.5 22 12 C16.5 16.5 12 16.5 12 22 C12 16.5 7.5 16.5 2 12 C7.5 7.5 12 7.5 12 2 Z"
-        fill="url(#gemini-sparkle)"
-      />
+      <rect x="0" y="0" width="24" height="24" rx="6" fill={`url(#${GRADIENT_ID})`} />
+      <text
+        x="12"
+        y="12.75"
+        textAnchor="middle"
+        dominantBaseline="central"
+        fill="#ffffff"
+        fontSize="10.5"
+        fontWeight="700"
+        letterSpacing="-0.5"
+        style={{ fontFamily: 'var(--font-sans)' }}
+      >
+        {BRAND_MONOGRAM}
+      </text>
     </svg>
   );
 }
@@ -41,10 +61,10 @@ function GeminiMark({ size = 22 }: { size?: number }) {
 export function Logo({ className, textClassName, iconOnly, size }: LogoProps) {
   return (
     <span className={cn('inline-flex items-center gap-2.5', className)}>
-      <GeminiMark size={size} />
+      <NPMark size={size} />
       {!iconOnly && (
         <span className={cn('text-[15px] font-medium tracking-tight', textClassName)}>
-          Nextpayments
+          {BRAND_NAME}
         </span>
       )}
     </span>

@@ -8,7 +8,7 @@ import { ROUTES } from '@/constants/routes';
 import { Reveal } from './reveal';
 import { SectionHeading } from './section-heading';
 
-const BULLETS = ['noSetup', 'noMonthly', 'noKyc'] as const;
+const BULLETS = ['allChains', 'noFees', 'referral'] as const;
 
 export function Pricing() {
   const t = useTranslations('landing.pricing');
@@ -25,7 +25,10 @@ export function Pricing() {
               aria-hidden
               className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-[radial-gradient(ellipse_55%_100%_at_50%_0%,var(--color-accent-soft)_0%,transparent_72%)]"
             />
-            <div className="flex items-baseline justify-center gap-2">
+            <span className="relative inline-flex items-center rounded-full bg-[var(--color-accent-soft)] px-3 py-1 text-xs font-medium text-[var(--color-accent)]">
+              {t('badge')}
+            </span>
+            <div className="mt-6 flex items-baseline justify-center gap-2">
               <span className="text-7xl font-normal leading-none tracking-tight text-[var(--color-text)]">
                 {t('fee')}
               </span>

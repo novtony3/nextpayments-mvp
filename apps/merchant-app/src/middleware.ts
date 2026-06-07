@@ -19,6 +19,12 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Match all routes except API routes, Next internals, and static files.
-  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)'],
+  // Match all routes except API routes, Next internals, static files (any
+  // path containing a dot), AND the extensionless `next/og` metadata routes.
+  // Those four (`/icon`, `/apple-icon`, `/opengraph-image`, `/twitter-image`)
+  // carry no extension, so without an explicit exclusion the i18n middleware
+  // would redirect them to `/<locale>/icon` and silently break the favicon and
+  // social cards. Dotted convention files (robots.txt, sitemap.xml,
+  // manifest.webmanifest) are already covered by the `.*\..*` rule.
+  matcher: ['/((?!api|_next|_vercel|icon|apple-icon|opengraph-image|twitter-image|.*\\..*).*)'],
 };
