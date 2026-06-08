@@ -8,7 +8,7 @@ import { Button } from '@nextpayments/ui/components/button';
 import { Link } from '@/i18n/routing';
 import { ROUTES } from '@/constants/routes';
 import { TwinAuroras } from '@/components/shared/twin-auroras';
-import { Reveal } from './reveal';
+import { RiseIn } from './rise-in';
 import { HeroVisual } from './hero-visual';
 import { HeroCanvas } from './fx/hero-canvas';
 import { KineticLine } from './fx/kinetic-line';
@@ -29,7 +29,7 @@ export function Hero() {
       <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-2 lg:gap-8">
         {/* Left — copy. */}
         <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-          <Reveal>
+          <RiseIn>
             <span className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border-strong)] bg-[var(--glass-fill)] px-4 py-1.5 text-xs font-medium tracking-wide text-[var(--color-text-muted)] backdrop-blur">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full rounded-full bg-[var(--color-accent)] opacity-70 motion-safe:animate-ping" />
@@ -37,7 +37,7 @@ export function Hero() {
               </span>
               {t('eyebrow')}
             </span>
-          </Reveal>
+          </RiseIn>
 
           <h1 className="mt-8 max-w-xl text-balance text-4xl font-medium leading-[1.05] tracking-tight text-[var(--color-text)] sm:text-6xl lg:text-[64px]">
             <KineticLine text={t('headlineLead')} />
@@ -45,13 +45,13 @@ export function Hero() {
             <KineticLine text={t('headlineTrail')} delay={0.18} gradient />
           </h1>
 
-          <Reveal delay={0.5}>
+          <RiseIn delay={0.5}>
             <p className="mt-7 max-w-md text-pretty text-[15px] leading-relaxed text-[var(--color-text-muted)] sm:text-[17px]">
               {t('subhead')}
             </p>
-          </Reveal>
+          </RiseIn>
 
-          <Reveal delay={0.6}>
+          <RiseIn delay={0.6}>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
               <Magnetic>
                 <Button asChild size="lg" className="glow-accent group">
@@ -65,7 +65,7 @@ export function Hero() {
                 <a href="#features">{t('ctaSecondary')}</a>
               </Button>
             </div>
-          </Reveal>
+          </RiseIn>
         </div>
 
         {/* Right — 3D particle globe with the floating glass card in front. */}
