@@ -107,3 +107,69 @@
     background-color: var(--color-text-subtle);
   }
 }
+
+/* ============================================================================
+ * Web3 landing FX — MERCHANT-ONLY. Reuses the shared brand/accent tokens so
+ * the admin app and the Gemini design system stay untouched. Every animation
+ * collapses to static under prefers-reduced-motion (handled per-utility).
+ * ========================================================================== */
+
+@keyframes np-gradient-pan {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+/* Animated web3 headline gradient — cyan → blue → lilac → coral sweep. The
+ * brand aurora is licensed here as a deliberate "hero moment" (PLAN §4.2). */
+@utility text-gradient-web3 {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-brand-cyan) 0%,
+    var(--color-brand-blue) 32%,
+    var(--color-brand-lilac) 64%,
+    var(--color-brand-coral) 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: np-gradient-pan 9s linear infinite alternate;
+  }
+}
+
+/* Faint technical "blueprint" grid for section backdrops. Pair with a
+ * radial mask on the element so it fades into the canvas at the edges. */
+@utility bg-web3-grid {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--color-accent) 9%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--color-accent) 9%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 54px 54px;
+}
+
+/* Soft accent bloom — hairline ring + outer glow. For hero CTAs and the
+ * featured pricing card. Tinted to the accent, never a pure-black shadow. */
+@utility glow-accent {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--color-accent) 30%, transparent),
+    0 10px 48px -10px color-mix(in oklab, var(--color-accent) 48%, transparent);
+}
+
+/* Radial edge-fade mask — feathers grids / textures into the canvas. */
+@utility mask-radial-fade {
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 45%, #000 30%, transparent 78%);
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 45%, #000 30%, transparent 78%);
+}
