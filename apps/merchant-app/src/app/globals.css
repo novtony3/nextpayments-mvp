@@ -239,6 +239,13 @@
   }
 }
 
+/* Continuous full 360° rotation — for the pricing light-burst rays. */
+@keyframes np-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .np-kinetic-rise {
     animation: np-kinetic-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -250,5 +257,9 @@
 
   .np-hero-card-float {
     animation: np-hero-card-float 8s ease-in-out infinite;
+  }
+
+  .np-spin {
+    animation: np-spin 24s linear infinite;
   }
 }
