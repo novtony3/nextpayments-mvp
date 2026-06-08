@@ -143,6 +143,26 @@
   }
 }
 
+/* Cooler, blue-forward headline gradient — cyan → blue with a restrained lilac
+ * tail (no coral), matching the Stitch web3 reference. Used by the hero
+ * KineticLine; the full aurora stays on `text-gradient-web3` elsewhere. */
+@utility text-gradient-hero {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-brand-cyan) 0%,
+    var(--color-brand-blue) 55%,
+    var(--color-brand-lilac) 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: np-gradient-pan 9s linear infinite alternate;
+  }
+}
+
 /* Faint technical "blueprint" grid for section backdrops. Pair with a
  * radial mask on the element so it fades into the canvas at the edges. */
 @utility bg-web3-grid {

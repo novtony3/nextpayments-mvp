@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "NextPayment",
+    "appName": "VNPayment",
     "tagline": "Passerelle de paiement crypto pour les entreprises",
     "loading": "Chargement...",
     "comingSoon": "Bientôt disponible",
@@ -12,7 +12,7 @@
     }
   },
   "meta": {
-    "description": "Acceptez les paiements crypto sur toutes les chaînes avec NextPayment. Intégrez la passerelle en quelques minutes : 300+ cryptos, sans KYC, des frais fixes de 0,5 % et 0,1 % de récompenses de parrainage."
+    "description": "Acceptez les paiements crypto sur toutes les chaînes avec VNPayment. Intégrez la passerelle en quelques minutes : 300+ cryptos, sans KYC, des frais fixes de 0,5 % et 0,1 % de récompenses de parrainage."
   },
   "nav": {
     "features": "Fonctionnalités",
@@ -164,7 +164,7 @@
           }
         }
       },
-      "copyright": "© 2026 NextPayment. Tous droits réservés."
+      "copyright": "© 2026 VNPayment. Tous droits réservés."
     }
   },
   "auth": {

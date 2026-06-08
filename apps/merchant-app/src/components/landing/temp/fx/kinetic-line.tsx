@@ -25,7 +25,10 @@ export function KineticLine({ text, className, delay = 0, gradient = false }: Ki
   return (
     <span className={cn('inline', className)} aria-label={text}>
       {words.map((word, i) => (
-        <span key={`${word}-${i}`} className="inline-block overflow-hidden pb-[0.12em] align-bottom">
+        <span
+          key={`${word}-${i}`}
+          className="inline-block overflow-hidden pb-[0.12em] align-bottom"
+        >
           <span
             aria-hidden
             className="np-kinetic-rise inline-block"
@@ -33,7 +36,7 @@ export function KineticLine({ text, className, delay = 0, gradient = false }: Ki
           >
             {/* Gradient lives on an inner span: it animates background-position,
                 which would otherwise collide with the rise transform animation. */}
-            <span className={cn('inline-block', gradient && 'text-gradient-web3')}>
+            <span className={cn('inline-block', gradient && 'text-gradient-hero')}>
               {word}
               {i < words.length - 1 ? ' ' : ''}
             </span>
