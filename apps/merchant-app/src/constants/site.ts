@@ -9,10 +9,10 @@
  */
 
 /** Wordmark shown next to the logo and used across document metadata. */
-export const BRAND_NAME = 'NextPayment';
+export const BRAND_NAME = 'VNPayment';
 
 /** Two-letter monogram rendered inside the logo tile, favicon, and OG card. */
-export const BRAND_MONOGRAM = 'NP';
+export const BRAND_MONOGRAM = 'VN';
 
 /** Short descriptor appended after the brand name in the default title. */
 export const BRAND_TAGLINE = 'Crypto Payment Gateway';
@@ -28,7 +28,7 @@ export const BRAND_OG_SUBLINE = 'Crypto payments on every chain.';
 
 /** Default English meta description (locale variants come from i18n `meta`). */
 export const BRAND_DESCRIPTION =
-  `Accept crypto payments on every chain. Integrate the NextPayment gateway in ` +
+  `Accept crypto payments on every chain. Integrate the VNPayment gateway in ` +
   `minutes — 300+ coins, no KYC, one flat ${FEE_RATE} fee, plus ${REFERRAL_RATE} referral rewards.`;
 
 /**
@@ -72,11 +72,11 @@ export const SITE_URL = (
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
     : '') ||
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '') ||
-  'https://nextpayment.app'
+  'https://vnpayment.xyz'
 ).replace(/\/+$/, '');
 
 /** Twitter/X handle for the `twitter:site` / `twitter:creator` tags. */
-export const TWITTER_HANDLE = '@nextpayment';
+export const TWITTER_HANDLE = '@vnpayment';
 
 /** Search keywords for the document metadata. */
 export const SEO_KEYWORDS = [
@@ -89,7 +89,7 @@ export const SEO_KEYWORDS = [
   'multi-chain crypto payments',
   'crypto checkout widget',
   'web3 payments',
-  'NextPayment',
+  'VNPayment',
 ] as const;
 
 /** Canonical OpenGraph / Twitter card dimensions (also the `next/og` size). */

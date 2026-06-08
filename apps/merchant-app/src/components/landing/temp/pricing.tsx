@@ -54,8 +54,9 @@ export function Pricing() {
                   'radial-gradient(circle at 50% 50%, var(--color-accent-soft) 0%, transparent 58%)',
               }}
             />
+            {/* Conic rays — spin a full 360° (static under reduced motion). */}
             <div
-              className="mask-radial-fade absolute inset-0 opacity-60"
+              className="np-spin mask-radial-fade absolute inset-0 opacity-60"
               style={{
                 backgroundImage:
                   'repeating-conic-gradient(from 0deg at 50% 50%, color-mix(in oklab, var(--color-brand-cyan) 20%, transparent) 0deg 3deg, transparent 3deg 15deg)',

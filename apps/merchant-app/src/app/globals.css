@@ -143,6 +143,26 @@
   }
 }
 
+/* Cooler, blue-forward headline gradient — cyan → blue with a restrained lilac
+ * tail (no coral), matching the Stitch web3 reference. Used by the hero
+ * KineticLine; the full aurora stays on `text-gradient-web3` elsewhere. */
+@utility text-gradient-hero {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-brand-cyan) 0%,
+    var(--color-brand-blue) 55%,
+    var(--color-brand-lilac) 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: np-gradient-pan 9s linear infinite alternate;
+  }
+}
+
 /* Faint technical "blueprint" grid for section backdrops. Pair with a
  * radial mask on the element so it fades into the canvas at the edges. */
 @utility bg-web3-grid {
@@ -219,6 +239,13 @@
   }
 }
 
+/* Continuous full 360° rotation — for the pricing light-burst rays. */
+@keyframes np-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .np-kinetic-rise {
     animation: np-kinetic-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -230,5 +257,9 @@
 
   .np-hero-card-float {
     animation: np-hero-card-float 8s ease-in-out infinite;
+  }
+
+  .np-spin {
+    animation: np-spin 24s linear infinite;
   }
 }

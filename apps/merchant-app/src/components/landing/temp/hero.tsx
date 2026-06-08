@@ -55,7 +55,9 @@ export function Hero() {
             <div className="mt-10 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
               <Magnetic>
                 <Button asChild size="lg" className="glow-accent group">
-                  <Link href={ROUTES.REGISTER}>
+                  {/* → dashboard; the (protected) guard sends logged-out users to
+                      /login?returnTo=/dashboard and back here after sign-in. */}
+                  <Link href={ROUTES.DASHBOARD}>
                     {t('ctaPrimary')}
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                   </Link>
