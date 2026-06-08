@@ -4,7 +4,7 @@ import { RETURN_TO_PARAM } from '@/constants/auth';
 import { ROUTES } from '@/constants/routes';
 import { Link, redirect } from '@/i18n/routing';
 import { safeReturnTo } from '@/lib/auth/return-to';
-import { getRefreshToken, isAuthenticated } from '@/lib/auth/session';
+import { getCurrentUser, getRefreshToken } from '@/lib/auth/session';
 import { Logo } from '@/components/shared/logo';
 import { BlueAccent } from '@/components/shared/blue-accent';
 import { LoginForm } from '@/components/auth/login-form';
@@ -27,8 +27,11 @@ export default async function LoginPage({ params, searchParams }: LoginPageProps
   const rawReturn = sp[RETURN_TO_PARAM];
   const returnTo = safeReturnTo(Array.isArray(rawReturn) ? rawReturn[0] : rawReturn);
 
-  // Already signed in → don't show the login screen.
-  if (await isAuthenticated()) {
+  // Already signed in → don't show the login screen. Gate on the *validated*
+  // user, not mere cookie presence: a stale/invalid access token (e.g. left
+  // over from a previous backend) must fall through to the form + silent
+  // recovery instead of bouncing the user straight back out of /login.
+  if (await getCurrentUser()) {
     redirect({ href: returnTo ?? ROUTES.HOME, locale });
   }
 
