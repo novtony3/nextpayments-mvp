@@ -5,7 +5,7 @@ import { RETURN_TO_PARAM } from '@/constants/auth';
 import { ROUTES } from '@/constants/routes';
 import { redirect } from '@/i18n/routing';
 import { stripLocalePrefix } from '@/lib/auth/return-to';
-import { getHeaderUser, isAuthenticated } from '@/lib/auth/session';
+import { getHeaderUser } from '@/lib/auth/session';
 import { DashboardShell } from '@/components/dashboard/shell/dashboard-shell';
 
 type ProtectedLayoutProps = {
@@ -21,15 +21,22 @@ type ProtectedLayoutProps = {
  * (from the `x-pathname` header the middleware sets) is passed as `returnTo`
  * so recovery sends the user back to where they were, not the landing page.
  *
- * Resolves the header identity here (server-side, cookie-authed) and threads
- * it to the shell, so the topbar account menu renders correctly on first
+ * The guard gates on a VALIDATED identity (`getHeaderUser`, which resolves the
+ * cached `getCurrentUser` against the backend) rather than mere cookie
+ * presence — a stale/invalid `np_access` cookie (e.g. left over after a
+ * backend switch) must redirect to login, not let the user into a dashboard
+ * whose data fetches will all fail. Resolving it here also threads the header
+ * identity to the shell, so the topbar account menu renders correctly on first
  * paint (no "Get started" flash on locale switch) and the verify banner only
- * shows for unverified accounts.
+ * shows for unverified accounts. `getCurrentUser` is `cache()`d, so this is a
+ * single backend call shared with the shell.
  */
 export default async function ProtectedLayout({ children, params }: ProtectedLayoutProps) {
   const { locale } = await params;
 
-  if (!(await isAuthenticated())) {
+  const user = await getHeaderUser();
+
+  if (!user) {
     const pathname = (await headers()).get('x-pathname') ?? '';
     const returnTo = stripLocalePrefix(pathname, locale);
     redirect({
@@ -40,8 +47,6 @@ export default async function ProtectedLayout({ children, params }: ProtectedLay
       locale,
     });
   }
-
-  const user = await getHeaderUser();
 
   return <DashboardShell user={user}>{children}</DashboardShell>;
 }
