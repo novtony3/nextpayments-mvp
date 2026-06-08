@@ -5,8 +5,12 @@
 # Build context: repo root (crypto-payment-fe/)
 #   docker build -f apps/merchant-app/Dockerfile .
 #
-# Build args (NEXT_PUBLIC_* are baked into the bundle at build time):
+# Build args (baked into the bundle at build time):
 #   NEXT_PUBLIC_API_URL   Payment backend public URL  (default: http://localhost:3000)
+#   API_PROXY_TARGET      Upstream the `/api/*` rewrite forwards to. next.config
+#                         evaluates `rewrites()` at BUILD time, so this MUST be a
+#                         build arg — setting it only at runtime is ignored.
+#                         (default: http://localhost:3000)
 #
 # Runtime env vars (passed via env_file / -e at container start):
 #   PORT               Server port (default: 5001)
@@ -33,6 +37,12 @@ FROM deps AS builder
 
 ARG NEXT_PUBLIC_API_URL=http://localhost:3000
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
+# next.config.ts reads this when evaluating `rewrites()` at build time and bakes
+# the `/api/*` proxy destination into the standalone output. Must be set here —
+# the runtime env_file value is NOT re-read by the prebuilt server.
+ARG API_PROXY_TARGET=http://localhost:3000
+ENV API_PROXY_TARGET=$API_PROXY_TARGET
 
 # Disable Next.js telemetry in CI/build environments
 ENV NEXT_TELEMETRY_DISABLED=1
