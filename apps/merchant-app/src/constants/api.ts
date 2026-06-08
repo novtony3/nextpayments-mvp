@@ -57,12 +57,31 @@ export const apiPath = {
   ordersMeStats: (): string => `${API_ROUTES.ORDERS}/me/stats`,
 } as const;
 
-/** Env var (server-only) that points the Next rewrite at the tunnel. */
+/** Per-machine override that points the Next rewrite at a local tunnel port. */
 export const API_PROXY_TARGET_ENV = 'API_PROXY_TARGET' as const;
 
+/** Configured backend origin for deployed/shared envs (e.g. the hosted API). */
+export const PUBLIC_API_URL_ENV = 'NEXT_PUBLIC_API_URL' as const;
+
 /**
- * Default upstream when `API_PROXY_TARGET` is unset. Matches the Postman
- * `baseUrl` and the tunnel script's default remote port — run the tunnel with
- * `--local-port 3000` for zero-config, or set the env to your chosen port.
+ * Default upstream when no env is set. Matches the Postman `baseUrl` and the
+ * tunnel script's default remote port — run the tunnel with `--local-port 3000`
+ * for zero-config, or set an env to your chosen target.
  */
 export const DEFAULT_API_PROXY_TARGET = 'http://localhost:3000' as const;
+
+/**
+ * Resolve the backend origin (no path) that the Next `/api` rewrite and the
+ * server-side fetches forward to. The browser never sees this — calls stay
+ * same-origin, so there is no CORS regardless of which target wins.
+ *
+ * Precedence: `API_PROXY_TARGET` (per-machine override, e.g. an SSH tunnel) →
+ * `NEXT_PUBLIC_API_URL` (the configured hosted backend) → localhost default.
+ */
+export function resolveBackendTarget(): string {
+  return (
+    process.env[API_PROXY_TARGET_ENV] ??
+    process.env[PUBLIC_API_URL_ENV] ??
+    DEFAULT_API_PROXY_TARGET
+  );
+}
