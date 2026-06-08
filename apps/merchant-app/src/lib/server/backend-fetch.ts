@@ -1,11 +1,6 @@
 import 'server-only';
 
-import {
-  API_BASE_URL,
-  API_PROXY_TARGET_ENV,
-  DEFAULT_API_PROXY_TARGET,
-  type ApiRoute,
-} from '@/constants/api';
+import { API_BASE_URL, resolveBackendTarget, type ApiRoute } from '@/constants/api';
 
 /**
  * A backend path. Static endpoints come from `API_ROUTES` (`ApiRoute`);
@@ -15,15 +10,16 @@ import {
 export type BackendRoute = ApiRoute | (string & {});
 
 /**
- * Server-side calls to the backend, straight to the upstream origin reached
- * via the SSH tunnel (the browser `/api` rewrite is for client code only).
- * The upstream host comes from a server-only env, so it never reaches the
- * browser. Used by Server Actions and diagnostics.
+ * Server-side calls to the backend, straight to the upstream origin (the
+ * hosted API, or a local tunnel) — the browser `/api` rewrite is for client
+ * code only. The target is resolved by `resolveBackendTarget()`; client API
+ * calls still stay same-origin, so there is no CORS. Used by Server Actions
+ * and diagnostics.
  */
 
 /** Upstream origin (no path) — for display/diagnostics. */
 export function getBackendTarget(): string {
-  return process.env[API_PROXY_TARGET_ENV] ?? DEFAULT_API_PROXY_TARGET;
+  return resolveBackendTarget();
 }
 
 /** Query values to append as `?k=v`; `undefined` entries are skipped. */

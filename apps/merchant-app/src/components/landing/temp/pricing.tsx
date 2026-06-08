@@ -16,7 +16,7 @@ export function Pricing() {
   const t = useTranslations('landing.pricing');
 
   return (
-    <section id="pricing" className="py-24 sm:py-32">
+    <section id="pricing" className="overflow-x-clip py-24 sm:py-32">
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 sm:px-6 lg:grid-cols-2 lg:gap-16">
         {/* Left — pitch + guarantees. */}
         <Reveal>

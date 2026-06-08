@@ -1,36 +1,31 @@
-'use client';
-
-import { motion, useReducedMotion } from 'framer-motion';
 import { Box } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { BRAND_GRADIENT_CSS, BRAND_MONOGRAM, BRAND_NAME } from '@/constants/site';
 import { HERO_CARD } from '@/constants/landing';
 
+import { RiseIn } from './rise-in';
+
 /**
  * Floating glassmorphic payment card — the hero's foreground object, sitting in
  * front of the 3D particle globe. Real DOM text (crisp + accessible); the card
  * itself is the always-on base of the hero visual, so the design holds up even
- * when the WebGL globe never mounts. Idle float + tilt; static under
+ * when the WebGL globe never mounts.
+ *
+ * Entrance + idle float/tilt are CSS-driven (`RiseIn` + `np-hero-card-float`),
+ * so the card paints the instant the page renders rather than waiting on
+ * framer-motion. The inline `rotate(-5deg)` is the resting tilt — the float
+ * animation overrides it while running, and it stays put under
  * `prefers-reduced-motion`.
  */
 export function HeroVisual() {
   const t = useTranslations('landing.web3.hero');
-  const reduce = useReducedMotion();
 
   return (
-    <motion.div
-      initial={reduce ? false : { opacity: 0, y: 28, rotateX: 12, filter: 'blur(10px)' }}
-      animate={reduce ? undefined : { opacity: 1, y: 0, rotateX: 0, filter: 'blur(0px)' }}
-      transition={{ duration: 1, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      style={{ transformPerspective: 1200 }}
-      className="relative z-10 w-full max-w-[24rem]"
-    >
-      <motion.div
-        animate={reduce ? undefined : { y: [0, -14, 0], rotateZ: [-5, -3.5, -5] }}
-        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-        style={{ rotate: reduce ? '-5deg' : undefined }}
-        className="relative aspect-[1.586/1] overflow-hidden rounded-[1.4rem] border border-white/15 bg-[var(--glass-fill-strong)] p-6 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.85)] backdrop-blur-2xl"
+    <RiseIn delay={0.35} className="relative z-10 w-full max-w-[24rem]">
+      <div
+        style={{ transform: 'rotate(-5deg)' }}
+        className="np-hero-card-float relative aspect-[1.586/1] overflow-hidden rounded-[1.4rem] border border-white/15 bg-[var(--glass-fill-strong)] p-6 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.85)] backdrop-blur-2xl"
       >
         {/* Brand-tint wash + diagonal sheen. */}
         <span
@@ -68,15 +63,11 @@ export function HeroVisual() {
           />
 
           <div>
-            <p className="font-mono text-base tracking-[0.18em] text-white/90">
-              {HERO_CARD.NUMBER}
-            </p>
-            <p className="mt-2 text-xs uppercase tracking-[0.2em] text-white/55">
-              {t('cardLabel')}
-            </p>
+            <p className="font-mono text-base tracking-[0.18em] text-white/90">{HERO_CARD.NUMBER}</p>
+            <p className="mt-2 text-xs uppercase tracking-[0.2em] text-white/55">{t('cardLabel')}</p>
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </RiseIn>
   );
 }

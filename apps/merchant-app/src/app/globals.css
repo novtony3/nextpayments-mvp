@@ -173,3 +173,62 @@
   -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 45%, #000 30%, transparent 78%);
   mask-image: radial-gradient(ellipse 70% 70% at 50% 45%, #000 30%, transparent 78%);
 }
+
+/* ----------------------------------------------------------------------------
+ * Paint-time hero entrances — pure CSS so the above-the-fold hero (kinetic
+ * headline, eyebrow/subhead/CTA, glass card) animates in the instant the page
+ * paints, instead of staying hidden until framer-motion hydrates (which delays
+ * first paint / LCP). The motion is identical to the framer versions it
+ * replaces; all of it collapses to static under prefers-reduced-motion.
+ * -------------------------------------------------------------------------- */
+
+/* Per-word mask rise for the kinetic headline. */
+@keyframes np-kinetic-rise {
+  from {
+    transform: translateY(115%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Soft fade + rise + de-blur for hero copy and the glass card wrapper. */
+@keyframes np-hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Idle float + tilt for the floating glass payment card. */
+@keyframes np-hero-card-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-5deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(-3.5deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .np-kinetic-rise {
+    animation: np-kinetic-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .np-hero-rise {
+    animation: np-hero-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .np-hero-card-float {
+    animation: np-hero-card-float 8s ease-in-out infinite;
+  }
+}
