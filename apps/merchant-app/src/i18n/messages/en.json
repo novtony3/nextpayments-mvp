@@ -29,6 +29,7 @@
   },
   "landing": {
     "hero": {
+      "eyebrow": "Accept crypto in minutes",
       "headlineLead": "Crypto payments,",
       "headlineTrail": "as simple as a chat.",
       "subhead": "Integrate the gateway in minutes. Accept 300+ coins on every chain, with no KYC and one flat 0.5% fee.",
@@ -37,6 +38,16 @@
       "demo": {
         "received": "Payment received",
         "confirmed": "Confirmed on-chain"
+      }
+    },
+    "web3": {
+      "featuresTitle": "Everything your business needs",
+      "hero": {
+        "cardLabel": "Crypto · on every chain"
+      },
+      "paas": {
+        "title": "Platform as a Service",
+        "subtitle": "Plug-and-play crypto payments for merchants — a drop-in checkout widget and a REST API that settle 300+ coins across every major chain."
       }
     },
     "trustBar": {

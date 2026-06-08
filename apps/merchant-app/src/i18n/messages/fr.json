@@ -29,6 +29,7 @@
   },
   "landing": {
     "hero": {
+      "eyebrow": "La crypto en quelques minutes",
       "headlineLead": "Les paiements crypto,",
       "headlineTrail": "aussi simples qu'un chat.",
       "subhead": "Intégrez la passerelle en quelques minutes. Acceptez 300+ cryptos sur toutes les chaînes, sans KYC et avec des frais fixes de 0,5 %.",
@@ -37,6 +38,16 @@
       "demo": {
         "received": "Paiement reçu",
         "confirmed": "Confirmé on-chain"
+      }
+    },
+    "web3": {
+      "featuresTitle": "Tout ce dont votre entreprise a besoin",
+      "hero": {
+        "cardLabel": "Crypto · sur toutes les chaînes"
+      },
+      "paas": {
+        "title": "Plateforme en tant que service",
+        "subtitle": "Des paiements crypto clés en main pour les marchands — un widget de paiement intégrable et une API REST qui règlent 300+ cryptos sur toutes les grandes chaînes."
       }
     },
     "trustBar": {

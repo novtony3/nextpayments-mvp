@@ -14,7 +14,11 @@ export function Footer() {
   const t = useTranslations('landing.footer');
 
   return (
-    <footer>
+    <footer className="relative">
+      <div
+        aria-hidden
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[color-mix(in_oklab,var(--color-accent)_45%,transparent)] to-transparent"
+      />
       <div className="mx-auto max-w-6xl px-5 py-16 sm:px-6">
         <div className="grid gap-12 lg:grid-cols-[1.5fr_repeat(4,minmax(0,1fr))]">
           <div className="space-y-4">
