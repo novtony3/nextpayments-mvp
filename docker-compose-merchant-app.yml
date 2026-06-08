@@ -5,6 +5,9 @@ services:
       dockerfile: apps/merchant-app/Dockerfile
       args:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+        # Baked into the build — next.config evaluates `rewrites()` at build time.
+        # Defaults to the backend container on the shared `backend` network.
+        API_PROXY_TARGET: ${API_PROXY_TARGET:-http://crypto-payment-be:3000}
     image: crypto-payment-merchant-app:local
     container_name: crypto-payment-merchant-app
     restart: unless-stopped
