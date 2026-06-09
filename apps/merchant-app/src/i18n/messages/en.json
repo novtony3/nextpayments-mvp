@@ -334,6 +334,11 @@
         "addressPlaceholder": "0x…",
         "amount": "Amount",
         "amountPlaceholder": "0.00",
+        "available": {
+          "value": "Available: {amount} {coin}",
+          "unknown": "Available balance unavailable"
+        },
+        "max": "Max",
         "memo": "Memo / Tag (optional)",
         "memoPlaceholder": "Leave empty if not required",
         "token2fa": "2FA code",
@@ -344,6 +349,10 @@
         "done": "Done",
         "emailSentTitle": "Check your email",
         "emailSentBody": "We've emailed you a link to approve this withdrawal. It won't be sent until you confirm from that link.",
+        "warnings": {
+          "address": "This address couldn't be verified for the selected network. Double-check it before continuing.",
+          "insufficient": "Amount exceeds your available balance."
+        },
         "errors": {
           "address": "Enter a valid EVM address (0x followed by 40 hex characters).",
           "amount": "Enter an amount greater than 0.",

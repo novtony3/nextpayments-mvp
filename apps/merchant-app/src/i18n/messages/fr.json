@@ -334,6 +334,11 @@
         "addressPlaceholder": "0x…",
         "amount": "Montant",
         "amountPlaceholder": "0,00",
+        "available": {
+          "value": "Disponible : {amount} {coin}",
+          "unknown": "Solde disponible indisponible"
+        },
+        "max": "Max",
         "memo": "Mémo / Tag (facultatif)",
         "memoPlaceholder": "Laissez vide si non requis",
         "token2fa": "Code 2FA",
@@ -344,6 +349,10 @@
         "done": "Terminé",
         "emailSentTitle": "Vérifiez votre e-mail",
         "emailSentBody": "Nous vous avons envoyé un lien pour approuver ce retrait. Il ne sera pas effectué tant que vous ne l'aurez pas confirmé depuis ce lien.",
+        "warnings": {
+          "address": "Cette adresse n'a pas pu être vérifiée pour le réseau sélectionné. Vérifiez-la avant de continuer.",
+          "insufficient": "Le montant dépasse votre solde disponible."
+        },
         "errors": {
           "address": "Saisissez une adresse EVM valide (0x suivi de 40 caractères hexadécimaux).",
           "amount": "Saisissez un montant supérieur à 0.",
