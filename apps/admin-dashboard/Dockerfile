@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 # =============================================================================
 # admin-dashboard/Dockerfile
 # Multi-stage: pnpm monorepo builder → nginx:alpine static server
@@ -22,8 +23,12 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY packages/                  ./packages/
 COPY apps/admin-dashboard/package.json ./apps/admin-dashboard/
 
-# Install all workspace deps (frozen — no drift)
-RUN pnpm install --frozen-lockfile
+# Install all workspace deps (frozen — no drift). Persist the pnpm store across
+# builds (BuildKit cache mount) so deps aren't re-downloaded every deploy — the
+# deploy host's link to npm is slow/flaky. `.npmrc` raises fetch timeout/retries.
+# Requires BuildKit (Docker ≥23 default).
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+  pnpm install --frozen-lockfile --store-dir=/pnpm/store
 
 # ── Stage 2: builder ──────────────────────────────────────────────────────────
 FROM deps AS builder

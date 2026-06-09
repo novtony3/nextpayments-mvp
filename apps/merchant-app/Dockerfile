@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 # =============================================================================
 # merchant-app/Dockerfile
 # Multi-stage: pnpm monorepo builder → Next.js standalone → node:alpine runner
@@ -30,7 +31,12 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY packages/                    ./packages/
 COPY apps/merchant-app/package.json ./apps/merchant-app/
 
-RUN pnpm install --frozen-lockfile
+# Persist the pnpm store across builds (BuildKit cache mount) so deps aren't
+# re-downloaded every deploy — the deploy host's link to npm is slow/flaky and
+# a cold "reused 0" install timed out the CI build. `.npmrc` (copied above) also
+# raises the fetch timeout/retries. Requires BuildKit (Docker ≥23 default).
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+  pnpm install --frozen-lockfile --store-dir=/pnpm/store
 
 # ── Stage 2: builder ──────────────────────────────────────────────────────────
 FROM deps AS builder
