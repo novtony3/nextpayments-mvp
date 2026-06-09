@@ -2,6 +2,7 @@ import {
   ArrowLeftRight,
   Code2,
   FileText,
+  Home,
   LifeBuoy,
   ReceiptText,
   ScanLine,
@@ -19,6 +20,7 @@ import type { DashboardIconKey } from '@/constants/dashboard';
  * clean-architecture "no React in constants" rule holds.
  */
 export const DASHBOARD_ICONS: Record<DashboardIconKey, LucideIcon> = {
+  home: Home,
   wallet: Wallet,
   transactions: ArrowLeftRight,
   orders: ReceiptText,

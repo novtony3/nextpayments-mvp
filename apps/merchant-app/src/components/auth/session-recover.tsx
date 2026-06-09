@@ -29,7 +29,7 @@ export function SessionRecover({ returnTo }: SessionRecoverProps) {
     void (async () => {
       const recovered = await refreshAction();
       if (recovered) {
-        router.replace(returnTo ?? ROUTES.DASHBOARD);
+        router.replace(returnTo ?? ROUTES.OVERVIEW);
         router.refresh();
       }
     })();
