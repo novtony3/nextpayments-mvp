@@ -4,6 +4,7 @@ import { Link } from '@/i18n/routing';
 import { ROUTES } from '@/constants/routes';
 import { Logo } from '@/components/shared/logo';
 import { BlueAccent } from '@/components/shared/blue-accent';
+import { CryptoCoinsBackdrop } from '@/components/shared/crypto-coins-backdrop';
 import { RegisterForm } from '@/components/auth/register-form';
 // TODO: re-enable Google sign-up — temporarily disabled.
 // import { SocialButtons } from '@/components/auth/social-buttons';
@@ -15,6 +16,8 @@ export default function RegisterPage() {
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[var(--color-bg)] px-6 py-16">
       {/* Gemini Desktop signature: deep blue aurora rising from the floor. */}
       <BlueAccent intensity="subtle" feather={false} />
+      {/* Frosted-glass crypto coins floating in 3D behind the card. */}
+      <CryptoCoinsBackdrop />
 
       <div className="relative z-10 w-full max-w-[400px]">
         <div className="mb-10 flex flex-col items-center text-center">

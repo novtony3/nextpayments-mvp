@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { Button } from '@nextpayments/ui/components/button';
+import { Checkbox } from '@nextpayments/ui/components/checkbox';
 
 import { Link } from '@/i18n/routing';
 import { ROUTES } from '@/constants/routes';
@@ -38,6 +39,9 @@ export function RegisterForm() {
       confirmPassword: z.string().min(1, { message: t('errors.confirmRequired') }),
       // Optional referral code (upline id); only sent to the backend when filled.
       referral: z.string().optional(),
+      // Client-side consent gate — must be ticked to submit; never sent to the
+      // backend (it takes name/email/password/referralId only).
+      agreeTerms: z.boolean().refine((v) => v, { message: t('errors.termsRequired') }),
     })
     .refine((v) => v.password === v.confirmPassword, {
       path: ['confirmPassword'],
@@ -55,7 +59,14 @@ export function RegisterForm() {
     resolver: zodResolver(schema),
     mode: 'onBlur',
     reValidateMode: 'onChange',
-    defaultValues: { name: '', email: '', password: '', confirmPassword: '', referral: '' },
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      referral: '',
+      agreeTerms: false,
+    },
   });
 
   const onSubmit = async (values: RegisterValues) => {
@@ -166,6 +177,45 @@ export function RegisterForm() {
         error={errors.referral?.message}
         {...register('referral')}
       />
+
+      <div className="flex flex-col gap-2">
+        {/* Links are interactive content, so clicking them never toggles the
+            box (per the <label> activation spec) — only the text/box do. */}
+        <label htmlFor="agreeTerms" className="flex cursor-pointer items-start gap-3">
+          <Checkbox
+            id="agreeTerms"
+            aria-invalid={!!errors.agreeTerms}
+            {...register('agreeTerms')}
+          />
+          <span className="text-sm leading-snug text-[var(--color-text-muted)]">
+            {t.rich('agreeTerms', {
+              // Placeholder anchors until the legal pages land — matches the
+              // footer's terms/privacy links (no real routes exist yet).
+              terms: (chunks) => (
+                <a
+                  href="#"
+                  className="font-medium text-[var(--color-accent)] underline-offset-4 hover:underline"
+                >
+                  {chunks}
+                </a>
+              ),
+              privacy: (chunks) => (
+                <a
+                  href="#"
+                  className="font-medium text-[var(--color-accent)] underline-offset-4 hover:underline"
+                >
+                  {chunks}
+                </a>
+              ),
+            })}
+          </span>
+        </label>
+        {errors.agreeTerms && (
+          <p role="alert" className="text-xs text-[var(--color-danger)]">
+            {errors.agreeTerms.message}
+          </p>
+        )}
+      </div>
 
       <Button type="submit" variant="primary" size="lg" fullWidth loading={isSubmitting}>
         {isSubmitting ? t('submitting') : t('submit')}

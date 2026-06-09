@@ -7,6 +7,7 @@ import { safeReturnTo } from '@/lib/auth/return-to';
 import { getCurrentUser, getRefreshToken } from '@/lib/auth/session';
 import { Logo } from '@/components/shared/logo';
 import { BlueAccent } from '@/components/shared/blue-accent';
+import { CryptoCoinsBackdrop } from '@/components/shared/crypto-coins-backdrop';
 import { LoginForm } from '@/components/auth/login-form';
 import { SessionRecover } from '@/components/auth/session-recover';
 // TODO: re-enable Google sign-in — temporarily disabled.
@@ -43,6 +44,8 @@ export default async function LoginPage({ params, searchParams }: LoginPageProps
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[var(--color-bg)] px-6 py-16">
       {/* Gemini Desktop signature: deep blue aurora rising from the floor. */}
       <BlueAccent intensity="bold" feather={false} />
+      {/* Frosted-glass crypto coins floating in 3D behind the card. */}
+      <CryptoCoinsBackdrop />
 
       {canRecover && <SessionRecover returnTo={returnTo} />}
 
