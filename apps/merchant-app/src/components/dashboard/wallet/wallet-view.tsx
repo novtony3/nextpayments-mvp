@@ -17,6 +17,9 @@ type WalletViewProps = {
   balances: BalanceRow[];
   /** False when the balance read failed (degraded notice in the list). */
   balancesOk: boolean;
+  /** Spendable balances (`/fund/balance`) driving the withdraw form's
+   * available + Max — distinct from the fee-reserve `balances` shown in the list. */
+  spendableBalances: BalanceRow[];
   /** Account 2FA state — gates the withdraw `token2fa` field. */
   gaEnabled: boolean;
 };
@@ -32,7 +35,12 @@ function assetForCoin(coin: string): FundAsset {
  * A balance row's Receive focuses the deposit panel on that coin; Send opens
  * the withdraw sheet pre-set to it.
  */
-export function WalletView({ balances, balancesOk, gaEnabled }: WalletViewProps) {
+export function WalletView({
+  balances,
+  balancesOk,
+  spendableBalances,
+  gaEnabled,
+}: WalletViewProps) {
   const t = useTranslations('dashboard.wallet');
   const [depositAsset, setDepositAsset] = useState<FundAsset>(FUND_ASSETS[0]!);
   const [withdrawAsset, setWithdrawAsset] = useState<FundAsset>(FUND_ASSETS[0]!);
@@ -75,6 +83,7 @@ export function WalletView({ balances, balancesOk, gaEnabled }: WalletViewProps)
         onClose={() => setWithdrawOpen(false)}
         gaEnabled={gaEnabled}
         initialAsset={withdrawAsset}
+        spendableBalances={spendableBalances}
       />
     </div>
   );

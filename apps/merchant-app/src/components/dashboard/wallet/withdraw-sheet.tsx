@@ -2,13 +2,14 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { MailCheck } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { Button } from '@nextpayments/ui/components/button';
+import { Notice } from '@nextpayments/ui/components/notice';
 import { SelectField } from '@nextpayments/ui/components/select-field';
 import { Sheet } from '@nextpayments/ui/components/sheet';
 
@@ -19,7 +20,10 @@ import {
   fundAssetValue,
   type FundAsset,
 } from '@/constants/fund';
-import { requestWithdrawAction } from '@/lib/fund/actions';
+import { formatCrypto } from '@/lib/format';
+import { requestWithdrawAction, validateAddressAction } from '@/lib/fund/actions';
+import { findBalanceAmount } from '@/lib/fund/balance';
+import type { BalanceRow } from '@/lib/fund/types';
 import { TextField } from '@/components/shared/text-field';
 
 type WithdrawSheetProps = {
@@ -29,6 +33,8 @@ type WithdrawSheetProps = {
   gaEnabled: boolean;
   /** Asset the form lands on (set when opened from a balance row's Send). */
   initialAsset: FundAsset;
+  /** Spendable balances (`/fund/balance`) for the available + Max affordance. */
+  spendableBalances: BalanceRow[];
 };
 
 function assetFromValue(value: string): FundAsset {
@@ -42,9 +48,19 @@ function assetFromValue(value: string): FundAsset {
  * `FUER00x` codes map to the field (network/coin→asset, amount) or a banner
  * (`FUER006`); the EVM address format is gated client-side first.
  */
-export function WithdrawSheet({ open, onClose, gaEnabled, initialAsset }: WithdrawSheetProps) {
+export function WithdrawSheet({
+  open,
+  onClose,
+  gaEnabled,
+  initialAsset,
+  spendableBalances,
+}: WithdrawSheetProps) {
   const t = useTranslations('dashboard.wallet.withdraw');
+  const locale = useLocale();
   const [submitted, setSubmitted] = useState(false);
+  // Soft advisory from `/fund/validate-address` — surfaced as a warning, never
+  // a hard gate (the EVM regex + the withdraw call remain the hard checks).
+  const [addressWarning, setAddressWarning] = useState(false);
 
   const schema = z.object({
     asset: z.string().min(1),
@@ -64,6 +80,9 @@ export function WithdrawSheet({ open, onClose, gaEnabled, initialAsset }: Withdr
     register,
     handleSubmit,
     setError,
+    setValue,
+    getValues,
+    watch,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<Values>({
@@ -78,12 +97,34 @@ export function WithdrawSheet({ open, onClose, gaEnabled, initialAsset }: Withdr
   useEffect(() => {
     if (open) {
       setSubmitted(false);
+      setAddressWarning(false);
       reset({ asset: fundAssetValue(initialAsset), address: '', memo: '', token2fa: '' });
     }
   }, [open, initialAsset, reset]);
 
+  // Available (spendable) balance for the currently-selected asset, and whether
+  // the typed amount exceeds it — a soft hint; the backend (`FUER005`) is the
+  // hard gate, since which balance is spendable is backend-defined.
+  const selectedCoin = assetFromValue(watch('asset')).coin;
+  const available = findBalanceAmount(spendableBalances, selectedCoin);
+  const amountValue = watch('amount');
+  const overBalance =
+    available !== null && typeof amountValue === 'number' && amountValue > available;
+
   const close = () => {
     onClose();
+  };
+
+  /** Soft destination-address check on blur; only an explicit `false` warns. */
+  const checkAddress = async () => {
+    const { address, asset } = getValues();
+    if (!EVM_ADDRESS_REGEX.test(address)) {
+      setAddressWarning(false);
+      return;
+    }
+    const { network, coin } = assetFromValue(asset);
+    const result = await validateAddressAction({ network, coin, address });
+    setAddressWarning(result.ok && result.valid === false);
   };
 
   const onSubmit = async (values: Values) => {
@@ -125,6 +166,9 @@ export function WithdrawSheet({ open, onClose, gaEnabled, initialAsset }: Withdr
     label: t('assetOption', { coin: a.coin, network: a.network }),
   }));
 
+  // Captured once so the soft address check can wrap RHF's onBlur/onChange.
+  const addressField = register('address');
+
   return (
     <Sheet open={open} onClose={close} title={t('title')} closeLabel={t('close')}>
       {submitted ? (
@@ -155,27 +199,62 @@ export function WithdrawSheet({ open, onClose, gaEnabled, initialAsset }: Withdr
             )}
           </label>
 
-          <TextField
-            id="withdraw-address"
-            label={t('address')}
-            placeholder={t('addressPlaceholder')}
-            autoComplete="off"
-            spellCheck={false}
-            error={errors.address?.message}
-            {...register('address')}
-          />
+          <div className="flex flex-col gap-2">
+            <TextField
+              id="withdraw-address"
+              label={t('address')}
+              placeholder={t('addressPlaceholder')}
+              autoComplete="off"
+              spellCheck={false}
+              error={errors.address?.message}
+              {...addressField}
+              onBlur={(e) => {
+                void addressField.onBlur(e);
+                void checkAddress();
+              }}
+              onChange={(e) => {
+                void addressField.onChange(e);
+                if (addressWarning) setAddressWarning(false);
+              }}
+            />
+            {addressWarning && !errors.address && (
+              <Notice tone="warning">{t('warnings.address')}</Notice>
+            )}
+          </div>
 
-          <TextField
-            id="withdraw-amount"
-            type="number"
-            inputMode="decimal"
-            step="any"
-            min={0}
-            label={t('amount')}
-            placeholder={t('amountPlaceholder')}
-            error={errors.amount?.message}
-            {...register('amount', { valueAsNumber: true })}
-          />
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-xs text-[var(--color-text-subtle)]">
+                {available === null
+                  ? t('available.unknown')
+                  : t('available.value', {
+                      amount: formatCrypto(available, locale),
+                      coin: selectedCoin,
+                    })}
+              </span>
+              {available !== null && available > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setValue('amount', available, { shouldValidate: true })}
+                  className="text-xs font-medium text-[var(--color-accent)] underline-offset-4 hover:underline"
+                >
+                  {t('max')}
+                </button>
+              )}
+            </div>
+            <TextField
+              id="withdraw-amount"
+              type="number"
+              inputMode="decimal"
+              step="any"
+              min={0}
+              label={t('amount')}
+              placeholder={t('amountPlaceholder')}
+              error={errors.amount?.message}
+              {...register('amount', { valueAsNumber: true })}
+            />
+            {overBalance && <Notice tone="warning">{t('warnings.insufficient')}</Notice>}
+          </div>
 
           <TextField
             id="withdraw-memo"

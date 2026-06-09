@@ -1,5 +1,5 @@
 import { getCurrentUser } from '@/lib/auth/session';
-import { loadFundBalance } from '@/lib/fund/backend';
+import { loadFundBalance, loadSpendableBalance } from '@/lib/fund/backend';
 import { loadOrderStats } from '@/lib/orders/backend';
 import { OrderStatsPanel } from '@/components/dashboard/orders/order-stats-panel';
 import { WalletView } from '@/components/dashboard/wallet/wallet-view';
@@ -11,10 +11,11 @@ import { WalletView } from '@/components/dashboard/wallet/wallet-view';
  * run in parallel and never throw into the tree (degraded notices instead).
  */
 export default async function DashboardPage() {
-  const [balanceResult, user, stats] = await Promise.all([
+  const [balanceResult, user, stats, spendableResult] = await Promise.all([
     loadFundBalance(),
     getCurrentUser(),
     loadOrderStats({}),
+    loadSpendableBalance(),
   ]);
 
   return (
@@ -22,6 +23,7 @@ export default async function DashboardPage() {
       <WalletView
         balances={balanceResult.ok ? balanceResult.balances : []}
         balancesOk={balanceResult.ok}
+        spendableBalances={spendableResult.ok ? spendableResult.balances : []}
         gaEnabled={user?.gaEnabled ?? false}
       />
       <OrderStatsPanel result={stats} />

@@ -4,8 +4,14 @@ import { FUND_ERROR_CODE } from '@/constants/fund';
 import { getAccessToken } from '@/lib/auth/session';
 import { AuthError } from '@/lib/auth/types';
 
-import { backendGetDepositAddress, backendWithdraw } from './backend';
-import { withdrawInputSchema, type GetAddressResult, type WithdrawResult } from './types';
+import { backendGetDepositAddress, backendValidateAddress, backendWithdraw } from './backend';
+import {
+  validateAddressInputSchema,
+  withdrawInputSchema,
+  type GetAddressResult,
+  type ValidateAddressResult,
+  type WithdrawResult,
+} from './types';
 
 /**
  * Fund mutations — the only place the token is used for deposit/withdraw
@@ -38,6 +44,27 @@ export async function getDepositAddressAction(input: {
       }
     }
     return { ok: false, reason: 'error' };
+  }
+}
+
+/**
+ * Soft/advisory address check (`POST /fund/validate-address`). Returns the
+ * backend verdict (or `valid:null` when unclear) — the form surfaces a warning
+ * on an explicit `false` but never blocks submit on it. Any failure resolves to
+ * `{ ok:false }` so the form silently skips the advisory (endpoint may be off).
+ */
+export async function validateAddressAction(input: unknown): Promise<ValidateAddressResult> {
+  const parsed = validateAddressInputSchema.safeParse(input);
+  if (!parsed.success) return { ok: false };
+
+  const token = await getAccessToken();
+  if (!token) return { ok: false };
+
+  try {
+    const valid = await backendValidateAddress(token, parsed.data);
+    return { ok: true, valid };
+  } catch {
+    return { ok: false };
   }
 }
 

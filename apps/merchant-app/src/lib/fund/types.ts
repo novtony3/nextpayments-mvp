@@ -130,3 +130,24 @@ export type WithdrawInput = z.infer<typeof withdrawInputSchema>;
 export type WithdrawResult =
   | { ok: true }
   | { ok: false; reason: 'invalid' | 'error'; code?: string };
+
+/* ------------------------------------------------------------------ *
+ * Validate address — POST /fund/validate-address (soft/advisory check)
+ * ------------------------------------------------------------------ */
+
+/** Validate-address input — `{network,coin,address}` per API.md Fund §. */
+export const validateAddressInputSchema = z.object({
+  network: z.string().min(1),
+  coin: z.string().min(1),
+  address: z.string().min(1),
+});
+
+export type ValidateAddressInput = z.infer<typeof validateAddressInputSchema>;
+
+/**
+ * Advisory validate-address result. `valid` is `null` when the backend gives no
+ * clear verdict (endpoint disabled / unobserved shape) — the form then shows no
+ * warning. The EVM regex + the `withdraw` call remain the hard gates; this is
+ * only a soft pre-check (see `constants/fund.ts`).
+ */
+export type ValidateAddressResult = { ok: true; valid: boolean | null } | { ok: false };
