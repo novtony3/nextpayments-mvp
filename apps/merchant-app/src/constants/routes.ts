@@ -8,7 +8,11 @@ export const ROUTES = {
   LOGIN: '/login',
   REGISTER: '/register',
   FORGOT_PASSWORD: '/forgot-password',
-  /** Wallet / Balances — the protected dashboard landing. */
+  /** "Check your email" page shown after signup (carries `?email=`). */
+  VERIFY_EMAIL: '/verify-email',
+  /** Home — the protected dashboard overview + post-login landing. */
+  OVERVIEW: '/home',
+  /** Wallet / Balances. */
   DASHBOARD: '/dashboard',
   TRANSACTIONS: '/transactions',
   ORDERS: '/orders',

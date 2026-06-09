@@ -67,7 +67,7 @@ export function LoginForm({ returnTo }: LoginFormProps) {
 
   const finishSuccess = (displayName: string) => {
     toast.success(t('successWelcome', { name: displayName }));
-    router.push(returnTo ?? ROUTES.HOME);
+    router.push(returnTo ?? ROUTES.OVERVIEW);
     router.refresh(); // let server components observe the new session cookie
   };
 

@@ -10,6 +10,7 @@ import { ROUTES, type Route } from '@/constants/routes';
 
 /** Lucide icon keys the dashboard chrome knows how to render. */
 export type DashboardIconKey =
+  | 'home'
   | 'wallet'
   | 'transactions'
   | 'orders'
@@ -31,6 +32,7 @@ export type DashboardNavItem = {
 
 /** Sidebar order mirrors the reference dashboard. */
 export const DASHBOARD_NAV: ReadonlyArray<DashboardNavItem> = [
+  { key: 'home', route: ROUTES.OVERVIEW, icon: 'home', backed: true },
   { key: 'wallet', route: ROUTES.DASHBOARD, icon: 'wallet', backed: true },
   { key: 'transactions', route: ROUTES.TRANSACTIONS, icon: 'transactions', backed: true },
   { key: 'orders', route: ROUTES.ORDERS, icon: 'orders', backed: true },
@@ -44,6 +46,9 @@ export const DASHBOARD_NAV: ReadonlyArray<DashboardNavItem> = [
 
 /** Fiat the estimated balance is displayed in (no inline "$"/"USD"). */
 export const FIAT = { code: 'USD', symbol: '$' } as const;
+
+/** Rows shown in the Home overview's "Recent Transactions" preview list. */
+export const HOME_RECENT_LIMIT = 5 as const;
 
 /** Zero-value placeholders for the UI-only balances list. */
 export const ZERO_CRYPTO = '0.00000000' as const;

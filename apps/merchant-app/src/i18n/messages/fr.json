@@ -234,12 +234,16 @@
         "serverError": "Une erreur est survenue. Veuillez réessayer."
       },
       "verify": {
-        "toast": "Compte créé. Vérifiez votre e-mail pour vous connecter.",
-        "title": "Vérifiez votre e-mail",
-        "body": "Nous avons envoyé un lien de vérification à {email}. Cliquez dessus pour activer votre compte.",
-        "hint": "Vous ne l'avez pas reçu ? Vérifiez vos spams.",
-        "goToLogin": "Aller à la connexion"
+        "toast": "Compte créé. Vérifiez votre e-mail pour vous connecter."
       }
+    },
+    "verifyEmail": {
+      "title": "Vérifiez votre e-mail",
+      "body": "Nous avons envoyé un lien de vérification à {email}. Cliquez dessus pour activer votre compte, puis connectez-vous.",
+      "genericBody": "Nous vous avons envoyé un lien de vérification. Cliquez dessus pour activer votre compte, puis connectez-vous.",
+      "hint": "Vous ne l'avez pas reçu ? Vérifiez vos spams.",
+      "goToLogin": "Aller à la connexion",
+      "backToRegister": "Utiliser une autre adresse e-mail"
     },
     "logout": {
       "button": "Se déconnecter",
@@ -252,6 +256,7 @@
   },
   "dashboard": {
     "nav": {
+      "home": "Accueil",
       "wallet": "Portefeuille",
       "transactions": "Transactions",
       "orders": "Commandes",
@@ -262,6 +267,37 @@
       "quickPos": "POS rapide",
       "support": "Assistance",
       "more": "Plus"
+    },
+    "home": {
+      "welcome": "Bon retour, {name} !",
+      "subtitle": "Voici ce qui se passe avec vos paiements aujourd'hui.",
+      "refresh": "Actualiser",
+      "error": "Impossible de charger votre aperçu. Le service est peut-être indisponible — réessayez bientôt.",
+      "cards": {
+        "totalRevenue": { "label": "Revenu total", "caption": "{count} paiements payés" },
+        "totalPayments": { "label": "Paiements totaux", "caption": "{count} payés" },
+        "transactions": { "label": "Transactions", "caption": "{count} réussies" },
+        "pending": { "label": "En attente", "caption": "En attente de paiement" }
+      },
+      "recent": {
+        "title": "Transactions récentes",
+        "viewAll": "Tout voir",
+        "amount": "{amount} {coin}",
+        "empty": {
+          "title": "Aucune transaction pour le moment",
+          "description": "Vos paiements récents apparaîtront ici."
+        }
+      },
+      "byCoin": {
+        "title": "Revenu par crypto",
+        "amount": "{amount} · {count} payés"
+      },
+      "quickActions": {
+        "title": "Actions rapides",
+        "viewOrders": "Voir les commandes",
+        "viewTransactions": "Voir les transactions",
+        "integrations": "Configurer une intégration"
+      }
     },
     "newTransaction": "Nouvelle transaction",
     "fiatSelector": "Devise d'affichage",

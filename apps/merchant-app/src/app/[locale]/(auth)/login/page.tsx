@@ -33,7 +33,7 @@ export default async function LoginPage({ params, searchParams }: LoginPageProps
   // over from a previous backend) must fall through to the form + silent
   // recovery instead of bouncing the user straight back out of /login.
   if (await getCurrentUser()) {
-    redirect({ href: returnTo ?? ROUTES.HOME, locale });
+    redirect({ href: returnTo ?? ROUTES.OVERVIEW, locale });
   }
 
   // Access cookie gone but a refresh cookie remains → attempt silent recovery.
