@@ -31,12 +31,18 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY packages/                    ./packages/
 COPY apps/merchant-app/package.json ./apps/merchant-app/
 
-# Persist the pnpm store across builds (BuildKit cache mount) so deps aren't
-# re-downloaded every deploy — the deploy host's link to npm is slow/flaky and
-# a cold "reused 0" install timed out the CI build. `.npmrc` (copied above) also
-# raises the fetch timeout/retries. Requires BuildKit (Docker ≥23 default).
+# Install deps. Two resiliences against the slow/flaky deploy-host link to
+# registry.npmjs.org that timed out the CI build:
+#  • BuildKit store cache mount → deps persist across builds (the big `next`/
+#    `swc` tarballs download once, then are reused). Requires Docker ≥23.
+#  • Fetch retries/timeout passed as CLI flags (the project `.npmrc` network
+#    settings were NOT honored in the build — CI retries stayed at the default
+#    2), so a large tarball gets more attempts and longer to finish.
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
-  pnpm install --frozen-lockfile --store-dir=/pnpm/store
+  pnpm install --frozen-lockfile --store-dir=/pnpm/store \
+    --fetch-retries=6 --fetch-retry-factor=2 \
+    --fetch-retry-mintimeout=10000 --fetch-retry-maxtimeout=60000 \
+    --fetch-timeout=300000
 
 # ── Stage 2: builder ──────────────────────────────────────────────────────────
 FROM deps AS builder
