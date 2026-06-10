@@ -22,6 +22,11 @@ interface SpotlightCardProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
   children?: React.ReactNode;
   /** Spotlight tint. Defaults to the single accent token. */
   glowColor?: string;
+  /**
+   * Force the ambient wash + accent border on without a pointer — lets a
+   * parent drive a "highlighted" state (e.g. an auto-cycling active card).
+   */
+  active?: boolean;
 }
 
 /**
@@ -34,6 +39,7 @@ export function SpotlightCard({
   className,
   children,
   glowColor = 'var(--color-accent)',
+  active = false,
   ...props
 }: SpotlightCardProps) {
   const reduce = useReducedMotion();
@@ -77,6 +83,7 @@ export function SpotlightCard({
       className={cn(
         'group relative overflow-hidden rounded-[var(--radius-2xl)] border border-[var(--color-border)] bg-[var(--glass-fill)] backdrop-blur-xl',
         'transition-colors duration-300 hover:border-[color-mix(in_oklab,var(--color-accent)_45%,transparent)]',
+        active && 'border-[color-mix(in_oklab,var(--color-accent)_45%,transparent)]',
         className,
       )}
       {...props}
@@ -88,7 +95,10 @@ export function SpotlightCard({
         style={{
           background: `radial-gradient(125% 85% at 50% 0%, color-mix(in oklab, ${glowColor} 20%, transparent), transparent 72%)`,
         }}
-        className="pointer-events-none absolute inset-0 z-0 rounded-[inherit] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        className={cn(
+          'pointer-events-none absolute inset-0 z-0 rounded-[inherit] transition-opacity duration-500',
+          active ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
+        )}
       />
       {/* Pointer-following spotlight (skips under reduced motion). */}
       <motion.span
