@@ -23,12 +23,16 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY packages/                  ./packages/
 COPY apps/admin-dashboard/package.json ./apps/admin-dashboard/
 
-# Install all workspace deps (frozen — no drift). Persist the pnpm store across
-# builds (BuildKit cache mount) so deps aren't re-downloaded every deploy — the
-# deploy host's link to npm is slow/flaky. `.npmrc` raises fetch timeout/retries.
+# Install all workspace deps (frozen — no drift). Two resiliences against the
+# slow/flaky deploy-host link to npm that timed out the CI build: a BuildKit
+# store cache mount (deps persist across builds) + fetch retries/timeout as CLI
+# flags (the project `.npmrc` network settings were NOT honored in the build).
 # Requires BuildKit (Docker ≥23 default).
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
-  pnpm install --frozen-lockfile --store-dir=/pnpm/store
+  pnpm install --frozen-lockfile --store-dir=/pnpm/store \
+    --fetch-retries=6 --fetch-retry-factor=2 \
+    --fetch-retry-mintimeout=10000 --fetch-retry-maxtimeout=60000 \
+    --fetch-timeout=300000
 
 # ── Stage 2: builder ──────────────────────────────────────────────────────────
 FROM deps AS builder
