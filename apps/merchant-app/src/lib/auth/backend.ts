@@ -16,6 +16,7 @@ import {
   type RegisterSession,
   type SessionUser,
   type TokenPair,
+  type VerifyEmailCredentials,
 } from './types';
 
 /**
@@ -110,6 +111,22 @@ export async function backendMe(accessToken: string): Promise<SessionUser> {
     throw rejection(envelope, 'Failed to load the current user');
   }
   return meResponseSchema.parse(json).data.user;
+}
+
+/**
+ * Consume the verification link the backend emails after signup. The `hash` is
+ * single-use — a second call (or an expired/garbage hash) comes back as a
+ * failure envelope, surfaced as an {@link AuthError} so the action can show the
+ * "link invalid or expired" copy. No auth header: the hash itself authorizes.
+ */
+export async function backendVerifyEmail({ hash }: VerifyEmailCredentials): Promise<void> {
+  const res = await backendFetch(API_ROUTES.USER_VERIFY_EMAIL, { query: { hash } });
+
+  const json = parseJson(res.raw);
+  const envelope = envelopeSchema.parse(json);
+  if (!res.ok || !envelope.success) {
+    throw rejection(envelope, 'Email verification failed');
+  }
 }
 
 /** Best-effort backend logout — failure here must not block clearing cookies. */

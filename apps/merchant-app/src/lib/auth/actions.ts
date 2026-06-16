@@ -3,7 +3,13 @@
 import { LOGIN_ERROR_CODE } from '@/constants/auth';
 import { TWO_FA_LOGIN_CODES } from '@/constants/security';
 
-import { backendLogin, backendLogout, backendRefresh, backendRegister } from './backend';
+import {
+  backendLogin,
+  backendLogout,
+  backendRefresh,
+  backendRegister,
+  backendVerifyEmail,
+} from './backend';
 import {
   clearSession,
   getAccessToken,
@@ -15,9 +21,11 @@ import {
   AuthError,
   loginInputSchema,
   registerInputSchema,
+  verifyEmailInputSchema,
   type HeaderUser,
   type LoginActionResult,
   type RegisterActionResult,
+  type VerifyEmailActionResult,
 } from './types';
 
 /** Backend error code for an already-registered email. */
@@ -85,6 +93,30 @@ export async function registerAction(input: unknown): Promise<RegisterActionResu
         ok: false,
         reason: err.code === EMAIL_TAKEN_CODE ? 'emailTaken' : 'invalid',
       };
+    }
+    // Transport failure (tunnel down), 5xx, or unexpected response shape.
+    return { ok: false, reason: 'error' };
+  }
+}
+
+/**
+ * Consume the verification link from the signup email. Re-validates the hash at
+ * the boundary, then calls the backend. A rejected/expired hash becomes
+ * `invalid`; a transport failure becomes `error`. No session is written — the
+ * user still signs in afterwards (register never persisted a token).
+ */
+export async function verifyEmailAction(hash: unknown): Promise<VerifyEmailActionResult> {
+  const parsed = verifyEmailInputSchema.safeParse({ hash });
+  if (!parsed.success) {
+    return { ok: false, reason: 'invalid' };
+  }
+
+  try {
+    await backendVerifyEmail(parsed.data);
+    return { ok: true };
+  } catch (err) {
+    if (err instanceof AuthError) {
+      return { ok: false, reason: 'invalid' };
     }
     // Transport failure (tunnel down), 5xx, or unexpected response shape.
     return { ok: false, reason: 'error' };

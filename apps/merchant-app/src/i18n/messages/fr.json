@@ -243,7 +243,19 @@
       "genericBody": "Nous vous avons envoyé un lien de vérification. Cliquez dessus pour activer votre compte, puis connectez-vous.",
       "hint": "Vous ne l'avez pas reçu ? Vérifiez vos spams.",
       "goToLogin": "Aller à la connexion",
-      "backToRegister": "Utiliser une autre adresse e-mail"
+      "backToRegister": "Utiliser une autre adresse e-mail",
+      "confirm": {
+        "verifyingTitle": "Vérification de votre e-mail",
+        "verifyingBody": "Patientez pendant que nous confirmons votre lien de vérification.",
+        "successTitle": "E-mail vérifié",
+        "successBody": "Votre e-mail est confirmé. Vous pouvez maintenant vous connecter.",
+        "invalidTitle": "Lien invalide ou expiré",
+        "invalidBody": "Ce lien de vérification n'est plus valide. Inscrivez-vous à nouveau pour en obtenir un nouveau, ou connectez-vous si votre e-mail est déjà vérifié.",
+        "errorTitle": "Vérification impossible pour le moment",
+        "errorBody": "Une erreur est survenue de notre côté. Veuillez réessayer dans un instant.",
+        "retry": "Réessayer",
+        "signUpAgain": "Retour à l'inscription"
+      }
     },
     "logout": {
       "button": "Se déconnecter",
@@ -742,7 +754,7 @@
         "badgeUnverified": "Non vérifiée",
         "emailLabel": "E-mail du compte",
         "emailUnknown": "Inconnu",
-        "resendHint": "Le flux de renvoi sera connecté lorsque les routes verify-email et forgot-password seront livrées."
+        "resendHint": "Ouvrez le lien de vérification que nous vous avons envoyé par e-mail pour confirmer cette adresse. Vous ne le voyez pas ? Vérifiez vos spams."
       },
       "errors": {
         "wrongPassword": "Mot de passe incorrect.",

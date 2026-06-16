@@ -50,6 +50,17 @@ export const registerInputSchema = z.object({
 export type RegisterCredentials = z.infer<typeof registerInputSchema>;
 
 /**
+ * Email-verification input. The `hash` is the single-use token from the link
+ * the backend emails after signup (`GET /user/verify-email?hash=`); re-validated
+ * here so a blank/garbage value never reaches the backend.
+ */
+export const verifyEmailInputSchema = z.object({
+  hash: z.string().min(1),
+});
+
+export type VerifyEmailCredentials = z.infer<typeof verifyEmailInputSchema>;
+
+/**
  * Loose response envelope — only the fields we depend on are validated.
  * Errors come back as `{success:false, error:{code,message}}` (no top-level
  * `message`), so both shapes are read.
@@ -144,3 +155,10 @@ export type LoginActionResult =
 export type RegisterActionResult =
   | { ok: true; email: string }
   | { ok: false; reason: 'emailTaken' | 'invalid' | 'error' };
+
+/**
+ * Email-verification result. `invalid` = the backend rejected the hash (missing,
+ * already used, or expired link); `error` = transport failure / 5xx. The confirm
+ * page maps both to locale-aware copy with the right recovery action.
+ */
+export type VerifyEmailActionResult = { ok: true } | { ok: false; reason: 'invalid' | 'error' };
