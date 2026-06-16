@@ -257,6 +257,46 @@
         "signUpAgain": "Back to sign up"
       }
     },
+    "forgotPassword": {
+      "title": "Reset your password",
+      "subtitle": "Enter your account email and we'll send you a link to set a new password.",
+      "email": "Email",
+      "submit": "Send reset link",
+      "submitting": "Sending...",
+      "sentTitle": "Check your email",
+      "sentBody": "If an account exists for {email}, we've sent a link to reset your password.",
+      "hint": "Didn't get it? Check your spam folder.",
+      "backToLogin": "Back to sign in",
+      "errors": {
+        "emailRequired": "Email is required",
+        "emailInvalid": "Enter a valid email address",
+        "serverError": "Something went wrong. Please try again."
+      }
+    },
+    "resetPassword": {
+      "title": "Set a new password",
+      "subtitle": "Choose a new password for your account.",
+      "password": "New password",
+      "confirmPassword": "Confirm new password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "submit": "Reset password",
+      "submitting": "Resetting...",
+      "success": "Password updated. Sign in with your new password.",
+      "invalidTitle": "Link invalid or expired",
+      "invalidBody": "This reset link is no longer valid. Request a new one to continue.",
+      "missingTokenTitle": "Reset link required",
+      "missingTokenBody": "Open the password-reset link from your email to set a new password.",
+      "requestNewLink": "Request a new link",
+      "backToLogin": "Back to sign in",
+      "errors": {
+        "passwordRequired": "Password is required",
+        "passwordTooShort": "Password must be at least 8 characters",
+        "confirmRequired": "Please confirm your password",
+        "passwordMismatch": "Passwords do not match",
+        "serverError": "Something went wrong. Please try again."
+      }
+    },
     "logout": {
       "button": "Sign out",
       "success": "Signed out"

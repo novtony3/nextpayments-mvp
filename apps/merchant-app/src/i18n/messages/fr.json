@@ -257,6 +257,46 @@
         "signUpAgain": "Retour à l'inscription"
       }
     },
+    "forgotPassword": {
+      "title": "Réinitialiser votre mot de passe",
+      "subtitle": "Saisissez l'e-mail de votre compte et nous vous enverrons un lien pour définir un nouveau mot de passe.",
+      "email": "E-mail",
+      "submit": "Envoyer le lien",
+      "submitting": "Envoi en cours...",
+      "sentTitle": "Vérifiez votre e-mail",
+      "sentBody": "Si un compte existe pour {email}, nous avons envoyé un lien pour réinitialiser votre mot de passe.",
+      "hint": "Vous ne l'avez pas reçu ? Vérifiez vos spams.",
+      "backToLogin": "Retour à la connexion",
+      "errors": {
+        "emailRequired": "L'e-mail est requis",
+        "emailInvalid": "Saisissez une adresse e-mail valide",
+        "serverError": "Une erreur est survenue. Veuillez réessayer."
+      }
+    },
+    "resetPassword": {
+      "title": "Définir un nouveau mot de passe",
+      "subtitle": "Choisissez un nouveau mot de passe pour votre compte.",
+      "password": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le nouveau mot de passe",
+      "showPassword": "Afficher le mot de passe",
+      "hidePassword": "Masquer le mot de passe",
+      "submit": "Réinitialiser le mot de passe",
+      "submitting": "Réinitialisation...",
+      "success": "Mot de passe mis à jour. Connectez-vous avec votre nouveau mot de passe.",
+      "invalidTitle": "Lien invalide ou expiré",
+      "invalidBody": "Ce lien de réinitialisation n'est plus valide. Demandez-en un nouveau pour continuer.",
+      "missingTokenTitle": "Lien de réinitialisation requis",
+      "missingTokenBody": "Ouvrez le lien de réinitialisation de mot de passe depuis votre e-mail pour définir un nouveau mot de passe.",
+      "requestNewLink": "Demander un nouveau lien",
+      "backToLogin": "Retour à la connexion",
+      "errors": {
+        "passwordRequired": "Le mot de passe est requis",
+        "passwordTooShort": "Le mot de passe doit comporter au moins 8 caractères",
+        "confirmRequired": "Veuillez confirmer votre mot de passe",
+        "passwordMismatch": "Les mots de passe ne correspondent pas",
+        "serverError": "Une erreur est survenue. Veuillez réessayer."
+      }
+    },
     "logout": {
       "button": "Se déconnecter",
       "success": "Déconnexion réussie"

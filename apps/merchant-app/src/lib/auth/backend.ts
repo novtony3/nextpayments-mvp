@@ -14,6 +14,8 @@ import {
   type LoginSession,
   type RegisterCredentials,
   type RegisterSession,
+  type ForgotPasswordCredentials,
+  type ResetPasswordCredentials,
   type SessionUser,
   type TokenPair,
   type VerifyEmailCredentials,
@@ -126,6 +128,44 @@ export async function backendVerifyEmail({ hash }: VerifyEmailCredentials): Prom
   const envelope = envelopeSchema.parse(json);
   if (!res.ok || !envelope.success) {
     throw rejection(envelope, 'Email verification failed');
+  }
+}
+
+/**
+ * Trigger the password-reset email. The backend mails a link of the form
+ * `${appBaseUrl}/reset-password?token=` to the address (if it exists). A
+ * rejection (e.g. unknown email) becomes an {@link AuthError}; the action layer
+ * decides whether to surface it (it doesn't, to avoid account enumeration).
+ */
+export async function backendForgotPassword({ email }: ForgotPasswordCredentials): Promise<void> {
+  const res = await backendFetch(API_ROUTES.USER_FORGOT_PASSWORD, { query: { email } });
+
+  const json = parseJson(res.raw);
+  const envelope = envelopeSchema.parse(json);
+  if (!res.ok || !envelope.success) {
+    throw rejection(envelope, 'Could not send the reset email');
+  }
+}
+
+/**
+ * Set a new password using the reset token from the email link. The token is
+ * single-use; a used/expired/invalid token (or a password the backend rejects)
+ * comes back as a failure envelope, surfaced as an {@link AuthError}.
+ */
+export async function backendResetPassword({
+  token,
+  password,
+}: ResetPasswordCredentials): Promise<void> {
+  const res = await backendFetch(API_ROUTES.USER_RESET_PASSWORD, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, password }),
+  });
+
+  const json = parseJson(res.raw);
+  const envelope = envelopeSchema.parse(json);
+  if (!res.ok || !envelope.success) {
+    throw rejection(envelope, 'Password reset failed');
   }
 }
 

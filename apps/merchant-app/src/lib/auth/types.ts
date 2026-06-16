@@ -60,6 +60,25 @@ export const verifyEmailInputSchema = z.object({
 
 export type VerifyEmailCredentials = z.infer<typeof verifyEmailInputSchema>;
 
+/** Forgot-password input — just the email to send the reset link to. */
+export const forgotPasswordInputSchema = z.object({
+  email: z.string().email(),
+});
+
+export type ForgotPasswordCredentials = z.infer<typeof forgotPasswordInputSchema>;
+
+/**
+ * Reset-password input. The `token` is the single-use value from the reset
+ * email link (`/reset-password?token=`); `password` is the new password,
+ * re-validated against the shared min length at the boundary.
+ */
+export const resetPasswordInputSchema = z.object({
+  token: z.string().min(1),
+  password: z.string().min(PASSWORD_MIN_LENGTH),
+});
+
+export type ResetPasswordCredentials = z.infer<typeof resetPasswordInputSchema>;
+
 /**
  * Loose response envelope — only the fields we depend on are validated.
  * Errors come back as `{success:false, error:{code,message}}` (no top-level
@@ -162,3 +181,18 @@ export type RegisterActionResult =
  * page maps both to locale-aware copy with the right recovery action.
  */
 export type VerifyEmailActionResult = { ok: true } | { ok: false; reason: 'invalid' | 'error' };
+
+/**
+ * Forgot-password result. `ok` covers both a sent link AND a backend rejection
+ * (e.g. unknown email) — the form shows the same generic "check your email"
+ * notice either way, so an attacker can't probe which addresses are registered.
+ * `error` is reserved for transport failure / 5xx.
+ */
+export type ForgotPasswordActionResult = { ok: true } | { ok: false; reason: 'error' };
+
+/**
+ * Reset-password result. `invalid` = the backend rejected the request (token
+ * missing/used/expired, or the new password failed a backend rule); `error` =
+ * transport failure / 5xx. The form maps each to locale-aware copy.
+ */
+export type ResetPasswordActionResult = { ok: true } | { ok: false; reason: 'invalid' | 'error' };
