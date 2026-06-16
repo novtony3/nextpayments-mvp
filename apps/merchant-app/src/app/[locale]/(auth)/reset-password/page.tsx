@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { MailCheck } from 'lucide-react';
+import { KeyRound } from 'lucide-react';
 
 import { Button } from '@nextpayments/ui/components/button';
 
@@ -9,32 +9,27 @@ import { firstParam } from '@/lib/search-params';
 import { Logo } from '@/components/shared/logo';
 import { BlueAccent } from '@/components/shared/blue-accent';
 import { CryptoCoinsBackdrop } from '@/components/shared/crypto-coins-backdrop';
-import { VerifyEmailConfirm } from '@/components/auth/verify-email-confirm';
+import { ResetPasswordForm } from '@/components/auth/reset-password-form';
 
-type VerifyEmailPageProps = {
+type ResetPasswordPageProps = {
   params: Promise<{ locale: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 /**
- * Two modes sharing the (auth) shell (aurora + floating coins + centered card):
- *
- * 1. `?hash=` present — the link from the verification email. {@link
- *    VerifyEmailConfirm} consumes it against `GET /user/verify-email?hash=` and
- *    shows the verifying → verified / invalid result.
- * 2. otherwise — the "check your email" notice shown after signup. The register
- *    flow redirects here with `?email=` to echo the address back; a generic
- *    variant renders when it's absent (e.g. opened directly).
+ * Set-a-new-password page reached from the reset email
+ * (`${appBaseUrl}/reset-password?token=`). With a `token` it renders {@link
+ * ResetPasswordForm}; opened without one (e.g. directly) it shows a "reset link
+ * required" notice pointing back to forgot-password. Shares the (auth) shell.
  */
-export default async function VerifyEmailPage({ params, searchParams }: VerifyEmailPageProps) {
+export default async function ResetPasswordPage({ params, searchParams }: ResetPasswordPageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
   const sp = await searchParams;
-  const hash = firstParam(sp.hash);
-  const email = firstParam(sp.email);
+  const token = firstParam(sp.token);
 
-  const t = await getTranslations('auth.verifyEmail');
+  const t = await getTranslations('auth.resetPassword');
 
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[var(--color-bg)] px-6 py-16">
@@ -50,32 +45,22 @@ export default async function VerifyEmailPage({ params, searchParams }: VerifyEm
           </Link>
         </div>
 
-        {hash ? (
-          <VerifyEmailConfirm hash={hash} />
+        {token ? (
+          <ResetPasswordForm token={token} />
         ) : (
           <div className="flex flex-col items-center gap-5 text-center">
             <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-accent-soft)] text-[var(--color-accent)]">
-              <MailCheck className="h-7 w-7" aria-hidden="true" />
+              <KeyRound className="h-7 w-7" aria-hidden="true" />
             </span>
-
             <div className="flex flex-col gap-2">
               <h1 className="text-2xl font-medium tracking-tight text-[var(--color-text)]">
-                {t('title')}
+                {t('missingTokenTitle')}
               </h1>
-              <p className="text-sm text-[var(--color-text-muted)]">
-                {email ? t('body', { email }) : t('genericBody')}
-              </p>
-              <p className="text-xs text-[var(--color-text-subtle)]">{t('hint')}</p>
+              <p className="text-sm text-[var(--color-text-muted)]">{t('missingTokenBody')}</p>
             </div>
-
-            <div className="flex w-full flex-col gap-2">
-              <Button asChild variant="primary" size="lg" fullWidth>
-                <Link href={ROUTES.LOGIN}>{t('goToLogin')}</Link>
-              </Button>
-              <Button asChild variant="ghost" size="lg" fullWidth>
-                <Link href={ROUTES.REGISTER}>{t('backToRegister')}</Link>
-              </Button>
-            </div>
+            <Button asChild variant="primary" size="lg" fullWidth>
+              <Link href={ROUTES.FORGOT_PASSWORD}>{t('requestNewLink')}</Link>
+            </Button>
           </div>
         )}
       </div>

@@ -14,8 +14,11 @@ import {
   type LoginSession,
   type RegisterCredentials,
   type RegisterSession,
+  type ForgotPasswordCredentials,
+  type ResetPasswordCredentials,
   type SessionUser,
   type TokenPair,
+  type VerifyEmailCredentials,
 } from './types';
 
 /**
@@ -110,6 +113,60 @@ export async function backendMe(accessToken: string): Promise<SessionUser> {
     throw rejection(envelope, 'Failed to load the current user');
   }
   return meResponseSchema.parse(json).data.user;
+}
+
+/**
+ * Consume the verification link the backend emails after signup. The `hash` is
+ * single-use — a second call (or an expired/garbage hash) comes back as a
+ * failure envelope, surfaced as an {@link AuthError} so the action can show the
+ * "link invalid or expired" copy. No auth header: the hash itself authorizes.
+ */
+export async function backendVerifyEmail({ hash }: VerifyEmailCredentials): Promise<void> {
+  const res = await backendFetch(API_ROUTES.USER_VERIFY_EMAIL, { query: { hash } });
+
+  const json = parseJson(res.raw);
+  const envelope = envelopeSchema.parse(json);
+  if (!res.ok || !envelope.success) {
+    throw rejection(envelope, 'Email verification failed');
+  }
+}
+
+/**
+ * Trigger the password-reset email. The backend mails a link of the form
+ * `${appBaseUrl}/reset-password?token=` to the address (if it exists). A
+ * rejection (e.g. unknown email) becomes an {@link AuthError}; the action layer
+ * decides whether to surface it (it doesn't, to avoid account enumeration).
+ */
+export async function backendForgotPassword({ email }: ForgotPasswordCredentials): Promise<void> {
+  const res = await backendFetch(API_ROUTES.USER_FORGOT_PASSWORD, { query: { email } });
+
+  const json = parseJson(res.raw);
+  const envelope = envelopeSchema.parse(json);
+  if (!res.ok || !envelope.success) {
+    throw rejection(envelope, 'Could not send the reset email');
+  }
+}
+
+/**
+ * Set a new password using the reset token from the email link. The token is
+ * single-use; a used/expired/invalid token (or a password the backend rejects)
+ * comes back as a failure envelope, surfaced as an {@link AuthError}.
+ */
+export async function backendResetPassword({
+  token,
+  password,
+}: ResetPasswordCredentials): Promise<void> {
+  const res = await backendFetch(API_ROUTES.USER_RESET_PASSWORD, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, password }),
+  });
+
+  const json = parseJson(res.raw);
+  const envelope = envelopeSchema.parse(json);
+  if (!res.ok || !envelope.success) {
+    throw rejection(envelope, 'Password reset failed');
+  }
 }
 
 /** Best-effort backend logout — failure here must not block clearing cookies. */

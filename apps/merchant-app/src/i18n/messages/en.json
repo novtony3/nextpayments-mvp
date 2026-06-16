@@ -243,7 +243,59 @@
       "genericBody": "We sent you a verification link. Click it to activate your account, then sign in.",
       "hint": "Didn't get it? Check your spam folder.",
       "goToLogin": "Go to sign in",
-      "backToRegister": "Use a different email"
+      "backToRegister": "Use a different email",
+      "confirm": {
+        "verifyingTitle": "Verifying your email",
+        "verifyingBody": "Hang tight while we confirm your verification link.",
+        "successTitle": "Email verified",
+        "successBody": "Your email is confirmed. You can sign in now.",
+        "invalidTitle": "Link invalid or expired",
+        "invalidBody": "This verification link is no longer valid. Sign up again to get a fresh one, or sign in if your email is already verified.",
+        "errorTitle": "Couldn't verify right now",
+        "errorBody": "Something went wrong on our side. Please try again in a moment.",
+        "retry": "Try again",
+        "signUpAgain": "Back to sign up"
+      }
+    },
+    "forgotPassword": {
+      "title": "Reset your password",
+      "subtitle": "Enter your account email and we'll send you a link to set a new password.",
+      "email": "Email",
+      "submit": "Send reset link",
+      "submitting": "Sending...",
+      "sentTitle": "Check your email",
+      "sentBody": "If an account exists for {email}, we've sent a link to reset your password.",
+      "hint": "Didn't get it? Check your spam folder.",
+      "backToLogin": "Back to sign in",
+      "errors": {
+        "emailRequired": "Email is required",
+        "emailInvalid": "Enter a valid email address",
+        "serverError": "Something went wrong. Please try again."
+      }
+    },
+    "resetPassword": {
+      "title": "Set a new password",
+      "subtitle": "Choose a new password for your account.",
+      "password": "New password",
+      "confirmPassword": "Confirm new password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "submit": "Reset password",
+      "submitting": "Resetting...",
+      "success": "Password updated. Sign in with your new password.",
+      "invalidTitle": "Link invalid or expired",
+      "invalidBody": "This reset link is no longer valid. Request a new one to continue.",
+      "missingTokenTitle": "Reset link required",
+      "missingTokenBody": "Open the password-reset link from your email to set a new password.",
+      "requestNewLink": "Request a new link",
+      "backToLogin": "Back to sign in",
+      "errors": {
+        "passwordRequired": "Password is required",
+        "passwordTooShort": "Password must be at least 8 characters",
+        "confirmRequired": "Please confirm your password",
+        "passwordMismatch": "Passwords do not match",
+        "serverError": "Something went wrong. Please try again."
+      }
     },
     "logout": {
       "button": "Sign out",
@@ -742,7 +794,7 @@
         "badgeUnverified": "Not verified",
         "emailLabel": "Account email",
         "emailUnknown": "Unknown",
-        "resendHint": "We'll wire up the resend flow when the verify-email and forgot-password routes ship."
+        "resendHint": "Open the verification link we emailed you to confirm this address. Don't see it? Check your spam folder."
       },
       "errors": {
         "wrongPassword": "Password is incorrect.",

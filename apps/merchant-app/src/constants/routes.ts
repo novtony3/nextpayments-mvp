@@ -8,6 +8,8 @@ export const ROUTES = {
   LOGIN: '/login',
   REGISTER: '/register',
   FORGOT_PASSWORD: '/forgot-password',
+  /** Set-a-new-password page reached from the reset email (carries `?token=`). */
+  RESET_PASSWORD: '/reset-password',
   /** "Check your email" page shown after signup (carries `?email=`). */
   VERIFY_EMAIL: '/verify-email',
   /** Home — the protected dashboard overview + post-login landing. */

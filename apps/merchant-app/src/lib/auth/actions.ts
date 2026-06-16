@@ -3,7 +3,15 @@
 import { LOGIN_ERROR_CODE } from '@/constants/auth';
 import { TWO_FA_LOGIN_CODES } from '@/constants/security';
 
-import { backendLogin, backendLogout, backendRefresh, backendRegister } from './backend';
+import {
+  backendForgotPassword,
+  backendLogin,
+  backendLogout,
+  backendRefresh,
+  backendRegister,
+  backendResetPassword,
+  backendVerifyEmail,
+} from './backend';
 import {
   clearSession,
   getAccessToken,
@@ -13,11 +21,17 @@ import {
 } from './session';
 import {
   AuthError,
+  forgotPasswordInputSchema,
   loginInputSchema,
   registerInputSchema,
+  resetPasswordInputSchema,
+  verifyEmailInputSchema,
+  type ForgotPasswordActionResult,
   type HeaderUser,
   type LoginActionResult,
   type RegisterActionResult,
+  type ResetPasswordActionResult,
+  type VerifyEmailActionResult,
 } from './types';
 
 /** Backend error code for an already-registered email. */
@@ -85,6 +99,81 @@ export async function registerAction(input: unknown): Promise<RegisterActionResu
         ok: false,
         reason: err.code === EMAIL_TAKEN_CODE ? 'emailTaken' : 'invalid',
       };
+    }
+    // Transport failure (tunnel down), 5xx, or unexpected response shape.
+    return { ok: false, reason: 'error' };
+  }
+}
+
+/**
+ * Consume the verification link from the signup email. Re-validates the hash at
+ * the boundary, then calls the backend. A rejected/expired hash becomes
+ * `invalid`; a transport failure becomes `error`. No session is written — the
+ * user still signs in afterwards (register never persisted a token).
+ */
+export async function verifyEmailAction(hash: unknown): Promise<VerifyEmailActionResult> {
+  const parsed = verifyEmailInputSchema.safeParse({ hash });
+  if (!parsed.success) {
+    return { ok: false, reason: 'invalid' };
+  }
+
+  try {
+    await backendVerifyEmail(parsed.data);
+    return { ok: true };
+  } catch (err) {
+    if (err instanceof AuthError) {
+      return { ok: false, reason: 'invalid' };
+    }
+    // Transport failure (tunnel down), 5xx, or unexpected response shape.
+    return { ok: false, reason: 'error' };
+  }
+}
+
+/**
+ * Request a password-reset email. Always reports success on a well-formed
+ * request — including when the backend rejects the address (e.g. no such
+ * account) — so the response never reveals which emails are registered. Only a
+ * transport failure / 5xx surfaces as `error`.
+ */
+export async function forgotPasswordAction(input: unknown): Promise<ForgotPasswordActionResult> {
+  const parsed = forgotPasswordInputSchema.safeParse(input);
+  if (!parsed.success) {
+    // Malformed input (the client form validates first) — no-op success keeps
+    // the generic "check your email" response, leaking nothing.
+    return { ok: true };
+  }
+
+  try {
+    await backendForgotPassword(parsed.data);
+    return { ok: true };
+  } catch (err) {
+    if (err instanceof AuthError) {
+      // Unknown email / backend rejection — still report success (anti-enumeration).
+      return { ok: true };
+    }
+    // Transport failure (tunnel down), 5xx, or unexpected response shape.
+    return { ok: false, reason: 'error' };
+  }
+}
+
+/**
+ * Set a new password using the reset token from the email link. A rejected
+ * token (missing/used/expired) or a backend-rejected password becomes
+ * `invalid`; a transport failure becomes `error`. No session is written — the
+ * user signs in afterwards with the new password.
+ */
+export async function resetPasswordAction(input: unknown): Promise<ResetPasswordActionResult> {
+  const parsed = resetPasswordInputSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, reason: 'invalid' };
+  }
+
+  try {
+    await backendResetPassword(parsed.data);
+    return { ok: true };
+  } catch (err) {
+    if (err instanceof AuthError) {
+      return { ok: false, reason: 'invalid' };
     }
     // Transport failure (tunnel down), 5xx, or unexpected response shape.
     return { ok: false, reason: 'error' };
