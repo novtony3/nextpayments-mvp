@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { API_ROUTES, type ApiRoute } from '@/constants/api';
+import { API_ROUTES, apiPath, type ApiRoute } from '@/constants/api';
 import { FUND_BALANCE_COINS } from '@/constants/fund';
 import { getAccessToken } from '@/lib/auth/session';
 import { AuthError, envelopeSchema } from '@/lib/auth/types';
@@ -19,6 +19,7 @@ import {
   type TransactionsResult,
   type TransactionTab,
   type ValidateAddressInput,
+  type WithdrawApprovalSummary,
   type WithdrawInput,
 } from './types';
 
@@ -248,4 +249,40 @@ export async function backendWithdraw(token: string, input: WithdrawInput): Prom
   });
   const json = parseJson(res.raw);
   ensureOk(res.ok, json, 'Could not request the withdrawal');
+}
+
+/** Pull a best-effort {amount,coin,address} out of the loose approve response
+ * `data` (numbers coerced to strings); `undefined` when none are present. */
+function extractApprovalSummary(json: unknown): WithdrawApprovalSummary | undefined {
+  const data = json && typeof json === 'object' ? (json as { data?: unknown }).data : null;
+  if (!data || typeof data !== 'object') return undefined;
+  const rec = data as Record<string, unknown>;
+  const str = (v: unknown): string | undefined =>
+    typeof v === 'string' ? v : typeof v === 'number' ? String(v) : undefined;
+  const summary: WithdrawApprovalSummary = {
+    amount: str(rec.amount),
+    coin: str(rec.coin),
+    address: str(rec.address),
+  };
+  return summary.amount || summary.coin || summary.address ? summary : undefined;
+}
+
+/**
+ * PUT /fund/withdraw/:token — approve a pending withdrawal from the email link.
+ * Requires the user's JWT (the token identifies *which* withdrawal, not the
+ * user — the backend returns 401 USER016 without a session). Throws
+ * `AuthError(code)` on a non-success envelope; returns a best-effort summary
+ * from the response when present.
+ */
+export async function backendApproveWithdraw(
+  accessToken: string,
+  approvalToken: string,
+): Promise<WithdrawApprovalSummary | undefined> {
+  const res = await backendFetch(apiPath.fundWithdrawApprove(approvalToken), {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  const json = parseJson(res.raw);
+  ensureOk(res.ok, json, 'Could not approve the withdrawal');
+  return extractApprovalSummary(json);
 }

@@ -16,6 +16,11 @@ export const ROUTES = {
   OVERVIEW: '/home',
   /** Wallet / Balances. */
   DASHBOARD: '/dashboard',
+  /** Withdrawal-approval landing reached from the email link; the single-use
+   * approval token rides as a path segment (`/withdraw/approve/<token>`) so it
+   * survives the protected-route login bounce, which only preserves the
+   * pathname (the middleware's `x-pathname` drops the query string). */
+  WITHDRAW_APPROVE: '/withdraw/approve',
   TRANSACTIONS: '/transactions',
   ORDERS: '/orders',
   /** Affiliate dashboard — totals + downline + commissions. Top-level

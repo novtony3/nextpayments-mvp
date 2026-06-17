@@ -413,6 +413,22 @@
           "unsupported": "Les retraits de {coin} sur {network} sont temporairement indisponibles.",
           "generic": "Impossible de demander le retrait. Réessayez bientôt."
         }
+      },
+      "withdrawApproval": {
+        "title": "Approuver le retrait",
+        "body": "Vous êtes sur le point d'approuver un retrait en attente depuis votre portefeuille. Cela libère les fonds — n'approuvez que si vous en êtes à l'origine.",
+        "approve": "Approuver le retrait",
+        "approving": "Approbation...",
+        "backToWallet": "Retour au portefeuille",
+        "successTitle": "Retrait approuvé",
+        "successBody": "Votre retrait a été approuvé et est en cours de traitement.",
+        "summaryAmount": "Montant",
+        "summaryTo": "Vers",
+        "invalidTitle": "Lien d'approbation invalide ou expiré",
+        "invalidBody": "Ce lien d'approbation n'est plus valide — il a peut-être déjà été utilisé ou a expiré. Refaites la demande de retrait depuis votre portefeuille.",
+        "errorTitle": "Approbation impossible pour le moment",
+        "errorBody": "Une erreur est survenue lors de l'approbation de ce retrait. Veuillez réessayer dans un instant.",
+        "retry": "Réessayer"
       }
     },
     "balances": {

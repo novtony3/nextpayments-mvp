@@ -413,6 +413,22 @@
           "unsupported": "Withdrawals for {coin} on {network} are temporarily unavailable.",
           "generic": "Couldn't request the withdrawal. Please try again shortly."
         }
+      },
+      "withdrawApproval": {
+        "title": "Approve withdrawal",
+        "body": "You're about to approve a pending withdrawal from your wallet. This releases the funds — only approve if you requested it.",
+        "approve": "Approve withdrawal",
+        "approving": "Approving...",
+        "backToWallet": "Back to wallet",
+        "successTitle": "Withdrawal approved",
+        "successBody": "Your withdrawal has been approved and is now being processed.",
+        "summaryAmount": "Amount",
+        "summaryTo": "To",
+        "invalidTitle": "Approval link invalid or expired",
+        "invalidBody": "This approval link is no longer valid — it may have been used already or expired. Request the withdrawal again from your wallet.",
+        "errorTitle": "Couldn't approve right now",
+        "errorBody": "Something went wrong approving this withdrawal. Please try again in a moment.",
+        "retry": "Try again"
       }
     },
     "balances": {

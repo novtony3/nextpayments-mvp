@@ -132,6 +132,31 @@ export type WithdrawResult =
   | { ok: false; reason: 'invalid' | 'error'; code?: string };
 
 /* ------------------------------------------------------------------ *
+ * Approve withdrawal — PUT /fund/withdraw/:token (email-link, JWT)
+ * ------------------------------------------------------------------ */
+
+/**
+ * Best-effort summary of an approved withdrawal, shown on the success screen.
+ * There is no GET-by-token endpoint, so the amount/coin/address are only known
+ * from the approve PUT's response (when it returns them) — all fields optional.
+ */
+export type WithdrawApprovalSummary = {
+  amount?: string;
+  coin?: string;
+  address?: string;
+};
+
+/**
+ * Approve-withdrawal result. `invalid` = the backend rejected the approval
+ * token (already used / expired / not found); `error` = transport, 5xx, or no
+ * server session. The approval endpoint requires the user's JWT — the token
+ * only identifies which pending withdrawal to approve.
+ */
+export type ApproveWithdrawResult =
+  | { ok: true; summary?: WithdrawApprovalSummary }
+  | { ok: false; reason: 'invalid' | 'error' };
+
+/* ------------------------------------------------------------------ *
  * Validate address — POST /fund/validate-address (soft/advisory check)
  * ------------------------------------------------------------------ */
 
