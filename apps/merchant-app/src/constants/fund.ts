@@ -79,21 +79,13 @@ export const FUND_ERROR_CODE = {
 export type FundErrorCode = (typeof FUND_ERROR_CODE)[keyof typeof FUND_ERROR_CODE];
 
 /**
- * Withdrawal statuses that are **terminal** (already sent, failed, or already
- * cancelled) — a denylist, lowercased for case-insensitive matching. The
- * cancel affordance is hidden only for these; any unknown/intermediate status
- * still shows the button (the backend is the authority and rejects a
- * non-cancellable withdrawal). A denylist fails safe — an unobserved
- * "pending"-like status keeps Cancel visible, whereas an allowlist guess would
- * silently hide it. Tighten once a real withdraw-history row is observed.
+ * Withdrawal statuses where the in-app Cancel affordance is shown — an
+ * ALLOWLIST, lowercased for case-insensitive matching. The lifecycle was
+ * observed live (2026-06-17): only **`pending`** (awaiting email approval) is
+ * cancellable. After approval the status becomes `confirmed` and
+ * `DELETE /fund/withdraw/:id` returns `FUER011 "Cannot cancel withdrawal"`.
+ * (Switched from a terminal-status denylist — `confirmed` is an intermediate,
+ * non-cancellable state that a denylist of "terminal" statuses missed, so
+ * Cancel was wrongly offered on already-approved rows.)
  */
-export const WITHDRAW_TERMINAL_STATUSES: ReadonlyArray<string> = [
-  'success',
-  'succeeded',
-  'completed',
-  'done',
-  'failed',
-  'rejected',
-  'cancelled',
-  'canceled',
-];
+export const WITHDRAW_CANCELLABLE_STATUSES: ReadonlyArray<string> = ['pending'];
