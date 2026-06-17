@@ -181,13 +181,19 @@ function extractAddress(data: Record<string, unknown>): { address: string; memo?
   return null;
 }
 
-/** POST /fund/get-fee-address. Throws `AuthError(code)` on FUER; returns the
- * deposit address (+ memo for tag chains) on success. */
+/**
+ * POST /fund/get-address — the user's **spendable** deposit address
+ * (`type:"user"`). Deposits here credit the withdrawable balance
+ * (`GET /fund/balance`). Must NOT use `get-fee-address` (`type:"fee"`): that is
+ * the gas/fee reserve, and deposits to it land in `fee-balance` (kind
+ * `feeDeposit`) which is NOT withdrawable. Throws `AuthError(code)` on FUER;
+ * returns the address (+ memo for tag chains) on success.
+ */
 export async function backendGetDepositAddress(
   token: string,
   input: GetAddressInput,
 ): Promise<{ address: string; memo?: string }> {
-  const res = await backendFetch(API_ROUTES.FUND_GET_FEE_ADDRESS, {
+  const res = await backendFetch(API_ROUTES.FUND_GET_ADDRESS, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     body: JSON.stringify({ network: input.network, coin: input.coin }),
