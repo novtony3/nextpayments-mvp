@@ -6,10 +6,12 @@ import { Card } from '@nextpayments/ui/components/card';
 import { DataTable, type DataTableColumn } from '@nextpayments/ui/components/data-table';
 import { EmptyState } from '@nextpayments/ui/components/empty-state';
 
+import { WITHDRAW_TERMINAL_STATUSES } from '@/constants/fund';
 import { CURRENCY_FILTER_ALL, TX_PARAM } from '@/constants/transactions';
 import { usePathname, useRouter } from '@/i18n/routing';
 import type { TransactionRow, TransactionsPage, TransactionTab } from '@/lib/fund/types';
 import { TablePagination } from '@/components/shared/table-pagination';
+import { WithdrawCancelButton } from './withdraw-cancel-button';
 
 type TransactionsTableProps = {
   data: TransactionsPage;
@@ -29,6 +31,32 @@ function reference(row: TransactionRow): string {
 function rowKey(row: TransactionRow, index: number): string {
   const id = row._id ?? row.id;
   return id === undefined || id === null ? String(index) : String(id);
+}
+
+/**
+ * Id to cancel a withdrawal by. Prefer a numeric business id — the backend's
+ * `confirm-withdrawal` uses a numeric `externalId`, so `DELETE /:withdrawId`
+ * likely wants that, not the Mongo `_id` the table otherwise displays. Falls
+ * back through `id` → `_id`. (Assumed shape — no authed history to observe.)
+ */
+function withdrawCancelId(row: TransactionRow): string | undefined {
+  for (const value of [row.withdrawId, row.externalId, row.id, row._id]) {
+    if (typeof value === 'number') return String(value);
+    if (typeof value === 'string' && value) return value;
+  }
+  return undefined;
+}
+
+/**
+ * The cancel id when the row looks cancellable: we have an id AND the status is
+ * not clearly terminal (denylist). Unknown statuses stay cancellable — the
+ * backend rejects a non-cancellable withdrawal, so it is the authority.
+ */
+function withdrawCancelTarget(row: TransactionRow): string | undefined {
+  const id = withdrawCancelId(row);
+  if (!id) return undefined;
+  const status = typeof row.status === 'string' ? row.status.toLowerCase() : '';
+  return WITHDRAW_TERMINAL_STATUSES.includes(status) ? undefined : id;
 }
 
 /**
@@ -94,6 +122,20 @@ export function TransactionsTable({ data, tab, coin }: TransactionsTableProps) {
       render: (row) => reference(row),
     },
   ];
+
+  // The "sent" tab is the withdrawal history — pending rows can be cancelled
+  // (`DELETE /fund/withdraw/:id`). Only added here so other tabs are untouched.
+  if (tab === 'sent') {
+    columns.push({
+      key: 'actions',
+      header: t('columns.actions'),
+      cellClassName: 'text-right',
+      render: (row) => {
+        const id = withdrawCancelTarget(row);
+        return id ? <WithdrawCancelButton withdrawId={id} /> : null;
+      },
+    });
+  }
 
   return (
     <div className="flex flex-col gap-6">

@@ -286,3 +286,22 @@ export async function backendApproveWithdraw(
   ensureOk(res.ok, json, 'Could not approve the withdrawal');
   return extractApprovalSummary(json);
 }
+
+/**
+ * DELETE /fund/withdraw/:withdrawId — cancel a pending withdrawal. Requires the
+ * user's JWT (probe with no auth → 401 USER016). The id is the withdrawal's
+ * business id from a withdraw-history row (see the caller's id extraction);
+ * throws `AuthError(code)` if the backend refuses (already sent/approved,
+ * unknown id, or not cancellable).
+ */
+export async function backendCancelWithdraw(
+  accessToken: string,
+  withdrawId: string,
+): Promise<void> {
+  const res = await backendFetch(apiPath.fundWithdrawCancel(withdrawId), {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  const json = parseJson(res.raw);
+  ensureOk(res.ok, json, 'Could not cancel the withdrawal');
+}

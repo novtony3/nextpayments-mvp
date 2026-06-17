@@ -57,6 +57,8 @@ export const apiPath = {
   ordersMeStats: (): string => `${API_ROUTES.ORDERS}/me/stats`,
   /** Approve a pending withdrawal via its single-use token (`PUT`). */
   fundWithdrawApprove: (token: string): string => `${API_ROUTES.FUND_WITHDRAW}/${token}`,
+  /** Cancel a pending withdrawal by its id (`DELETE`). */
+  fundWithdrawCancel: (withdrawId: string): string => `${API_ROUTES.FUND_WITHDRAW}/${withdrawId}`,
 } as const;
 
 /** Per-machine override that points the Next rewrite at a local tunnel port. */

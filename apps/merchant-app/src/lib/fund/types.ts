@@ -156,6 +156,14 @@ export type ApproveWithdrawResult =
   | { ok: true; summary?: WithdrawApprovalSummary }
   | { ok: false; reason: 'invalid' | 'error' };
 
+/**
+ * Cancel-withdrawal result (`DELETE /fund/withdraw/:withdrawId`). `invalid` =
+ * the backend refused (already sent/approved, unknown id, or not cancellable);
+ * `error` = transport / 5xx / no session. The row's cancel affordance is gated
+ * only by a terminal-status denylist, so the backend is the real authority.
+ */
+export type CancelWithdrawResult = { ok: true } | { ok: false; reason: 'invalid' | 'error' };
+
 /* ------------------------------------------------------------------ *
  * Validate address — POST /fund/validate-address (soft/advisory check)
  * ------------------------------------------------------------------ */

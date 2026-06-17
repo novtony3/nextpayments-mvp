@@ -729,11 +729,21 @@
         "amount": "Montant",
         "status": "Statut",
         "date": "Date",
-        "reference": "Référence"
+        "reference": "Référence",
+        "actions": "Actions"
       },
       "empty": "Aucune transaction pour le moment.",
       "error": "Impossible de charger les transactions. Le service est peut-être indisponible — réessayez bientôt.",
-      "tabUnavailable": "{tab} ne sont pas encore disponibles. Cet onglet s'activera une fois son backend connecté."
+      "tabUnavailable": "{tab} ne sont pas encore disponibles. Cet onglet s'activera une fois son backend connecté.",
+      "cancel": {
+        "action": "Annuler",
+        "confirm": "Confirmer",
+        "keep": "Conserver",
+        "cancelling": "Annulation...",
+        "success": "Retrait annulé.",
+        "notCancellable": "Ce retrait ne peut plus être annulé.",
+        "error": "Impossible d'annuler le retrait. Veuillez réessayer."
+      }
     }
   },
   "notFound": {

@@ -72,3 +72,23 @@ export const FUND_ERROR_CODE = {
 } as const;
 
 export type FundErrorCode = (typeof FUND_ERROR_CODE)[keyof typeof FUND_ERROR_CODE];
+
+/**
+ * Withdrawal statuses that are **terminal** (already sent, failed, or already
+ * cancelled) — a denylist, lowercased for case-insensitive matching. The
+ * cancel affordance is hidden only for these; any unknown/intermediate status
+ * still shows the button (the backend is the authority and rejects a
+ * non-cancellable withdrawal). A denylist fails safe — an unobserved
+ * "pending"-like status keeps Cancel visible, whereas an allowlist guess would
+ * silently hide it. Tighten once a real withdraw-history row is observed.
+ */
+export const WITHDRAW_TERMINAL_STATUSES: ReadonlyArray<string> = [
+  'success',
+  'succeeded',
+  'completed',
+  'done',
+  'failed',
+  'rejected',
+  'cancelled',
+  'canceled',
+];

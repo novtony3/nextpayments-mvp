@@ -729,11 +729,21 @@
         "amount": "Amount",
         "status": "Status",
         "date": "Date",
-        "reference": "Reference"
+        "reference": "Reference",
+        "actions": "Actions"
       },
       "empty": "No transactions yet.",
       "error": "Couldn't load transactions. The service may be unavailable — try again shortly.",
-      "tabUnavailable": "{tab} are not available yet. This tab will activate once its backend is connected."
+      "tabUnavailable": "{tab} are not available yet. This tab will activate once its backend is connected.",
+      "cancel": {
+        "action": "Cancel",
+        "confirm": "Confirm",
+        "keep": "Keep",
+        "cancelling": "Cancelling...",
+        "success": "Withdrawal cancelled.",
+        "notCancellable": "This withdrawal can no longer be cancelled.",
+        "error": "Couldn't cancel the withdrawal. Please try again."
+      }
     }
   },
   "notFound": {
