@@ -70,6 +70,8 @@ export const FUND_ERROR_CODE = {
   INVALID_AMOUNT: 'FUER005',
   /** Pair exists in the catalog but deposit/withdraw is not enabled. */
   NOT_SUPPORTED: 'FUER006',
+  /** Withdrawal amount exceeds the account's available balance. */
+  INSUFFICIENT_BALANCE: 'FUER008',
 } as const;
 
 export type FundErrorCode = (typeof FUND_ERROR_CODE)[keyof typeof FUND_ERROR_CODE];

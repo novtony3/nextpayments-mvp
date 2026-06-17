@@ -408,6 +408,7 @@
         "errors": {
           "address": "Enter a valid EVM address (0x followed by 40 hex characters).",
           "amount": "Enter an amount greater than 0.",
+          "insufficient": "Not enough balance for this withdrawal.",
           "token2fa": "Enter your 6-digit 2FA code.",
           "asset": "This coin or network isn't valid.",
           "unsupported": "Withdrawals for {coin} on {network} are temporarily unavailable.",

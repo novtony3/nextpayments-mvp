@@ -408,6 +408,7 @@
         "errors": {
           "address": "Saisissez une adresse EVM valide (0x suivi de 40 caractères hexadécimaux).",
           "amount": "Saisissez un montant supérieur à 0.",
+          "insufficient": "Solde insuffisant pour ce retrait.",
           "token2fa": "Saisissez votre code 2FA à 6 chiffres.",
           "asset": "Cette crypto ou ce réseau n'est pas valide.",
           "unsupported": "Les retraits de {coin} sur {network} sont temporairement indisponibles.",

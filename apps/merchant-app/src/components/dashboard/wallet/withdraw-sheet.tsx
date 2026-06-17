@@ -146,6 +146,8 @@ export function WithdrawSheet({
       const code = result.code;
       if (code === FUND_ERROR_CODE.INVALID_AMOUNT) {
         setError('amount', { message: t('errors.amount') });
+      } else if (code === FUND_ERROR_CODE.INSUFFICIENT_BALANCE) {
+        setError('amount', { message: t('errors.insufficient') });
       } else if (
         code === FUND_ERROR_CODE.INVALID_NETWORK ||
         code === FUND_ERROR_CODE.INVALID_COIN
