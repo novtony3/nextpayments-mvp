@@ -70,6 +70,8 @@ export const FUND_ERROR_CODE = {
   INVALID_AMOUNT: 'FUER005',
   /** Pair exists in the catalog but deposit/withdraw is not enabled. */
   NOT_SUPPORTED: 'FUER006',
+  /** Withdrawal amount is below the coin's `minWithdraw`. */
+  AMOUNT_BELOW_MIN: 'FUER007',
   /** Withdrawal amount exceeds the account's available balance. */
   INSUFFICIENT_BALANCE: 'FUER008',
 } as const;
