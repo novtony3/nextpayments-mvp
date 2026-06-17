@@ -109,8 +109,8 @@ export type GetAddressInput = { network: string; coin: string };
 /**
  * Withdraw input validated at the Server-Action boundary (never trust the
  * client even though the form also validates). `address` must be a valid EVM
- * address (ETH/BSC); `token2fa` is required only when the account has 2FA on,
- * enforced in the form — the schema keeps it optional.
+ * address (the Ethereum-based chains — ETH, ERC20); `token2fa` is required only
+ * when the account has 2FA on, enforced in the form — the schema keeps it optional.
  */
 export const withdrawInputSchema = z.object({
   network: z.string().min(1),
