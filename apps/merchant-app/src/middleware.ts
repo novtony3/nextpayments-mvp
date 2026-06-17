@@ -19,12 +19,20 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Match all routes except API routes, Next internals, static files (any
-  // path containing a dot), AND the extensionless `next/og` metadata routes.
-  // Those four (`/icon`, `/apple-icon`, `/opengraph-image`, `/twitter-image`)
-  // carry no extension, so without an explicit exclusion the i18n middleware
-  // would redirect them to `/<locale>/icon` and silently break the favicon and
-  // social cards. Dotted convention files (robots.txt, sitemap.xml,
-  // manifest.webmanifest) are already covered by the `.*\..*` rule.
-  matcher: ['/((?!api|_next|_vercel|icon|apple-icon|opengraph-image|twitter-image|.*\\..*).*)'],
+  // Run on all routes EXCEPT: API routes, Next internals, the extensionless
+  // `next/og` metadata routes (`/icon`, `/apple-icon`, `/opengraph-image`,
+  // `/twitter-image` — excluded by name so they aren't locale-redirected and
+  // broken), and static files matched by a KNOWN EXTENSION at the end of the
+  // path (incl. the dotted convention files robots.txt / sitemap.xml /
+  // manifest.webmanifest).
+  //
+  // It deliberately does NOT exclude *every* path containing a dot. A withdrawal
+  // approval token is a JWT (`header.payload.signature`) carried as a path
+  // segment (`/withdraw/approve/<jwt>`); a blanket `.*\..*` exclusion skipped
+  // that route entirely — dropping locale routing (→ 404 on the un-prefixed
+  // link) and the `x-pathname` header the protected guard reads to build
+  // `returnTo` (→ the user wasn't returned to the approval page after login).
+  matcher: [
+    '/((?!api|_next|_vercel|icon|apple-icon|opengraph-image|twitter-image|.*\\.(?:txt|xml|webmanifest|ico|png|jpe?g|svg|gif|webp|js|css|woff2?|ttf|map)$).*)',
+  ],
 };
