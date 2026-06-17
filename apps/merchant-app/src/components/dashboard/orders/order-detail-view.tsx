@@ -6,7 +6,7 @@ import { Notice } from '@nextpayments/ui/components/notice';
 
 import { ROUTES } from '@/constants/routes';
 import { Link } from '@/i18n/routing';
-import { formatCrypto, parseAmount } from '@/lib/format';
+import { formatCrypto, formatDateTime, parseAmount } from '@/lib/format';
 import type { OrderDetailResult, OrderRow } from '@/lib/orders/types';
 
 import { ReadOnlyField } from '../integrations/read-only-field';
@@ -15,12 +15,6 @@ type OrderDetailViewProps = {
   orderId: string;
   result: OrderDetailResult;
 };
-
-function formatDate(value: unknown, locale: string): string {
-  if (typeof value !== 'string' && typeof value !== 'number') return '—';
-  const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? String(value) : d.toLocaleString(locale);
-}
 
 function formatAmount(value: OrderRow['amount'], locale: string): string {
   if (value === undefined || value === null || value === '') return '—';
@@ -82,7 +76,7 @@ export function OrderDetailView({ orderId, result }: OrderDetailViewProps) {
           {order.orderId ?? orderId}
         </h1>
         <p className="text-sm text-[var(--color-text-muted)]">
-          {t('createdAt', { date: formatDate(order.createdAt, locale) })}
+          {t('createdAt', { date: formatDateTime(order.createdAt, locale) })}
         </p>
       </header>
 
@@ -97,7 +91,7 @@ export function OrderDetailView({ orderId, result }: OrderDetailViewProps) {
           <ReadOnlyField label={t('fields.status')} value={status} />
           <ReadOnlyField
             label={t('fields.expiresAt')}
-            value={formatDate(order.expiresAt, locale)}
+            value={formatDateTime(order.expiresAt, locale)}
           />
         </div>
         {address && (
@@ -118,7 +112,7 @@ export function OrderDetailView({ orderId, result }: OrderDetailViewProps) {
           {t('sections.transaction')}
         </h2>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <ReadOnlyField label={t('fields.paidAt')} value={formatDate(order.paidAt, locale)} />
+          <ReadOnlyField label={t('fields.paidAt')} value={formatDateTime(order.paidAt, locale)} />
           {txHash ? (
             <ReadOnlyField
               label={t('fields.transactionHash')}
@@ -149,7 +143,7 @@ export function OrderDetailView({ orderId, result }: OrderDetailViewProps) {
           />
           <ReadOnlyField
             label={t('fields.ipnDeliveredAt')}
-            value={formatDate(order.ipnDeliveredAt, locale)}
+            value={formatDateTime(order.ipnDeliveredAt, locale)}
           />
           {asString(order.ipnLastError) && (
             <ReadOnlyField
@@ -188,7 +182,7 @@ export function OrderDetailView({ orderId, result }: OrderDetailViewProps) {
           />
           <ReadOnlyField
             label={t('fields.updatedAt')}
-            value={formatDate(order.updatedAt, locale)}
+            value={formatDateTime(order.updatedAt, locale)}
           />
         </div>
         {description && <ReadOnlyField label={t('fields.description')} value={description} />}
