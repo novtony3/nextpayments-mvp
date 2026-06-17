@@ -6,7 +6,7 @@ import { Card } from '@nextpayments/ui/components/card';
 import { DataTable, type DataTableColumn } from '@nextpayments/ui/components/data-table';
 import { EmptyState } from '@nextpayments/ui/components/empty-state';
 
-import { WITHDRAW_TERMINAL_STATUSES } from '@/constants/fund';
+import { WITHDRAW_CANCELLABLE_STATUSES } from '@/constants/fund';
 import { CURRENCY_FILTER_ALL, TX_PARAM } from '@/constants/transactions';
 import { usePathname, useRouter } from '@/i18n/routing';
 import type { TransactionRow, TransactionsPage, TransactionTab } from '@/lib/fund/types';
@@ -34,29 +34,26 @@ function rowKey(row: TransactionRow, index: number): string {
 }
 
 /**
- * Id to cancel a withdrawal by. Prefer a numeric business id — the backend's
- * `confirm-withdrawal` uses a numeric `externalId`, so `DELETE /:withdrawId`
- * likely wants that, not the Mongo `_id` the table otherwise displays. Falls
- * back through `id` → `_id`. (Assumed shape — no authed history to observe.)
+ * Id to cancel a withdrawal by. `DELETE /fund/withdraw/:withdrawId` expects the
+ * Mongo **`_id`** — verified live: the numeric business `id` returns
+ * `FUER009 "Withdrawal not found"`, while `_id` resolves the row. (The
+ * confirm-withdrawal webhook's numeric `externalId` is a different identifier.)
  */
 function withdrawCancelId(row: TransactionRow): string | undefined {
-  for (const value of [row.withdrawId, row.externalId, row.id, row._id]) {
-    if (typeof value === 'number') return String(value);
-    if (typeof value === 'string' && value) return value;
-  }
-  return undefined;
+  return typeof row._id === 'string' && row._id ? row._id : undefined;
 }
 
 /**
- * The cancel id when the row looks cancellable: we have an id AND the status is
- * not clearly terminal (denylist). Unknown statuses stay cancellable — the
- * backend rejects a non-cancellable withdrawal, so it is the authority.
+ * The cancel id when the row is actually cancellable: we have an `_id` AND the
+ * status is in the cancellable allowlist (only `pending` — once approved it is
+ * `confirmed`, which the backend refuses to cancel with FUER011). Returns
+ * `undefined` (no button) otherwise.
  */
 function withdrawCancelTarget(row: TransactionRow): string | undefined {
   const id = withdrawCancelId(row);
   if (!id) return undefined;
   const status = typeof row.status === 'string' ? row.status.toLowerCase() : '';
-  return WITHDRAW_TERMINAL_STATUSES.includes(status) ? undefined : id;
+  return WITHDRAW_CANCELLABLE_STATUSES.includes(status) ? id : undefined;
 }
 
 /**
