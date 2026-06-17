@@ -8,6 +8,7 @@ import { DataTable, type DataTableColumn } from '@nextpayments/ui/components/dat
 import { EmptyState } from '@nextpayments/ui/components/empty-state';
 
 import { ROUTES } from '@/constants/routes';
+import { formatDate } from '@/lib/format';
 import type { AffiliateDownlineRow, DownlineResult } from '@/lib/affiliate/types';
 
 import { AffiliatePager } from './affiliate-pager';
@@ -19,13 +20,6 @@ type DownlineTableProps = {
   /** Other search params to preserve when changing page (e.g. commissions page). */
   preservedParams: Record<string, string | undefined>;
 };
-
-function formatDate(value: string | undefined, locale: string): string {
-  if (!value) return '—';
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return value;
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(d);
-}
 
 /**
  * Downline (direct referrals) table. Single-level program — only level-1
