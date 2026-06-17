@@ -4,10 +4,18 @@ import { FUND_ERROR_CODE } from '@/constants/fund';
 import { getAccessToken } from '@/lib/auth/session';
 import { AuthError } from '@/lib/auth/types';
 
-import { backendGetDepositAddress, backendValidateAddress, backendWithdraw } from './backend';
+import {
+  backendApproveWithdraw,
+  backendCancelWithdraw,
+  backendGetDepositAddress,
+  backendValidateAddress,
+  backendWithdraw,
+} from './backend';
 import {
   validateAddressInputSchema,
   withdrawInputSchema,
+  type ApproveWithdrawResult,
+  type CancelWithdrawResult,
   type GetAddressResult,
   type ValidateAddressResult,
   type WithdrawResult,
@@ -80,6 +88,57 @@ export async function requestWithdrawAction(input: unknown): Promise<WithdrawRes
     return { ok: true };
   } catch (err) {
     if (err instanceof AuthError) return { ok: false, reason: 'invalid', code: err.code };
+    return { ok: false, reason: 'error' };
+  }
+}
+
+/**
+ * Approve a pending withdrawal from the email link (`PUT /fund/withdraw/:token`).
+ * Requires a server session — the page is auth-guarded, but we re-check here and
+ * map a missing session to `error`. A backend rejection (token used/expired/not
+ * found) maps to `invalid`; transport/5xx to `error`. Never auto-called — the
+ * page fires this only on the user's explicit "Approve" click.
+ */
+export async function approveWithdrawAction(
+  approvalToken: unknown,
+): Promise<ApproveWithdrawResult> {
+  if (typeof approvalToken !== 'string' || !approvalToken) {
+    return { ok: false, reason: 'invalid' };
+  }
+
+  const token = await getAccessToken();
+  if (!token) return { ok: false, reason: 'error' };
+
+  try {
+    const summary = await backendApproveWithdraw(token, approvalToken);
+    return { ok: true, summary };
+  } catch (err) {
+    // Any backend non-success (incl. an expired session mid-action) → the token
+    // can't be acted on; surface as invalid. Transport/5xx → error (retryable).
+    if (err instanceof AuthError) return { ok: false, reason: 'invalid' };
+    return { ok: false, reason: 'error' };
+  }
+}
+
+/**
+ * Cancel a pending withdrawal (`DELETE /fund/withdraw/:withdrawId`). The id
+ * comes from a withdraw-history row. A backend refusal (already sent/approved,
+ * unknown id, not cancellable) maps to `invalid` so the table can toast it;
+ * transport/5xx to `error`.
+ */
+export async function cancelWithdrawAction(withdrawId: unknown): Promise<CancelWithdrawResult> {
+  if (typeof withdrawId !== 'string' || !withdrawId) {
+    return { ok: false, reason: 'invalid' };
+  }
+
+  const token = await getAccessToken();
+  if (!token) return { ok: false, reason: 'error' };
+
+  try {
+    await backendCancelWithdraw(token, withdrawId);
+    return { ok: true };
+  } catch (err) {
+    if (err instanceof AuthError) return { ok: false, reason: 'invalid' };
     return { ok: false, reason: 'error' };
   }
 }

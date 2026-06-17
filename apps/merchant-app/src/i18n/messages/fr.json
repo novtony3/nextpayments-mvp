@@ -408,11 +408,29 @@
         "errors": {
           "address": "Saisissez une adresse EVM valide (0x suivi de 40 caractères hexadécimaux).",
           "amount": "Saisissez un montant supérieur à 0.",
+          "belowMin": "Le montant est inférieur au minimum pour cette crypto.",
+          "insufficient": "Solde insuffisant pour ce retrait.",
           "token2fa": "Saisissez votre code 2FA à 6 chiffres.",
           "asset": "Cette crypto ou ce réseau n'est pas valide.",
           "unsupported": "Les retraits de {coin} sur {network} sont temporairement indisponibles.",
           "generic": "Impossible de demander le retrait. Réessayez bientôt."
         }
+      },
+      "withdrawApproval": {
+        "title": "Approuver le retrait",
+        "body": "Vous êtes sur le point d'approuver un retrait en attente depuis votre portefeuille. Cela libère les fonds — n'approuvez que si vous en êtes à l'origine.",
+        "approve": "Approuver le retrait",
+        "approving": "Approbation...",
+        "backToWallet": "Retour au portefeuille",
+        "successTitle": "Retrait approuvé",
+        "successBody": "Votre retrait a été approuvé et est en cours de traitement.",
+        "summaryAmount": "Montant",
+        "summaryTo": "Vers",
+        "invalidTitle": "Lien d'approbation invalide ou expiré",
+        "invalidBody": "Ce lien d'approbation n'est plus valide — il a peut-être déjà été utilisé ou a expiré. Refaites la demande de retrait depuis votre portefeuille.",
+        "errorTitle": "Approbation impossible pour le moment",
+        "errorBody": "Une erreur est survenue lors de l'approbation de ce retrait. Veuillez réessayer dans un instant.",
+        "retry": "Réessayer"
       }
     },
     "balances": {
@@ -713,11 +731,21 @@
         "amount": "Montant",
         "status": "Statut",
         "date": "Date",
-        "reference": "Référence"
+        "reference": "Référence",
+        "actions": "Actions"
       },
       "empty": "Aucune transaction pour le moment.",
       "error": "Impossible de charger les transactions. Le service est peut-être indisponible — réessayez bientôt.",
-      "tabUnavailable": "{tab} ne sont pas encore disponibles. Cet onglet s'activera une fois son backend connecté."
+      "tabUnavailable": "{tab} ne sont pas encore disponibles. Cet onglet s'activera une fois son backend connecté.",
+      "cancel": {
+        "action": "Annuler",
+        "confirm": "Confirmer",
+        "keep": "Conserver",
+        "cancelling": "Annulation...",
+        "success": "Retrait annulé.",
+        "notCancellable": "Ce retrait ne peut plus être annulé.",
+        "error": "Impossible d'annuler le retrait. Veuillez réessayer."
+      }
     }
   },
   "notFound": {

@@ -3,11 +3,11 @@
  * UI. No React/i18n here: labels are derived from `network`/`coin` at the call
  * site, errors are i18n keys the form maps from the backend `FUER00x` codes.
  *
- * Backend contract: API.md Fund §. On the probed backend the live, enabled
- * pair is ETH/ETH (deposit via `get-address` returns a real `type:"user"`
- * address); USDT on ETH/BSC exists in the catalog but returns `FUER006`
- * "not supported" until enabled server-side, so the UI degrades gracefully on
- * `FUER006` for those.
+ * Backend contract: API.md Fund §. The enabled catalog pairs (from the backend
+ * coin/network catalog) are ETH on `ETH` and USDT on `ERC20` — these are the
+ * exact `network`/`coin` strings the backend matches, so they must be sent
+ * verbatim on deposit/withdraw. The UI still degrades gracefully on `FUER006`
+ * if a pair is later disabled server-side.
  */
 
 /** Default coin/network the deposit panel and withdraw form land on — the
@@ -24,15 +24,15 @@ export type FundAsset = {
 };
 
 /**
- * Catalog pairs offered in the selectors. Data-driven so the selector and the
- * default never drift; ETH/ETH (enabled) is first so it is the landing
- * selection. The USDT pairs are catalog-present but currently `FUER006` — the
- * deposit panel surfaces them as "temporarily unavailable" rather than hiding.
+ * Catalog pairs offered in the selectors — the `enabled:true` (network, coin)
+ * entries from the backend coin/network catalog. `network`/`coin` are the exact
+ * strings the backend stores and matches, sent verbatim on deposit/withdraw
+ * (USDT is on `ERC20`, NOT `ETH`/`BSC`). ETH/ETH is first so it is the default
+ * landing selection. Keep in sync with the backend catalog's enabled rows.
  */
 export const FUND_ASSETS: ReadonlyArray<FundAsset> = [
   { network: 'ETH', coin: 'ETH' },
-  { network: 'ETH', coin: 'USDT' },
-  { network: 'BSC', coin: 'USDT' },
+  { network: 'ERC20', coin: 'USDT' },
 ];
 
 /** Stable `value` for an asset `<option>` (no inline join at call sites). */
@@ -49,8 +49,9 @@ export const FUND_BALANCE_COINS: ReadonlyArray<string> = [
   ...new Set(FUND_ASSETS.map((a) => a.coin)),
 ];
 
-/** EVM (`0x` + 40 hex) address gate — the real client-side check for ETH/BSC
- * withdrawals; the backend `validate-address` is only a soft pre-check. */
+/** EVM (`0x` + 40 hex) address gate — the real client-side check for the
+ * Ethereum-based chains (ETH, ERC20); the backend `validate-address` is only a
+ * soft pre-check. */
 export const EVM_ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
 
 /** Deposit QR edge length (px) — mirrors `two-fa-card`'s `QR_SIZE_PX`. */
@@ -69,6 +70,30 @@ export const FUND_ERROR_CODE = {
   INVALID_AMOUNT: 'FUER005',
   /** Pair exists in the catalog but deposit/withdraw is not enabled. */
   NOT_SUPPORTED: 'FUER006',
+  /** Withdrawal amount is below the coin's `minWithdraw`. */
+  AMOUNT_BELOW_MIN: 'FUER007',
+  /** Withdrawal amount exceeds the account's available balance. */
+  INSUFFICIENT_BALANCE: 'FUER008',
 } as const;
 
 export type FundErrorCode = (typeof FUND_ERROR_CODE)[keyof typeof FUND_ERROR_CODE];
+
+/**
+ * Withdrawal statuses that are **terminal** (already sent, failed, or already
+ * cancelled) — a denylist, lowercased for case-insensitive matching. The
+ * cancel affordance is hidden only for these; any unknown/intermediate status
+ * still shows the button (the backend is the authority and rejects a
+ * non-cancellable withdrawal). A denylist fails safe — an unobserved
+ * "pending"-like status keeps Cancel visible, whereas an allowlist guess would
+ * silently hide it. Tighten once a real withdraw-history row is observed.
+ */
+export const WITHDRAW_TERMINAL_STATUSES: ReadonlyArray<string> = [
+  'success',
+  'succeeded',
+  'completed',
+  'done',
+  'failed',
+  'rejected',
+  'cancelled',
+  'canceled',
+];

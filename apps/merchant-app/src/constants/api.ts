@@ -55,6 +55,10 @@ export const apiPath = {
   /** JWT-protected dashboard endpoints (no HMAC needed — uses the session). */
   ordersMe: (): string => `${API_ROUTES.ORDERS}/me`,
   ordersMeStats: (): string => `${API_ROUTES.ORDERS}/me/stats`,
+  /** Approve a pending withdrawal via its single-use token (`PUT`). */
+  fundWithdrawApprove: (token: string): string => `${API_ROUTES.FUND_WITHDRAW}/${token}`,
+  /** Cancel a pending withdrawal by its id (`DELETE`). */
+  fundWithdrawCancel: (withdrawId: string): string => `${API_ROUTES.FUND_WITHDRAW}/${withdrawId}`,
 } as const;
 
 /** Per-machine override that points the Next rewrite at a local tunnel port. */
@@ -80,8 +84,6 @@ export const DEFAULT_API_PROXY_TARGET = 'http://localhost:3000' as const;
  */
 export function resolveBackendTarget(): string {
   return (
-    process.env[API_PROXY_TARGET_ENV] ??
-    process.env[PUBLIC_API_URL_ENV] ??
-    DEFAULT_API_PROXY_TARGET
+    process.env[API_PROXY_TARGET_ENV] ?? process.env[PUBLIC_API_URL_ENV] ?? DEFAULT_API_PROXY_TARGET
   );
 }

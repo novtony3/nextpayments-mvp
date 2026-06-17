@@ -408,11 +408,29 @@
         "errors": {
           "address": "Enter a valid EVM address (0x followed by 40 hex characters).",
           "amount": "Enter an amount greater than 0.",
+          "belowMin": "Amount is below the minimum for this coin.",
+          "insufficient": "Not enough balance for this withdrawal.",
           "token2fa": "Enter your 6-digit 2FA code.",
           "asset": "This coin or network isn't valid.",
           "unsupported": "Withdrawals for {coin} on {network} are temporarily unavailable.",
           "generic": "Couldn't request the withdrawal. Please try again shortly."
         }
+      },
+      "withdrawApproval": {
+        "title": "Approve withdrawal",
+        "body": "You're about to approve a pending withdrawal from your wallet. This releases the funds — only approve if you requested it.",
+        "approve": "Approve withdrawal",
+        "approving": "Approving...",
+        "backToWallet": "Back to wallet",
+        "successTitle": "Withdrawal approved",
+        "successBody": "Your withdrawal has been approved and is now being processed.",
+        "summaryAmount": "Amount",
+        "summaryTo": "To",
+        "invalidTitle": "Approval link invalid or expired",
+        "invalidBody": "This approval link is no longer valid — it may have been used already or expired. Request the withdrawal again from your wallet.",
+        "errorTitle": "Couldn't approve right now",
+        "errorBody": "Something went wrong approving this withdrawal. Please try again in a moment.",
+        "retry": "Try again"
       }
     },
     "balances": {
@@ -713,11 +731,21 @@
         "amount": "Amount",
         "status": "Status",
         "date": "Date",
-        "reference": "Reference"
+        "reference": "Reference",
+        "actions": "Actions"
       },
       "empty": "No transactions yet.",
       "error": "Couldn't load transactions. The service may be unavailable — try again shortly.",
-      "tabUnavailable": "{tab} are not available yet. This tab will activate once its backend is connected."
+      "tabUnavailable": "{tab} are not available yet. This tab will activate once its backend is connected.",
+      "cancel": {
+        "action": "Cancel",
+        "confirm": "Confirm",
+        "keep": "Keep",
+        "cancelling": "Cancelling...",
+        "success": "Withdrawal cancelled.",
+        "notCancellable": "This withdrawal can no longer be cancelled.",
+        "error": "Couldn't cancel the withdrawal. Please try again."
+      }
     }
   },
   "notFound": {
