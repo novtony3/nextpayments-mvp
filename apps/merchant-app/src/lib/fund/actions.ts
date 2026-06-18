@@ -10,7 +10,7 @@ import {
   backendGetDepositAddress,
   backendValidateAddress,
   backendWithdraw,
-  loadHeaderBalance,
+  loadHeaderBalances,
 } from './backend';
 import {
   validateAddressInputSchema,
@@ -18,7 +18,7 @@ import {
   type ApproveWithdrawResult,
   type CancelWithdrawResult,
   type GetAddressResult,
-  type HeaderBalanceResult,
+  type HeaderBalancesResult,
   type ValidateAddressResult,
   type WithdrawResult,
 } from './types';
@@ -146,11 +146,10 @@ export async function cancelWithdrawAction(withdrawId: unknown): Promise<CancelW
 }
 
 /**
- * Spendable balance of one header-selector coin (`GET /fund/balance?coin=`).
- * Client-invoked when the user switches coins or the tab refocuses; the initial
- * value is server-rendered in the protected layout. Coin validation and the
- * session read live in {@link loadHeaderBalance}; never throws.
+ * The account's spendable balances for the dashboard header selector. Client-
+ * invoked on tab refocus to refresh holdings; the initial set is server-rendered
+ * in the protected layout. Never throws (see {@link loadHeaderBalances}).
  */
-export async function getFundBalanceAction(coin: unknown): Promise<HeaderBalanceResult> {
-  return loadHeaderBalance(typeof coin === 'string' ? coin : '');
+export async function getHeaderBalancesAction(): Promise<HeaderBalancesResult> {
+  return loadHeaderBalances();
 }

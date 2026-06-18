@@ -7,7 +7,7 @@ import { cn } from '@nextpayments/ui/lib/utils';
 
 import { SHOW_VERIFY_BANNER } from '@/constants/dashboard';
 import type { HeaderUser } from '@/lib/auth/types';
-import type { HeaderBalanceResult } from '@/lib/fund/types';
+import type { HeaderBalancesResult } from '@/lib/fund/types';
 import { SessionExpiryWatcher } from '@/components/shared/session-expiry-watcher';
 
 import { DashboardSidebar } from './dashboard-sidebar';
@@ -20,8 +20,8 @@ type DashboardShellProps = {
    * topbar account menu (correct on first paint, no flash) and the verify
    * banner gate. */
   user: HeaderUser | null;
-  /** Server-rendered default-coin balance for the header selector. */
-  initialBalance: HeaderBalanceResult;
+  /** Server-rendered spendable balances for the header selector. */
+  initialBalances: HeaderBalancesResult;
 };
 
 const SIDEBAR_WIDTH = 'w-64';
@@ -40,7 +40,7 @@ const DRAWER_TRANSITION_MS = 320;
  * top bar. The auth guard stays in the server `(protected)/layout`; this only
  * owns presentation + the mobile drawer state.
  */
-export function DashboardShell({ children, user, initialBalance }: DashboardShellProps) {
+export function DashboardShell({ children, user, initialBalances }: DashboardShellProps) {
   const t = useTranslations('dashboard');
   const [mobileOpen, setMobileOpen] = useState(false);
   // `rendered` keeps the drawer in the DOM through its close so the slide-out
@@ -162,7 +162,7 @@ export function DashboardShell({ children, user, initialBalance }: DashboardShel
           <DashboardTopbar
             user={user}
             onMenuClick={() => setMobileOpen(true)}
-            initialBalance={initialBalance}
+            initialBalances={initialBalances}
           />
           <main className="min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
             {children}

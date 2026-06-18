@@ -8,30 +8,18 @@ import { Card } from '@nextpayments/ui/components/card';
 import { IconButton } from '@nextpayments/ui/components/icon-button';
 import { SearchInput } from '@nextpayments/ui/components/search-input';
 
-import { COIN_FALLBACK_GRADIENT, COIN_TILES } from '@/constants/coins';
+import { coinName, formatCoinAmount } from '@/constants/coins';
 import { ZERO_CRYPTO } from '@/constants/dashboard';
-import { formatCrypto, parseAmount } from '@/lib/format';
+import { parseAmount } from '@/lib/format';
 import type { BalanceRow } from '@/lib/fund/types';
+import { CoinAvatar } from '@/components/shared/coin-avatar';
 
 /** Display shape derived from a loose backend balance row + coin metadata. */
 type DisplayBalance = {
   ticker: string;
   name: string;
-  gradient: string;
   amount: string;
 };
-
-function CoinAvatar({ row }: { row: DisplayBalance }) {
-  return (
-    <span
-      aria-hidden="true"
-      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-mono text-[10px] font-semibold text-white"
-      style={{ backgroundImage: row.gradient }}
-    >
-      {row.ticker.slice(0, 4)}
-    </span>
-  );
-}
 
 type BalancesViewProps = {
   /** Live rows from `GET /fund/balance` (loose shape; read defensively). */
@@ -50,10 +38,10 @@ type BalancesViewProps = {
 
 /**
  * Wallet balances list — wired to `GET /fund/balance`. Rows are a loose
- * backend shape, so coin/amount are read defensively and display metadata
- * (name, tile color) is joined from the shared {@link COIN_TILES}. No fiat is
- * shown: the balance endpoint carries no price, so a fabricated value would be
- * misleading — the crypto amount is the source of truth.
+ * backend shape, so coin/amount are read defensively; the coin avatar, name and
+ * per-coin amount precision come from the shared coin catalog (so a coin matches
+ * the header pill exactly). No fiat is shown: the balance endpoint carries no
+ * price, so a fabricated value would be misleading.
  */
 export function BalancesView({ balances, ok, canReceive, onReceive }: BalancesViewProps) {
   const t = useTranslations('dashboard.balances');
@@ -70,13 +58,11 @@ export function BalancesView({ balances, ok, canReceive, onReceive }: BalancesVi
             : typeof row.ticker === 'string'
               ? row.ticker
               : '—';
-      const tile = COIN_TILES.find((c) => c.ticker === ticker);
       const num = parseAmount(row.amount);
       return {
         ticker,
-        name: tile?.name ?? ticker,
-        gradient: tile?.gradient ?? COIN_FALLBACK_GRADIENT,
-        amount: num === null ? ZERO_CRYPTO : formatCrypto(num, locale),
+        name: coinName(ticker),
+        amount: num === null ? ZERO_CRYPTO : formatCoinAmount(num, ticker, locale),
       };
     });
   }, [balances, locale]);
@@ -114,7 +100,7 @@ export function BalancesView({ balances, ok, canReceive, onReceive }: BalancesVi
         ) : (
           rows.map((row) => (
             <div key={row.ticker} className="row-interactive flex items-center gap-4 px-5 py-4">
-              <CoinAvatar row={row} />
+              <CoinAvatar ticker={row.ticker} size="md" showTicker />
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-[var(--color-text)]">{row.name}</p>
                 <p className="text-xs text-[var(--color-text-subtle)]">{row.ticker}</p>

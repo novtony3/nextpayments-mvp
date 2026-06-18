@@ -68,16 +68,12 @@ export const FUND_BALANCE_COINS: ReadonlyArray<string> = [
 ];
 
 /**
- * Coins offered in the dashboard header balance selector (spendable balance via
- * `GET /fund/balance?coin=`). Independent of the fund / top-up catalogs
- * ({@link FUND_ASSETS}, {@link TOPUP_ASSETS}) so the header can surface holdings
- * — e.g. USDT — even for coins not currently offered for top-up. The first entry
- * is the default selection; extend the list as more coins become spendable.
+ * Preferred coin for the dashboard header balance selector — selected by default
+ * when the account holds it, and the graceful fallback shown (with no amount)
+ * when there are no balances yet. The header is otherwise driven by the coins the
+ * balance response actually returns, not a fixed list.
  */
-export const HEADER_BALANCE_COINS: ReadonlyArray<string> = ['USDT'];
-
-/** Default coin shown in the header balance selector — the first listed coin. */
-export const DEFAULT_HEADER_BALANCE_COIN = HEADER_BALANCE_COINS[0]!;
+export const DEFAULT_HEADER_BALANCE_COIN = 'USDT' as const;
 
 /** EVM (`0x` + 40 hex) address gate — the real client-side check for the
  * Ethereum-based chains (ETH, ERC20); the backend `validate-address` is only a

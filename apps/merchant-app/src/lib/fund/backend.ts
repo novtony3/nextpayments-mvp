@@ -1,13 +1,13 @@
 import 'server-only';
 
 import { API_ROUTES, apiPath, type ApiRoute } from '@/constants/api';
-import { FUND_BALANCE_COINS, HEADER_BALANCE_COINS } from '@/constants/fund';
+import { FUND_BALANCE_COINS } from '@/constants/fund';
 import { getAccessToken } from '@/lib/auth/session';
 import { AuthError, envelopeSchema } from '@/lib/auth/types';
 import { toPaginatedPage } from '@/lib/pagination';
 import { backendFetch } from '@/lib/server/backend-fetch';
 
-import { findBalanceAmount } from './balance';
+import { readBalanceAmount, readBalanceTicker } from './balance';
 import {
   balanceResponseSchema,
   getAddressResponseSchema,
@@ -15,8 +15,9 @@ import {
   withdrawInputSchema,
   type BalanceRow,
   type BalancesResult,
+  type CoinBalance,
   type GetAddressInput,
-  type HeaderBalanceResult,
+  type HeaderBalancesResult,
   type TransactionsQuery,
   type TransactionsResult,
   type TransactionTab,
@@ -145,17 +146,50 @@ export async function loadSpendableBalance(
 }
 
 /**
- * Spendable balance of a single coin for the dashboard header selector. A thin
- * composition over {@link loadSpendableBalance} (one coin) + {@link
- * findBalanceAmount}; never throws. A coin outside {@link HEADER_BALANCE_COINS}
- * or a missing/failed fetch returns `{ ok: false }` (the header shows a muted
- * placeholder); a present-but-absent coin row reads as `0`, not unavailable.
+ * GET /fund/balance with NO coin filter — the account's full spendable balance
+ * set in one call. Throws on a non-success envelope (e.g. if the backend requires
+ * a coin), so {@link loadHeaderBalances} can fall back to enumerating coins.
  */
-export async function loadHeaderBalance(coin: string): Promise<HeaderBalanceResult> {
-  if (!HEADER_BALANCE_COINS.includes(coin)) return { ok: false };
-  const result = await loadSpendableBalance([coin]);
-  if (!result.ok) return { ok: false };
-  return { ok: true, coin, amount: findBalanceAmount(result.balances, coin) ?? 0 };
+export async function backendAllBalances(token: string): Promise<BalanceRow[]> {
+  const res = await backendFetch(API_ROUTES.FUND_BALANCE, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const json = parseJson(res.raw);
+  ensureOk(res.ok, json, 'Could not load balances');
+  return balanceResponseSchema.parse(json).data.balances;
+}
+
+/** Map loose balance rows to `{ coin, amount }`, dropping rows with no ticker. */
+function toCoinBalances(rows: ReadonlyArray<BalanceRow>): CoinBalance[] {
+  return rows.flatMap((row) => {
+    const coin = readBalanceTicker(row);
+    return coin ? [{ coin, amount: readBalanceAmount(row) ?? 0 }] : [];
+  });
+}
+
+/**
+ * The account's spendable balances for the dashboard header selector — the coins
+ * actually returned, mapped to `{ coin, amount }`; never throws. Prefers a single
+ * all-coins read ({@link backendAllBalances}); if the backend requires a coin
+ * filter (it throws), falls back to enumerating the known catalog coins in
+ * parallel. An empty but successful read is a genuine "no balances yet".
+ */
+export async function loadHeaderBalances(): Promise<HeaderBalancesResult> {
+  const token = await getAccessToken();
+  if (!token) return { ok: false };
+
+  try {
+    return { ok: true, balances: toCoinBalances(await backendAllBalances(token)) };
+  } catch {
+    const settled = await Promise.allSettled(
+      FUND_BALANCE_COINS.map((coin) => backendBalance(token, coin)),
+    );
+    const fulfilled = settled.filter(
+      (r): r is PromiseFulfilledResult<BalanceRow[]> => r.status === 'fulfilled',
+    );
+    if (fulfilled.length === 0) return { ok: false };
+    return { ok: true, balances: toCoinBalances(fulfilled.flatMap((r) => r.value)) };
+  }
 }
 
 /**

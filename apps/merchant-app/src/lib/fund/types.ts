@@ -81,12 +81,16 @@ export const balanceResponseSchema = z.object({
 /** Never-throw reader result the Wallet page consumes. */
 export type BalancesResult = { ok: true; balances: BalanceRow[] } | { ok: false };
 
+/** One coin's spendable balance (header selector option). */
+export type CoinBalance = { coin: string; amount: number };
+
 /**
- * Header balance selector result — the spendable amount for a single coin.
- * Never throws; `{ ok: false }` covers no session / fetch failure / a coin not
- * in {@link HEADER_BALANCE_COINS}, which the header renders as a muted placeholder.
+ * Header balances result — the spendable balances actually returned for the
+ * account, used to populate the header coin selector (mapped to the coin catalog
+ * for colour/name/precision). Never throws; `{ ok: false }` is no session /
+ * fetch failure, which the header renders as a muted placeholder.
  */
-export type HeaderBalanceResult = { ok: true; coin: string; amount: number } | { ok: false };
+export type HeaderBalancesResult = { ok: true; balances: CoinBalance[] } | { ok: false };
 
 /* ------------------------------------------------------------------ *
  * Deposit — POST /fund/get-address → { data: { ... address ... } }

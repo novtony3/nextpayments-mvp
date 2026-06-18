@@ -2,67 +2,75 @@
 
 import { ChevronDown } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { cn } from '@nextpayments/ui/lib/utils';
 
-import { coinGradient } from '@/constants/coins';
-import { DEFAULT_HEADER_BALANCE_COIN, HEADER_BALANCE_COINS } from '@/constants/fund';
-import { formatFiat } from '@/lib/format';
-import { getFundBalanceAction } from '@/lib/fund/actions';
-import type { HeaderBalanceResult } from '@/lib/fund/types';
+import { coinName, formatCoinAmount } from '@/constants/coins';
+import { DEFAULT_HEADER_BALANCE_COIN } from '@/constants/fund';
+import { getHeaderBalancesAction } from '@/lib/fund/actions';
+import type { CoinBalance, HeaderBalancesResult } from '@/lib/fund/types';
 import { useWindowFocus } from '@/lib/hooks/use-window-focus';
+import { CoinAvatar } from '@/components/shared/coin-avatar';
 
 type HeaderBalanceProps = {
-  /** Server-rendered balance for the default coin — avoids a first-paint flash. */
-  initial: HeaderBalanceResult;
+  /** Server-rendered holdings — the coins that populate the selector (no flash). */
+  initial: HeaderBalancesResult;
 };
 
-/** Shown when the balance is unknown (no session / fetch failed). */
+/** Shown when the selected coin has no known amount (no session / fetch failed). */
 const NO_BALANCE = '—';
 
-/** Soft top highlight layered over the coin gradient for a glossy-token look. */
-const COIN_GLOSS = 'radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.5), transparent 58%)';
+function holdingsOf(result: HeaderBalancesResult): CoinBalance[] {
+  return result.ok ? result.balances : [];
+}
+
+/** Default selection: the preferred coin if held, else the first holding. */
+function preferredCoin(holdings: CoinBalance[]): string {
+  if (holdings.some((b) => b.coin === DEFAULT_HEADER_BALANCE_COIN)) {
+    return DEFAULT_HEADER_BALANCE_COIN;
+  }
+  return holdings[0]?.coin ?? DEFAULT_HEADER_BALANCE_COIN;
+}
 
 /**
- * A coin switch (chevron + select) only makes sense once more than one coin is
- * offered; with a single coin the pill is a clean display-only chip. Computed
- * once from the catalog so adding a coin lights up the switcher automatically.
- */
-const CAN_SWITCH_COIN = HEADER_BALANCE_COINS.length > 1;
-
-/**
- * Dashboard header balance — one glass pill, sized to sit with the topbar's
- * other controls (h-9): a glossy brand-gradient coin token, the spendable amount
- * (`GET /fund/balance?coin=`), and the ticker. The default coin's amount is
- * server-rendered (`initial`). When more than one coin is offered, a transparent
- * native `<select>` overlays the pill for an accessible, low-code coin switch
- * (matching the app's `SelectField` approach) and a chevron signals it; with one
- * coin the pill is display-only. The value refetches on switch + tab refocus. It
- * lives in the persistent shell, so its state survives client-side navigations.
+ * Dashboard header balance — one glass pill showing the selected coin's spendable
+ * balance, sized to sit with the topbar's other controls (h-9). The coins come
+ * from the account's actual balance response (server-rendered as `initial`,
+ * refreshed on tab refocus), each mapped to the shared coin catalog for its token
+ * gradient, name and decimal precision. A transparent native `<select>` overlays
+ * the pill when more than one coin is held; otherwise it is a display-only chip.
+ * Lives in the persistent shell, so its state survives client-side navigations.
  * Hidden on narrow screens.
  */
 export function HeaderBalance({ initial }: HeaderBalanceProps) {
   const t = useTranslations('dashboard.headerBalance');
   const locale = useLocale();
-  const [coin, setCoin] = useState(initial.ok ? initial.coin : DEFAULT_HEADER_BALANCE_COIN);
-  const [amount, setAmount] = useState<number | null>(initial.ok ? initial.amount : null);
+  const [holdings, setHoldings] = useState<CoinBalance[]>(() => holdingsOf(initial));
+  const [coin, setCoin] = useState<string>(() => preferredCoin(holdingsOf(initial)));
   const [pending, setPending] = useState(false);
 
-  const refresh = useCallback(async (next: string) => {
+  const refresh = useCallback(async () => {
     setPending(true);
-    const result = await getFundBalanceAction(next);
-    setAmount(result.ok ? result.amount : null);
+    const result = await getHeaderBalancesAction();
     setPending(false);
+    if (!result.ok) return;
+    setHoldings(result.balances);
+    // Keep the selection valid if the held coins changed under us.
+    setCoin((current) =>
+      result.balances.some((b) => b.coin === current) ? current : preferredCoin(result.balances),
+    );
   }, []);
 
-  const onCoinChange = (next: string) => {
-    setCoin(next);
-    void refresh(next);
-  };
+  // Refresh holdings when the user returns to the tab.
+  useWindowFocus(() => void refresh());
 
-  // Re-fetch the current coin when the user returns to the tab.
-  useWindowFocus(() => void refresh(coin));
+  const amount = useMemo(
+    () => holdings.find((b) => b.coin === coin)?.amount ?? null,
+    [holdings, coin],
+  );
+
+  const canSwitch = holdings.length > 1;
 
   return (
     <div
@@ -71,14 +79,10 @@ export function HeaderBalance({ initial }: HeaderBalanceProps) {
         'border border-[var(--glass-border)] bg-[var(--glass-fill)] backdrop-blur-md',
         'transition-colors duration-200 sm:inline-flex',
         'focus-within:border-[var(--color-accent)]',
-        CAN_SWITCH_COIN && 'pr-2.5 hover:border-[var(--color-accent)]',
+        canSwitch && 'pr-2.5 hover:border-[var(--color-accent)]',
       )}
     >
-      <span
-        aria-hidden="true"
-        className="h-6 w-6 shrink-0 rounded-full ring-1 ring-inset ring-[var(--glass-highlight)]"
-        style={{ backgroundImage: `${COIN_GLOSS}, ${coinGradient(coin)}` }}
-      />
+      <CoinAvatar ticker={coin} size="sm" />
 
       <span className="flex items-baseline gap-1">
         <span
@@ -89,14 +93,14 @@ export function HeaderBalance({ initial }: HeaderBalanceProps) {
             pending && 'opacity-50',
           )}
         >
-          {amount === null ? NO_BALANCE : formatFiat(amount, locale)}
+          {amount === null ? NO_BALANCE : formatCoinAmount(amount, coin, locale)}
         </span>
         <span className="text-xs font-medium leading-none text-[var(--color-text-muted)]">
           {coin}
         </span>
       </span>
 
-      {CAN_SWITCH_COIN && (
+      {canSwitch && (
         <>
           <ChevronDown
             aria-hidden="true"
@@ -108,15 +112,15 @@ export function HeaderBalance({ initial }: HeaderBalanceProps) {
           <select
             aria-label={t('coinLabel')}
             value={coin}
-            onChange={(event) => onCoinChange(event.target.value)}
+            onChange={(event) => setCoin(event.target.value)}
             className={cn(
               'absolute inset-0 h-full w-full cursor-pointer appearance-none rounded-full opacity-0',
               '[&>option]:bg-[var(--color-surface-elevated)] [&>option]:text-[var(--color-text)]',
             )}
           >
-            {HEADER_BALANCE_COINS.map((c) => (
-              <option key={c} value={c}>
-                {c}
+            {holdings.map((b) => (
+              <option key={b.coin} value={b.coin}>
+                {coinName(b.coin)} ({b.coin})
               </option>
             ))}
           </select>

@@ -8,7 +8,7 @@ import { IconButton } from '@nextpayments/ui/components/icon-button';
 import { DASHBOARD_NAV } from '@/constants/dashboard';
 import { usePathname } from '@/i18n/routing';
 import type { HeaderUser } from '@/lib/auth/types';
-import type { HeaderBalanceResult } from '@/lib/fund/types';
+import type { HeaderBalancesResult } from '@/lib/fund/types';
 import { AuthControls } from '@/components/auth/auth-controls';
 import { LanguageSwitcher } from '@/components/shared/language-switcher';
 import { ThemeToggle } from '@/components/shared/theme-toggle';
@@ -21,8 +21,8 @@ type DashboardTopbarProps = {
   user: HeaderUser | null;
   /** Opens the mobile navigation drawer. */
   onMenuClick: () => void;
-  /** Server-rendered default-coin balance for the header selector. */
-  initialBalance: HeaderBalanceResult;
+  /** Server-rendered spendable balances for the header selector. */
+  initialBalances: HeaderBalancesResult;
 };
 
 const DEFAULT_NAV = DASHBOARD_NAV[0]!;
@@ -33,7 +33,7 @@ const DEFAULT_NAV = DASHBOARD_NAV[0]!;
  * controls. Reuses the shared language/theme/auth chrome rather than forking
  * a second copy.
  */
-export function DashboardTopbar({ user, onMenuClick, initialBalance }: DashboardTopbarProps) {
+export function DashboardTopbar({ user, onMenuClick, initialBalances }: DashboardTopbarProps) {
   const t = useTranslations('dashboard');
   const pathname = usePathname();
 
@@ -73,7 +73,7 @@ export function DashboardTopbar({ user, onMenuClick, initialBalance }: Dashboard
             className="hidden sm:inline-flex"
           />
           */}
-          <HeaderBalance initial={initialBalance} />
+          <HeaderBalance initial={initialBalances} />
           <LanguageSwitcher />
           <ThemeToggle />
           <AuthControls user={user} />

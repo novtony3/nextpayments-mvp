@@ -2,6 +2,7 @@ import { ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { COIN_TILES } from '@/constants/coins';
+import { CoinAvatar } from '@/components/shared/coin-avatar';
 import { Reveal } from './reveal';
 import { SectionHeading } from './section-heading';
 
@@ -20,12 +21,12 @@ export function Coins() {
                 key={coin.ticker}
                 className="group flex flex-col items-center gap-2 rounded-2xl bg-[var(--color-surface)] p-4 transition-all duration-300 hover:-translate-y-1 hover:bg-[var(--color-surface-elevated)]"
               >
-                <span
-                  className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-accent-soft)] font-mono text-[11px] font-semibold tracking-tight text-[var(--color-text-muted)] transition-colors duration-300 group-hover:text-[var(--color-accent)]"
-                  aria-hidden
-                >
-                  {coin.ticker}
-                </span>
+                <CoinAvatar
+                  ticker={coin.ticker}
+                  size="lg"
+                  showTicker
+                  className="transition-transform duration-300 group-hover:scale-105"
+                />
                 <span className="text-xs font-medium text-[var(--color-text-muted)] transition-colors duration-300 group-hover:text-[var(--color-text)]">
                   {coin.name}
                 </span>

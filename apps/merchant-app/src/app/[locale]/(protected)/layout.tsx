@@ -2,12 +2,11 @@ import { headers } from 'next/headers';
 import type { ReactNode } from 'react';
 
 import { RETURN_TO_PARAM } from '@/constants/auth';
-import { DEFAULT_HEADER_BALANCE_COIN } from '@/constants/fund';
 import { ROUTES } from '@/constants/routes';
 import { redirect } from '@/i18n/routing';
 import { stripLocalePrefix } from '@/lib/auth/return-to';
 import { getHeaderUser } from '@/lib/auth/session';
-import { loadHeaderBalance } from '@/lib/fund/backend';
+import { loadHeaderBalances } from '@/lib/fund/backend';
 import { DashboardShell } from '@/components/dashboard/shell/dashboard-shell';
 
 type ProtectedLayoutProps = {
@@ -36,12 +35,9 @@ type ProtectedLayoutProps = {
 export default async function ProtectedLayout({ children, params }: ProtectedLayoutProps) {
   const { locale } = await params;
 
-  // Resolve the validated identity and the header's default-coin balance in
+  // Resolve the validated identity and the header's spendable balances in
   // parallel — both are independent backend reads gated by the same session.
-  const [user, initialBalance] = await Promise.all([
-    getHeaderUser(),
-    loadHeaderBalance(DEFAULT_HEADER_BALANCE_COIN),
-  ]);
+  const [user, initialBalances] = await Promise.all([getHeaderUser(), loadHeaderBalances()]);
 
   if (!user) {
     const pathname = (await headers()).get('x-pathname') ?? '';
@@ -56,7 +52,7 @@ export default async function ProtectedLayout({ children, params }: ProtectedLay
   }
 
   return (
-    <DashboardShell user={user} initialBalance={initialBalance}>
+    <DashboardShell user={user} initialBalances={initialBalances}>
       {children}
     </DashboardShell>
   );
