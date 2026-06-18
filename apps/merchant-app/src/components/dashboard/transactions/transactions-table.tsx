@@ -9,8 +9,10 @@ import { EmptyState } from '@nextpayments/ui/components/empty-state';
 import { WITHDRAW_CANCELLABLE_STATUSES } from '@/constants/fund';
 import { CURRENCY_FILTER_ALL, TX_PARAM } from '@/constants/transactions';
 import { usePathname, useRouter } from '@/i18n/routing';
+import { formatDateTime } from '@/lib/format';
 import type { TransactionRow, TransactionsPage, TransactionTab } from '@/lib/fund/types';
 import { TablePagination } from '@/components/shared/table-pagination';
+import { TransactionStatusBadge } from './transaction-status-badge';
 import { WithdrawCancelButton } from './withdraw-cancel-button';
 
 type TransactionsTableProps = {
@@ -75,12 +77,6 @@ export function TransactionsTable({ data, tab, coin }: TransactionsTableProps) {
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  const formatDate = (value: unknown): string => {
-    if (typeof value !== 'string' && typeof value !== 'number') return cell(value);
-    const d = new Date(value);
-    return Number.isNaN(d.getTime()) ? cell(value) : d.toLocaleString(locale);
-  };
-
   if (data.rows.length === 0) {
     return (
       <Card glow={false}>
@@ -100,17 +96,13 @@ export function TransactionsTable({ data, tab, coin }: TransactionsTableProps) {
     {
       key: 'status',
       header: t('columns.status'),
-      render: (row) => (
-        <span className="rounded-full bg-[var(--color-accent-soft)] px-2.5 py-1 text-xs font-medium text-[var(--color-accent)]">
-          {cell(row.status)}
-        </span>
-      ),
+      render: (row) => <TransactionStatusBadge status={row.status} />,
     },
     {
       key: 'date',
       header: t('columns.date'),
       cellClassName: 'text-[var(--color-text-muted)]',
-      render: (row) => formatDate(row.createdAt),
+      render: (row) => formatDateTime(row.createdAt, locale),
     },
     {
       key: 'reference',

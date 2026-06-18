@@ -9,7 +9,7 @@ import { EmptyState } from '@nextpayments/ui/components/empty-state';
 import { ORDERS_PARAM, ORDER_STATUS_FILTER_ALL, type OrderStatusFilter } from '@/constants/orders';
 import { ROUTES } from '@/constants/routes';
 import { Link, usePathname, useRouter } from '@/i18n/routing';
-import { formatCrypto, parseAmount } from '@/lib/format';
+import { formatCrypto, formatDateTime, parseAmount } from '@/lib/format';
 import type { OrderRow, OrderListPage } from '@/lib/orders/types';
 import { TablePagination } from '@/components/shared/table-pagination';
 
@@ -70,12 +70,6 @@ export function OrdersTable({ data, status, integrationId }: OrdersTableProps) {
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  const formatDate = (value: unknown): string => {
-    if (typeof value !== 'string' && typeof value !== 'number') return cell(value);
-    const d = new Date(value);
-    return Number.isNaN(d.getTime()) ? cell(value) : d.toLocaleString(locale);
-  };
-
   if (data.rows.length === 0) {
     return (
       <Card glow={false}>
@@ -116,7 +110,7 @@ export function OrdersTable({ data, status, integrationId }: OrdersTableProps) {
       key: 'createdAt',
       header: t('columns.createdAt'),
       cellClassName: 'text-[var(--color-text-muted)]',
-      render: (row) => formatDate(row.createdAt),
+      render: (row) => formatDateTime(row.createdAt, locale),
     },
   ];
 

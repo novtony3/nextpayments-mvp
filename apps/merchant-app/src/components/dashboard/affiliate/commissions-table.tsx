@@ -8,7 +8,7 @@ import { DataTable, type DataTableColumn } from '@nextpayments/ui/components/dat
 import { EmptyState } from '@nextpayments/ui/components/empty-state';
 
 import { ROUTES } from '@/constants/routes';
-import { formatCrypto, parseAmount } from '@/lib/format';
+import { formatCrypto, formatDate, parseAmount } from '@/lib/format';
 import type { AffiliateCommissionRow, CommissionResult } from '@/lib/affiliate/types';
 
 import { AffiliatePager } from './affiliate-pager';
@@ -19,13 +19,6 @@ type CommissionsTableProps = {
   /** Query params to preserve when paging (e.g. downline page + level). */
   preservedParams: Record<string, string | undefined>;
 };
-
-function formatDate(value: string | undefined, locale: string): string {
-  if (!value) return '—';
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return value;
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(d);
-}
 
 /** Commissions ledger — paginated independently from the downline table. */
 export function CommissionsTable({ result, pageParam, preservedParams }: CommissionsTableProps) {
