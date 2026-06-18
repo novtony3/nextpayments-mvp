@@ -8,13 +8,10 @@ import { Card } from '@nextpayments/ui/components/card';
 import { IconButton } from '@nextpayments/ui/components/icon-button';
 import { SearchInput } from '@nextpayments/ui/components/search-input';
 
-import { COIN_TILES } from '@/constants/coins';
+import { COIN_FALLBACK_GRADIENT, COIN_TILES } from '@/constants/coins';
 import { ZERO_CRYPTO } from '@/constants/dashboard';
 import { formatCrypto, parseAmount } from '@/lib/format';
 import type { BalanceRow } from '@/lib/fund/types';
-
-/** Neutral tile when the coin isn't in the shared {@link COIN_TILES} list. */
-const FALLBACK_GRADIENT = 'linear-gradient(135deg,#5a6772,#8a94a3)';
 
 /** Display shape derived from a loose backend balance row + coin metadata. */
 type DisplayBalance = {
@@ -78,7 +75,7 @@ export function BalancesView({ balances, ok, canReceive, onReceive }: BalancesVi
       return {
         ticker,
         name: tile?.name ?? ticker,
-        gradient: tile?.gradient ?? FALLBACK_GRADIENT,
+        gradient: tile?.gradient ?? COIN_FALLBACK_GRADIENT,
         amount: num === null ? ZERO_CRYPTO : formatCrypto(num, locale),
       };
     });

@@ -22,3 +22,15 @@ export const COIN_TILES: ReadonlyArray<CoinTile> = [
   { ticker: 'MATIC', name: 'Polygon', gradient: 'linear-gradient(135deg,#8247e5,#b48cff)' },
   { ticker: 'LTC', name: 'Litecoin', gradient: 'linear-gradient(135deg,#a6a9b0,#d4d8de)' },
 ];
+
+/** Neutral tile gradient for a coin not present in {@link COIN_TILES}. */
+export const COIN_FALLBACK_GRADIENT = 'linear-gradient(135deg,#5a6772,#8a94a3)';
+
+/**
+ * Brand gradient for a coin ticker (from {@link COIN_TILES}), or the neutral
+ * fallback. Single source for the coin avatars shared by the balances list and
+ * the header balance pill.
+ */
+export function coinGradient(ticker: string): string {
+  return COIN_TILES.find((c) => c.ticker === ticker)?.gradient ?? COIN_FALLBACK_GRADIENT;
+}
