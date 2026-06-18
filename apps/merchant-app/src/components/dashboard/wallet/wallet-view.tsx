@@ -96,6 +96,7 @@ export function WalletView({
         items={tabItems}
         value={tab}
         onValueChange={(value) => setTab(value as WalletTab)}
+        className="justify-center"
       />
 
       {tab === WALLET_TAB.TOPUP ? (
