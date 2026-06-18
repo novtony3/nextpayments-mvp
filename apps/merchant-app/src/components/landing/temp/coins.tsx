@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 
 import { COIN_TILES } from '@/constants/coins';
+import { CoinAvatar } from '@/components/shared/coin-avatar';
 import { Reveal } from './reveal';
 
 // The eight headline tokens shown in the grid; the full list backs the
@@ -110,13 +111,12 @@ function CoinTile({
           ease: 'easeInOut',
         }}
       >
-        <span
-          aria-hidden
-          className="flex h-16 w-16 items-center justify-center rounded-full font-mono text-[13px] font-bold text-white shadow-[0_8px_24px_-6px_rgba(0,0,0,0.5)] ring-1 ring-white/15 drop-shadow-[0_1px_2px_rgba(0,0,0,0.45)]"
-          style={{ backgroundImage: coin.gradient }}
-        >
-          {coin.ticker}
-        </span>
+        <CoinAvatar
+          ticker={coin.ticker}
+          size="xl"
+          showTicker
+          className="shadow-[0_8px_24px_-6px_rgba(0,0,0,0.5)]"
+        />
       </motion.div>
     </Reveal>
   );

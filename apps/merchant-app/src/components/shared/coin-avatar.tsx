@@ -6,11 +6,12 @@ import { coinGradient } from '@/constants/coins';
 const COIN_GLOSS = 'radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.5), transparent 58%)';
 
 /** Token diameter + on-token ticker size per use: sm = header pill, md = balances
- * list, lg = landing grid. */
+ * list, lg = landing grid (original), xl = landing swarm (temp). */
 const SIZES = {
   sm: { box: 'h-6 w-6', text: 'text-[8px]' },
   md: { box: 'h-9 w-9', text: 'text-[10px]' },
   lg: { box: 'h-12 w-12', text: 'text-[11px]' },
+  xl: { box: 'h-16 w-16', text: 'text-[13px]' },
 } as const;
 
 type CoinAvatarProps = {
@@ -41,6 +42,8 @@ export function CoinAvatar({
       className={cn(
         'inline-flex shrink-0 items-center justify-center rounded-full font-mono font-semibold text-white',
         'ring-1 ring-inset ring-[var(--glass-highlight)]',
+        // Legible on light gradients too (DOGE gold, LTC silver).
+        '[text-shadow:0_1px_2px_rgba(0,0,0,0.45)]',
         box,
         showTicker && text,
         className,

@@ -145,20 +145,6 @@ export async function loadSpendableBalance(
   return { ok: true, balances: fulfilled.flatMap((r) => r.value) };
 }
 
-/**
- * GET /fund/balance with NO coin filter — the account's full spendable balance
- * set in one call. Throws on a non-success envelope (e.g. if the backend requires
- * a coin), so {@link loadHeaderBalances} can fall back to enumerating coins.
- */
-export async function backendAllBalances(token: string): Promise<BalanceRow[]> {
-  const res = await backendFetch(API_ROUTES.FUND_BALANCE, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  const json = parseJson(res.raw);
-  ensureOk(res.ok, json, 'Could not load balances');
-  return balanceResponseSchema.parse(json).data.balances;
-}
-
 /** Map loose balance rows to `{ coin, amount }`, dropping rows with no ticker. */
 function toCoinBalances(rows: ReadonlyArray<BalanceRow>): CoinBalance[] {
   return rows.flatMap((row) => {
@@ -169,27 +155,17 @@ function toCoinBalances(rows: ReadonlyArray<BalanceRow>): CoinBalance[] {
 
 /**
  * The account's spendable balances for the dashboard header selector — the coins
- * actually returned, mapped to `{ coin, amount }`; never throws. Prefers a single
- * all-coins read ({@link backendAllBalances}); if the backend requires a coin
- * filter (it throws), falls back to enumerating the known catalog coins in
- * parallel. An empty but successful read is a genuine "no balances yet".
+ * that return a balance among the supported set ({@link FUND_BALANCE_COINS}),
+ * mapped to `{ coin, amount }`; never throws. The backend `/fund/balance` is
+ * per-coin (confirmed: it expects `?coin=`), so this reuses the proven parallel
+ * per-coin read — the same source the wallet balances list uses. The header maps
+ * each returned coin to the coin catalog for colour/name/precision; expand the
+ * supported set as the backend enables spendable balances for more coins.
  */
 export async function loadHeaderBalances(): Promise<HeaderBalancesResult> {
-  const token = await getAccessToken();
-  if (!token) return { ok: false };
-
-  try {
-    return { ok: true, balances: toCoinBalances(await backendAllBalances(token)) };
-  } catch {
-    const settled = await Promise.allSettled(
-      FUND_BALANCE_COINS.map((coin) => backendBalance(token, coin)),
-    );
-    const fulfilled = settled.filter(
-      (r): r is PromiseFulfilledResult<BalanceRow[]> => r.status === 'fulfilled',
-    );
-    if (fulfilled.length === 0) return { ok: false };
-    return { ok: true, balances: toCoinBalances(fulfilled.flatMap((r) => r.value)) };
-  }
+  const result = await loadSpendableBalance();
+  if (!result.ok) return { ok: false };
+  return { ok: true, balances: toCoinBalances(result.balances) };
 }
 
 /**

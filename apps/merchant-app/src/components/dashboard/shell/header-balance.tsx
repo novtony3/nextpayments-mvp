@@ -70,6 +70,11 @@ export function HeaderBalance({ initial }: HeaderBalanceProps) {
     [holdings, coin],
   );
 
+  // Honour "only show coins the response returns": no holdings → no pill. The
+  // focus listener above stays registered, so the pill reappears if a balance
+  // arrives on a later refresh.
+  if (holdings.length === 0) return null;
+
   const canSwitch = holdings.length > 1;
 
   return (
