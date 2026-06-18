@@ -10,6 +10,7 @@ import {
   backendGetDepositAddress,
   backendValidateAddress,
   backendWithdraw,
+  loadHeaderBalance,
 } from './backend';
 import {
   validateAddressInputSchema,
@@ -17,6 +18,7 @@ import {
   type ApproveWithdrawResult,
   type CancelWithdrawResult,
   type GetAddressResult,
+  type HeaderBalanceResult,
   type ValidateAddressResult,
   type WithdrawResult,
 } from './types';
@@ -141,4 +143,14 @@ export async function cancelWithdrawAction(withdrawId: unknown): Promise<CancelW
     if (err instanceof AuthError) return { ok: false, reason: 'invalid' };
     return { ok: false, reason: 'error' };
   }
+}
+
+/**
+ * Spendable balance of one header-selector coin (`GET /fund/balance?coin=`).
+ * Client-invoked when the user switches coins or the tab refocuses; the initial
+ * value is server-rendered in the protected layout. Coin validation and the
+ * session read live in {@link loadHeaderBalance}; never throws.
+ */
+export async function getFundBalanceAction(coin: unknown): Promise<HeaderBalanceResult> {
+  return loadHeaderBalance(typeof coin === 'string' ? coin : '');
 }

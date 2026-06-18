@@ -1,12 +1,13 @@
 import 'server-only';
 
 import { API_ROUTES, apiPath, type ApiRoute } from '@/constants/api';
-import { FUND_BALANCE_COINS } from '@/constants/fund';
+import { FUND_BALANCE_COINS, HEADER_BALANCE_COINS } from '@/constants/fund';
 import { getAccessToken } from '@/lib/auth/session';
 import { AuthError, envelopeSchema } from '@/lib/auth/types';
 import { toPaginatedPage } from '@/lib/pagination';
 import { backendFetch } from '@/lib/server/backend-fetch';
 
+import { findBalanceAmount } from './balance';
 import {
   balanceResponseSchema,
   getAddressResponseSchema,
@@ -15,6 +16,7 @@ import {
   type BalanceRow,
   type BalancesResult,
   type GetAddressInput,
+  type HeaderBalanceResult,
   type TransactionsQuery,
   type TransactionsResult,
   type TransactionTab,
@@ -140,6 +142,20 @@ export async function loadSpendableBalance(
   );
   if (fulfilled.length === 0) return { ok: false };
   return { ok: true, balances: fulfilled.flatMap((r) => r.value) };
+}
+
+/**
+ * Spendable balance of a single coin for the dashboard header selector. A thin
+ * composition over {@link loadSpendableBalance} (one coin) + {@link
+ * findBalanceAmount}; never throws. A coin outside {@link HEADER_BALANCE_COINS}
+ * or a missing/failed fetch returns `{ ok: false }` (the header shows a muted
+ * placeholder); a present-but-absent coin row reads as `0`, not unavailable.
+ */
+export async function loadHeaderBalance(coin: string): Promise<HeaderBalanceResult> {
+  if (!HEADER_BALANCE_COINS.includes(coin)) return { ok: false };
+  const result = await loadSpendableBalance([coin]);
+  if (!result.ok) return { ok: false };
+  return { ok: true, coin, amount: findBalanceAmount(result.balances, coin) ?? 0 };
 }
 
 /**

@@ -359,9 +359,26 @@
       "message": "Veuillez vérifier votre compte pour activer toutes les devises et fonctionnalités.",
       "cta": "Terminer la vérification"
     },
+    "session": {
+      "expired": {
+        "message": "Votre session a expiré. Rechargez la page ou reconnectez-vous pour continuer.",
+        "reload": "Recharger"
+      }
+    },
+    "headerBalance": {
+      "coinLabel": "Devise du solde"
+    },
     "wallet": {
       "title": "Portefeuille",
       "subtitle": "Rechargez votre solde ou retirez des fonds.",
+      "tabs": {
+        "withdraw": "Retirer",
+        "topup": "Recharger"
+      },
+      "withdrawTab": {
+        "emptyTitle": "Les retraits arrivent bientôt",
+        "emptyDescription": "C'est ici que vous enverrez des fonds. Cette section s'activera dès qu'elle sera prête."
+      },
       "deposit": {
         "title": "Recharger",
         "subtitle": "Envoyez de la crypto à votre adresse de dépôt pour créditer votre solde.",

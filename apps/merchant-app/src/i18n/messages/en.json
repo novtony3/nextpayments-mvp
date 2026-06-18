@@ -359,9 +359,26 @@
       "message": "Please verify your account to enable all currencies and features.",
       "cta": "Complete Verification"
     },
+    "session": {
+      "expired": {
+        "message": "Your session has expired. Reload the page or sign in again to continue.",
+        "reload": "Reload"
+      }
+    },
+    "headerBalance": {
+      "coinLabel": "Balance coin"
+    },
     "wallet": {
       "title": "Wallet",
       "subtitle": "Top up your balance or withdraw funds.",
+      "tabs": {
+        "withdraw": "Withdraw",
+        "topup": "Top up"
+      },
+      "withdrawTab": {
+        "emptyTitle": "Withdrawals are coming soon",
+        "emptyDescription": "This is where you'll send funds out. It will light up once it's ready."
+      },
       "deposit": {
         "title": "Top up",
         "subtitle": "Send crypto to your deposit address to credit your balance.",

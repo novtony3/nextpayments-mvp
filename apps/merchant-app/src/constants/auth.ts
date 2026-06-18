@@ -74,6 +74,15 @@ export const SESSION_MAX_AGE = {
 } as const;
 
 /**
+ * How often the client session watcher re-checks whether the access cookie is
+ * still present (ms), as an idle fallback. Tab refocus, route changes and mount
+ * are the primary triggers; this interval only catches a user who stays on one
+ * focused page past the access-cookie lifetime. Derived from the access lifetime
+ * (a fraction of it) so it is never an independent magic number.
+ */
+export const SESSION_CHECK_INTERVAL_MS = (SESSION_MAX_AGE.ACCESS / 5) * 1000;
+
+/**
  * Query param the protected-route guard appends when bouncing to login, so the
  * post-recovery redirect returns the user to the page they were on (not the
  * landing page). Read back on the login page and validated as an internal path.

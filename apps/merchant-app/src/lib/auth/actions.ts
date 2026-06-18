@@ -215,3 +215,14 @@ export async function refreshAction(): Promise<boolean> {
 export async function currentUserAction(): Promise<HeaderUser | null> {
   return getHeaderUser();
 }
+
+/**
+ * Whether the access cookie is still present — polled by the client session
+ * watcher. A thin Server Action over the cookie read, with **no** backend call:
+ * when `np_access` reaches its `maxAge` the browser drops it, so an absence here
+ * means the session has expired and the client can prompt the user to reload or
+ * sign in.
+ */
+export async function isSessionActiveAction(): Promise<boolean> {
+  return Boolean(await getAccessToken());
+}

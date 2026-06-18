@@ -9,7 +9,7 @@ import { Button } from '@nextpayments/ui/components/button';
 import { Card } from '@nextpayments/ui/components/card';
 import { SelectField } from '@nextpayments/ui/components/select-field';
 
-import { FUND_ASSETS, FUND_QR_SIZE_PX, fundAssetValue, type FundAsset } from '@/constants/fund';
+import { FUND_QR_SIZE_PX, TOPUP_ASSETS, fundAssetValue, type FundAsset } from '@/constants/fund';
 import { getDepositAddressAction } from '@/lib/fund/actions';
 import { ReadOnlyField } from '@/components/dashboard/integrations/read-only-field';
 
@@ -27,7 +27,7 @@ type Status =
   | { kind: 'error' };
 
 function assetFromValue(value: string): FundAsset {
-  return FUND_ASSETS.find((a) => fundAssetValue(a) === value) ?? FUND_ASSETS[0]!;
+  return TOPUP_ASSETS.find((a) => fundAssetValue(a) === value) ?? TOPUP_ASSETS[0]!;
 }
 
 /**
@@ -43,7 +43,7 @@ export function DepositPanel({ asset, onAssetChange }: DepositPanelProps) {
   const [status, setStatus] = useState<Status>({ kind: 'idle' });
   const [pending, startTransition] = useTransition();
 
-  const options = FUND_ASSETS.map((a) => ({
+  const options = TOPUP_ASSETS.map((a) => ({
     value: fundAssetValue(a),
     label: t('assetOption', { coin: a.coin, network: a.network }),
   }));

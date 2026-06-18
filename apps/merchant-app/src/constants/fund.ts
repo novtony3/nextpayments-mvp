@@ -24,16 +24,34 @@ export type FundAsset = {
 };
 
 /**
- * Catalog pairs offered in the selectors — the `enabled:true` (network, coin)
+ * Full catalog of (network, coin) pairs the backend enables — the `enabled:true`
  * entries from the backend coin/network catalog. `network`/`coin` are the exact
  * strings the backend stores and matches, sent verbatim on deposit/withdraw
- * (USDT is on `ERC20`, NOT `ETH`/`BSC`). ETH/ETH is first so it is the default
- * landing selection. Keep in sync with the backend catalog's enabled rows.
+ * (USDT is on `ERC20`, NOT `ETH`/`BSC`). Drives the **withdraw** selector and the
+ * Wallet balance queries ({@link FUND_BALANCE_COINS}). Top-up offers a subset
+ * ({@link TOPUP_ASSETS}). ETH/ETH is first so it is the default landing
+ * selection. Keep in sync with the backend catalog's enabled rows.
  */
 export const FUND_ASSETS: ReadonlyArray<FundAsset> = [
   { network: 'ETH', coin: 'ETH' },
   { network: 'ERC20', coin: 'USDT' },
 ];
+
+/**
+ * Pairs offered in the top-up (deposit) selector — a subset of
+ * {@link FUND_ASSETS}. USDT-ERC20 is intentionally NOT depositable right now
+ * (product decision), so top-up offers ETH only; USDT stays visible in the
+ * balances list, the withdraw form, and the header balance. Entries are exact
+ * backend `network`/`coin` strings.
+ */
+export const TOPUP_ASSETS: ReadonlyArray<FundAsset> = [{ network: 'ETH', coin: 'ETH' }];
+
+/**
+ * Coins that can be topped up (deposited) — unique tickers from
+ * {@link TOPUP_ASSETS}. Used to gate the balance row "Receive" affordance so it
+ * only appears for depositable coins.
+ */
+export const TOPUP_COINS: ReadonlyArray<string> = [...new Set(TOPUP_ASSETS.map((a) => a.coin))];
 
 /** Stable `value` for an asset `<option>` (no inline join at call sites). */
 export function fundAssetValue({ network, coin }: FundAsset): string {
@@ -48,6 +66,18 @@ export function fundAssetValue({ network, coin }: FundAsset): string {
 export const FUND_BALANCE_COINS: ReadonlyArray<string> = [
   ...new Set(FUND_ASSETS.map((a) => a.coin)),
 ];
+
+/**
+ * Coins offered in the dashboard header balance selector (spendable balance via
+ * `GET /fund/balance?coin=`). Independent of the fund / top-up catalogs
+ * ({@link FUND_ASSETS}, {@link TOPUP_ASSETS}) so the header can surface holdings
+ * — e.g. USDT — even for coins not currently offered for top-up. The first entry
+ * is the default selection; extend the list as more coins become spendable.
+ */
+export const HEADER_BALANCE_COINS: ReadonlyArray<string> = ['USDT'];
+
+/** Default coin shown in the header balance selector — the first listed coin. */
+export const DEFAULT_HEADER_BALANCE_COIN = HEADER_BALANCE_COINS[0]!;
 
 /** EVM (`0x` + 40 hex) address gate — the real client-side check for the
  * Ethereum-based chains (ETH, ERC20); the backend `validate-address` is only a
