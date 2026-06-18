@@ -77,17 +77,29 @@ session signal.
 
 ---
 
-## Task 3 — Remove USDT-ERC20 from Top-up
+## Task 3 — Remove USDT-ERC20 from Top-up **only**
 
-In `src/constants/fund.ts`, remove `{ network: 'ERC20', coin: 'USDT' }` from
-`FUND_ASSETS`, leaving only `{ network: 'ETH', coin: 'ETH' }`.
+Scope confirmed with the user: USDT-ERC20 is removed from the **top-up (deposit)
+options only**. It stays in the balances list, the withdraw form, and the header
+balance. (The original spec wrongly proposed editing `FUND_ASSETS` directly,
+which would also have dropped USDT from withdraw + the balances query — that is
+**not** wanted and contradicts Task 4.)
 
-`FUND_ASSETS` is the single source of truth, so the deposit selector becomes a
-single option **and** the withdraw form's asset list narrows to ETH (expected
-ripple). `FUND_BALANCE_COINS` auto-narrows to `['ETH']`. This is independent of
-the Task 4 header balance, which uses its own coin constant.
+Decouple the deposit catalog from the full catalog in `src/constants/fund.ts`:
 
-**Files**: `src/constants/fund.ts` only.
+- Keep `FUND_ASSETS` as the **full** catalog (`ETH/ETH` + `ERC20/USDT`) — it
+  drives the **withdraw** selector and `FUND_BALANCE_COINS` (balances list +
+  spendable query), both of which must still include USDT.
+- Add `TOPUP_ASSETS` = the deposit subset (`ETH/ETH` only) and `TOPUP_COINS`
+  (its unique tickers).
+- `deposit-panel.tsx` uses `TOPUP_ASSETS` for its options/default.
+- `wallet-view.tsx`: deposit state seeds from `TOPUP_ASSETS`; the balances row
+  **Receive** affordance is gated to depositable coins via a `canReceive`
+  predicate (`TOPUP_COINS.includes`), so a non-depositable coin (USDT) shows no
+  Receive button instead of opening an ETH deposit.
+
+**Files**: `constants/fund.ts`, `deposit-panel.tsx`, `wallet-view.tsx`,
+`balances/balances-view.tsx` (new `canReceive` prop).
 
 ---
 
