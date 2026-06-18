@@ -21,15 +21,26 @@ type HeaderBalanceProps = {
 /** Shown when the balance is unknown (no session / fetch failed). */
 const NO_BALANCE = '—';
 
+/** Soft top highlight layered over the coin gradient for a glossy-token look. */
+const COIN_GLOSS = 'radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.5), transparent 58%)';
+
+/**
+ * A coin switch (chevron + select) only makes sense once more than one coin is
+ * offered; with a single coin the pill is a clean display-only chip. Computed
+ * once from the catalog so adding a coin lights up the switcher automatically.
+ */
+const CAN_SWITCH_COIN = HEADER_BALANCE_COINS.length > 1;
+
 /**
  * Dashboard header balance — one glass pill, sized to sit with the topbar's
- * other controls (h-9): a brand-gradient coin dot, the spendable amount
+ * other controls (h-9): a glossy brand-gradient coin token, the spendable amount
  * (`GET /fund/balance?coin=`), and the ticker. The default coin's amount is
- * server-rendered (`initial`); a transparent native `<select>` overlays the pill
- * for an accessible, low-code coin switch (matches the app's `SelectField`
- * approach and scales as more coins are added), and the value refetches on
- * switch + tab refocus. It lives in the persistent shell, so its state survives
- * client-side navigations. Hidden on narrow screens.
+ * server-rendered (`initial`). When more than one coin is offered, a transparent
+ * native `<select>` overlays the pill for an accessible, low-code coin switch
+ * (matching the app's `SelectField` approach) and a chevron signals it; with one
+ * coin the pill is display-only. The value refetches on switch + tab refocus. It
+ * lives in the persistent shell, so its state survives client-side navigations.
+ * Hidden on narrow screens.
  */
 export function HeaderBalance({ initial }: HeaderBalanceProps) {
   const t = useTranslations('dashboard.headerBalance');
@@ -56,16 +67,17 @@ export function HeaderBalance({ initial }: HeaderBalanceProps) {
   return (
     <div
       className={cn(
-        'group relative hidden h-9 select-none items-center gap-2 rounded-full pl-2 pr-3',
+        'group relative hidden h-9 select-none items-center gap-2 rounded-full pl-1.5 pr-3.5',
         'border border-[var(--glass-border)] bg-[var(--glass-fill)] backdrop-blur-md',
         'transition-colors duration-200 sm:inline-flex',
-        'focus-within:border-[var(--color-accent)] hover:border-[var(--color-accent)]',
+        'focus-within:border-[var(--color-accent)]',
+        CAN_SWITCH_COIN && 'pr-2.5 hover:border-[var(--color-accent)]',
       )}
     >
       <span
         aria-hidden="true"
-        className="h-5 w-5 shrink-0 rounded-full ring-1 ring-inset ring-[var(--glass-highlight)]"
-        style={{ backgroundImage: coinGradient(coin) }}
+        className="h-6 w-6 shrink-0 rounded-full ring-1 ring-inset ring-[var(--glass-highlight)]"
+        style={{ backgroundImage: `${COIN_GLOSS}, ${coinGradient(coin)}` }}
       />
 
       <span className="flex items-baseline gap-1">
@@ -84,29 +96,32 @@ export function HeaderBalance({ initial }: HeaderBalanceProps) {
         </span>
       </span>
 
-      <ChevronDown
-        aria-hidden="true"
-        className={cn(
-          'h-3.5 w-3.5 shrink-0 text-[var(--color-text-subtle)] transition-colors duration-200',
-          'group-focus-within:text-[var(--color-accent)] group-hover:text-[var(--color-text-muted)]',
-        )}
-      />
-
-      <select
-        aria-label={t('coinLabel')}
-        value={coin}
-        onChange={(event) => onCoinChange(event.target.value)}
-        className={cn(
-          'absolute inset-0 h-full w-full cursor-pointer appearance-none rounded-full opacity-0',
-          '[&>option]:bg-[var(--color-surface-elevated)] [&>option]:text-[var(--color-text)]',
-        )}
-      >
-        {HEADER_BALANCE_COINS.map((c) => (
-          <option key={c} value={c}>
-            {c}
-          </option>
-        ))}
-      </select>
+      {CAN_SWITCH_COIN && (
+        <>
+          <ChevronDown
+            aria-hidden="true"
+            className={cn(
+              'h-3.5 w-3.5 shrink-0 text-[var(--color-text-subtle)] transition-colors duration-200',
+              'group-focus-within:text-[var(--color-accent)] group-hover:text-[var(--color-text-muted)]',
+            )}
+          />
+          <select
+            aria-label={t('coinLabel')}
+            value={coin}
+            onChange={(event) => onCoinChange(event.target.value)}
+            className={cn(
+              'absolute inset-0 h-full w-full cursor-pointer appearance-none rounded-full opacity-0',
+              '[&>option]:bg-[var(--color-surface-elevated)] [&>option]:text-[var(--color-text)]',
+            )}
+          >
+            {HEADER_BALANCE_COINS.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </>
+      )}
     </div>
   );
 }
