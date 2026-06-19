@@ -375,10 +375,6 @@
         "withdraw": "Withdraw",
         "topup": "Top up"
       },
-      "withdrawTab": {
-        "emptyTitle": "Withdrawals are coming soon",
-        "emptyDescription": "This is where you'll send funds out. It will light up once it's ready."
-      },
       "deposit": {
         "title": "Top up",
         "subtitle": "Send crypto to your deposit address to credit your balance.",

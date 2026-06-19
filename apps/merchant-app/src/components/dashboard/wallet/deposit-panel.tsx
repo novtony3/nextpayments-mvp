@@ -32,8 +32,8 @@ function assetFromValue(value: string): FundAsset {
 
 /**
  * Topup / Deposit — the primary Wallet surface. Pick a (network, coin) and
- * fetch the deposit address (`POST /fund/get-fee-address`) with a scannable
- * QR. Degrades calmly when the backend reports the pair is
+ * fetch the deposit address (`POST /fund/get-address`, the user wallet address)
+ * with a scannable QR. Degrades calmly when the backend reports the pair is
  * not enabled (`FUER006`): a notice instead of an address. No live polling —
  * deposits credit the balance only after on-chain confirmations (webhook), so
  * the panel states that rather than faking a status.
