@@ -1,12 +1,10 @@
 'use client';
 
-import { ArrowUpRight, Sparkles } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 
 import { Button } from '@nextpayments/ui/components/button';
-import { Card } from '@nextpayments/ui/components/card';
-import { EmptyState } from '@nextpayments/ui/components/empty-state';
 import { Tabs } from '@nextpayments/ui/components/tabs';
 
 import {
@@ -22,19 +20,22 @@ import { BalancesView } from '@/components/dashboard/balances/balances-view';
 import { DepositPanel } from './deposit-panel';
 import { WithdrawSheet } from './withdraw-sheet';
 
-/** Wallet sections. Top-up holds all the live UI; withdraw is a placeholder
- * until its own surface is built — both are kept here so the tab values are not
- * inline literals. */
+/** Wallet sections. Each tab owns one balance track: Top-up funds the wallet
+ * (deposit + fee-balance), Withdraw sends spendable funds out. */
 const WALLET_TAB = { WITHDRAW: 'withdraw', TOPUP: 'topup' } as const;
 type WalletTab = (typeof WALLET_TAB)[keyof typeof WALLET_TAB];
 
 type WalletViewProps = {
-  balances: BalanceRow[];
-  /** False when the balance read failed (degraded notice in the list). */
-  balancesOk: boolean;
-  /** Spendable balances (`/fund/balance`) driving the withdraw form's
-   * available + Max — distinct from the fee-reserve `balances` shown in the list. */
+  /** Fee-reserve balances (`/fund/fee-balance`) shown on the Top-up tab — the
+   * funds available to pay for transactions. */
+  feeBalances: BalanceRow[];
+  /** False when the fee-balance read failed (degraded notice in the list). */
+  feeBalancesOk: boolean;
+  /** Spendable balances (`/fund/balance`) shown on the Withdraw tab, and driving
+   * the withdraw form's available + Max — the withdrawable funds. */
   spendableBalances: BalanceRow[];
+  /** False when the spendable-balance read failed (degraded notice in the list). */
+  spendableBalancesOk: boolean;
   /** Account 2FA state — gates the withdraw `token2fa` field. */
   gaEnabled: boolean;
 };
@@ -52,17 +53,24 @@ function topupAssetForCoin(coin: string): FundAsset {
 }
 
 /**
- * Wallet — split into a (placeholder) Withdraw tab and the Top-up tab that holds
- * all the live surface: the deposit panel, the live balances list, and the
- * withdraw trigger (its sheet stays mounted, opened from here). Top-up is the
- * default tab so users never land on the empty Withdraw placeholder. A balance
- * row's Receive focuses the deposit panel on that coin; Send opens the withdraw
- * sheet pre-set to it.
+ * Wallet — two tabs, each owning one balance track on the same user wallet.
+ *
+ * - **Top-up** (default): fund the wallet. The deposit panel (`get-address`)
+ *   credits the wallet; the balances list shows the fee-balance (the funds
+ *   available to pay for transactions). A row's Receive focuses the deposit
+ *   panel on that coin.
+ * - **Withdraw**: send spendable funds (`/fund/balance`) out. A primary trigger
+ *   and each row's Send open the withdraw sheet (request → email approval →
+ *   cancel-while-pending, all wired elsewhere).
+ *
+ * Top-up is the default so users land on the funding surface, not the (possibly
+ * empty) withdrawable list.
  */
 export function WalletView({
-  balances,
-  balancesOk,
+  feeBalances,
+  feeBalancesOk,
   spendableBalances,
+  spendableBalancesOk,
   gaEnabled,
 }: WalletViewProps) {
   const t = useTranslations('dashboard.wallet');
@@ -101,10 +109,21 @@ export function WalletView({
 
       {tab === WALLET_TAB.TOPUP ? (
         <div className="flex flex-col gap-8">
+          <DepositPanel asset={depositAsset} onAssetChange={setDepositAsset} />
+
+          <BalancesView
+            balances={feeBalances}
+            ok={feeBalancesOk}
+            canReceive={(coin) => TOPUP_COINS.includes(coin)}
+            onReceive={(coin) => setDepositAsset(topupAssetForCoin(coin))}
+          />
+        </div>
+      ) : (
+        <div className="flex flex-col gap-8">
           <div className="flex justify-end">
             <Button
               type="button"
-              variant="outline"
+              variant="primary"
               size="md"
               leftIcon={<ArrowUpRight className="h-4 w-4" />}
               onClick={() => openWithdraw()}
@@ -113,24 +132,13 @@ export function WalletView({
             </Button>
           </div>
 
-          <DepositPanel asset={depositAsset} onAssetChange={setDepositAsset} />
-
           <BalancesView
-            balances={balances}
-            ok={balancesOk}
-            canReceive={(coin) => TOPUP_COINS.includes(coin)}
-            onReceive={(coin) => setDepositAsset(topupAssetForCoin(coin))}
+            balances={spendableBalances}
+            ok={spendableBalancesOk}
+            canSend={() => true}
             onSend={(coin) => openWithdraw(coin)}
           />
         </div>
-      ) : (
-        <Card glow={false}>
-          <EmptyState
-            icon={<Sparkles className="h-5 w-5" />}
-            title={t('withdrawTab.emptyTitle')}
-            description={t('withdrawTab.emptyDescription')}
-          />
-        </Card>
       )}
 
       <WithdrawSheet

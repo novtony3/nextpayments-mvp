@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowDownLeft } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 
@@ -22,18 +22,21 @@ type DisplayBalance = {
 };
 
 type BalancesViewProps = {
-  /** Live rows from `GET /fund/balance` (loose shape; read defensively). */
+  /** Live balance rows (loose shape; read defensively). Source depends on the
+   * caller: fee-balance for the Top-up tab, `/fund/balance` for the Withdraw tab. */
   balances: BalanceRow[];
   /** False when the balance read failed (tunnel down / not authed). */
   ok: boolean;
-  /** Whether a coin is depositable — gates the row "Receive" affordance so it
-   * only shows for top-up–enabled coins. */
-  canReceive: (coin: string) => boolean;
+  /** Whether a coin shows the row "Receive" affordance (focuses the deposit
+   * panel). Defaults to off; the Top-up tab enables it for depositable coins. */
+  canReceive?: (coin: string) => boolean;
   /** Open the deposit panel for a coin (balance row "Receive"). */
-  onReceive: (coin: string) => void;
-  /** Open the withdraw sheet for a coin (balance row "Send"). TODO: re-enable —
-   * the Send icon is temporarily commented out, so this is currently unused. */
-  onSend: (coin: string) => void;
+  onReceive?: (coin: string) => void;
+  /** Whether a coin shows the row "Send" affordance (opens the withdraw sheet).
+   * Defaults to off; the Withdraw tab enables it for the spendable balance. */
+  canSend?: (coin: string) => boolean;
+  /** Open the withdraw sheet for a coin (balance row "Send"). */
+  onSend?: (coin: string) => void;
 };
 
 /**
@@ -43,7 +46,14 @@ type BalancesViewProps = {
  * the header pill exactly). No fiat is shown: the balance endpoint carries no
  * price, so a fabricated value would be misleading.
  */
-export function BalancesView({ balances, ok, canReceive, onReceive }: BalancesViewProps) {
+export function BalancesView({
+  balances,
+  ok,
+  canReceive,
+  onReceive,
+  canSend,
+  onSend,
+}: BalancesViewProps) {
   const t = useTranslations('dashboard.balances');
   const locale = useLocale();
   const [query, setQuery] = useState('');
@@ -111,23 +121,22 @@ export function BalancesView({ balances, ok, canReceive, onReceive }: BalancesVi
                 </p>
               </div>
               <div className="flex shrink-0 items-center gap-1">
-                {canReceive(row.ticker) && (
+                {canReceive?.(row.ticker) && (
                   <IconButton
                     aria-label={`${t('receive')} ${row.ticker}`}
                     variant="subtle"
                     icon={<ArrowDownLeft className="h-4 w-4" />}
-                    onClick={() => onReceive(row.ticker)}
+                    onClick={() => onReceive?.(row.ticker)}
                   />
                 )}
-                {/* TODO: re-enable withdraw — Send icon (opens the "Withdraw funds" sheet)
-                    temporarily disabled.
-                <IconButton
-                  aria-label={`${t('send')} ${row.ticker}`}
-                  variant="subtle"
-                  icon={<ArrowUpRight className="h-4 w-4" />}
-                  onClick={() => onSend(row.ticker)}
-                />
-                */}
+                {canSend?.(row.ticker) && (
+                  <IconButton
+                    aria-label={`${t('send')} ${row.ticker}`}
+                    variant="subtle"
+                    icon={<ArrowUpRight className="h-4 w-4" />}
+                    onClick={() => onSend?.(row.ticker)}
+                  />
+                )}
               </div>
             </div>
           ))

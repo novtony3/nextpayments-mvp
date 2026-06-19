@@ -1,35 +1,38 @@
 import { getCurrentUser } from '@/lib/auth/session';
-import { loadSpendableBalance } from '@/lib/fund/backend';
+import { loadFundBalance, loadSpendableBalance } from '@/lib/fund/backend';
 import { loadOrderStats } from '@/lib/orders/backend';
 import { OrderStatsPanel } from '@/components/dashboard/orders/order-stats-panel';
 import { WalletView } from '@/components/dashboard/wallet/wallet-view';
 
 /**
- * Wallet dashboard — Topup-first. The Fund wallet (deposit address + balances
- * + withdraw) is the primary surface, fed by `GET /fund/balance` and the
- * deposit/withdraw actions; order stats (`/orders/me/stats`) sit below. Reads
- * run in parallel and never throw into the tree (degraded notices instead).
+ * Wallet dashboard — Topup-first. The Fund wallet is the primary surface; order
+ * stats (`/orders/me/stats`) sit below. Reads run in parallel and never throw
+ * into the tree (degraded notices instead).
  *
- * Both the balances list and the withdraw form use the **spendable** balance
- * (`/fund/balance`) — the withdrawable funds. Fee-balance (`/fund/fee-balance`,
- * the gas reserve) is intentionally NOT shown here: surfacing it as "balance"
- * made users expect to withdraw gas-reserve funds that withdraw can't touch.
+ * Two balance tracks feed the two wallet tabs: the **Top-up** tab shows the
+ * fee-balance (`/fund/fee-balance`, the funds available to pay for transactions)
+ * via {@link loadFundBalance}; the **Withdraw** tab shows the spendable balance
+ * (`/fund/balance`, the withdrawable funds) via {@link loadSpendableBalance},
+ * which also drives the withdraw form's available + Max.
  */
 export default async function DashboardPage() {
-  const [user, stats, spendableResult] = await Promise.all([
+  const [user, stats, feeResult, spendableResult] = await Promise.all([
     getCurrentUser(),
     loadOrderStats({}),
+    loadFundBalance(),
     loadSpendableBalance(),
   ]);
 
+  const feeBalances = feeResult.ok ? feeResult.balances : [];
   const spendable = spendableResult.ok ? spendableResult.balances : [];
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-8">
       <WalletView
-        balances={spendable}
-        balancesOk={spendableResult.ok}
+        feeBalances={feeBalances}
+        feeBalancesOk={feeResult.ok}
         spendableBalances={spendable}
+        spendableBalancesOk={spendableResult.ok}
         gaEnabled={user?.gaEnabled ?? false}
       />
       <OrderStatsPanel result={stats} />
