@@ -20,10 +20,10 @@
     // time — so set the SAME value as a *build variable* named
     // NEXT_PUBLIC_API_URL in the Cloudflare Workers Builds settings, or the
     // baked rewrite will keep pointing at the http://localhost:3000 default.
-    "NEXT_PUBLIC_API_URL": "https://api.your-domain.com",
+    "NEXT_PUBLIC_API_URL": "https://api.vnpayment.xyz",
     // Public origin of THIS deployment. Used by src/constants/site.ts and
     // resolves the metadataBase warning. REPLACE with your Worker/custom domain.
-    "NEXT_PUBLIC_SITE_URL": "https://your-worker.workers.dev"
+    // "NEXT_PUBLIC_SITE_URL": "https://your-worker.workers.dev"
   },
   "observability": {
     "enabled": false
