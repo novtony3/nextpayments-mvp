@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "crypto-payment-fe",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-07-10",
+  // nodejs_compat is required by the OpenNext Cloudflare runtime.
+  "compatibility_flags": ["nodejs_compat"],
+  // Static assets (prerendered pages, _next/static, public/*) served from the
+  // edge. `.open-next/assets` is produced by `opennextjs-cloudflare build`.
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // Runtime environment for the Worker. These are read at request time by
+  // src/lib/server/backend-fetch.ts (server-side proxy) via process.env.
+  // Not secrets — for secrets use `wrangler secret put` instead of `vars`.
+  "vars": {
+    // Hosted backend origin (no trailing path). REPLACE with your real API.
+    // ⚠️ The `/api` rewrite in next.config.ts also reads this, but at BUILD
+    // time — so set the SAME value as a *build variable* named
+    // NEXT_PUBLIC_API_URL in the Cloudflare Workers Builds settings, or the
+    // baked rewrite will keep pointing at the http://localhost:3000 default.
+    "NEXT_PUBLIC_API_URL": "https://api.vnpayment.xyz",
+    // Public origin of THIS deployment. Used by src/constants/site.ts and
+    // resolves the metadataBase warning. REPLACE with your Worker/custom domain.
+    // "NEXT_PUBLIC_SITE_URL": "https://your-worker.workers.dev"
+  },
+  "observability": {
+    "enabled": false
+  }
+}
