@@ -19,6 +19,11 @@ build/
 *.tsbuildinfo
 next-env.d.ts
 
+# Cloudflare / OpenNext
+.open-next/
+.wrangler/
+cloudflare-env.d.ts
+
 # Env
 .env
 .env.local
