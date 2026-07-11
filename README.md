@@ -172,14 +172,14 @@ Backend wiring is centralized in `apps/merchant-app/src/constants/api.ts` (`reso
 
 ### Environment variable table
 
-| Variable                                                              | Read in                                     | Purpose / default                                                                                                                             |
-| --------------------------------------------------------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `API_PROXY_TARGET`                                                    | `src/constants/api.ts`                      | Highest-priority backend origin; override per machine, e.g. SSH tunnel `http://localhost:13000`. Docker sets `http://crypto-payment-be:3000`. |
-| `NEXT_PUBLIC_API_URL`                                                 | `src/constants/api.ts`                      | Hosted backend when `API_PROXY_TARGET` is not set. `.env.local`/`.env.example` set `https://api.vnpayment.xyz`.                               |
-| (fallback)                                                            | `DEFAULT_API_PROXY_TARGET`                  | `http://localhost:3000` when both env vars are empty.                                                                                         |
-| `NEXT_DIST_DIR`                                                       | `next.config.ts`                            | Change the `.next` build directory (used by `build:check`).                                                                                   |
-| `NEXT_PUBLIC_SITE_URL`, `VERCEL_PROJECT_PRODUCTION_URL`, `VERCEL_URL` | `src/constants/site.ts`                     | Public origin for metadata/canonical/OG/sitemap; fallback `https://vnpayment.xyz`.                                                            |
-| `NODE_ENV`                                                            | `src/lib/auth/session.ts`, `next.config.ts` | Marks the session cookie `secure` in production.                                                                                              |
+| Variable                                                              | Read in                                     | Purpose / default                                                                                                                                                         |
+| --------------------------------------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `API_PROXY_TARGET`                                                    | `src/constants/api.ts`                      | Highest-priority backend origin; override per machine, e.g. SSH tunnel `http://localhost:13000`. Docker sets `http://crypto-payment-be:3000`.                             |
+| `NEXT_PUBLIC_API_URL`                                                 | `src/constants/api.ts`                      | Hosted backend when `API_PROXY_TARGET` is not set. `.env.local`/`.env.example` set `https://api.vnpayment.xyz` (legacy domain — backend not yet migrated to omnipayx.io). |
+| (fallback)                                                            | `DEFAULT_API_PROXY_TARGET`                  | `http://localhost:3000` when both env vars are empty.                                                                                                                     |
+| `NEXT_DIST_DIR`                                                       | `next.config.ts`                            | Change the `.next` build directory (used by `build:check`).                                                                                                               |
+| `NEXT_PUBLIC_SITE_URL`, `VERCEL_PROJECT_PRODUCTION_URL`, `VERCEL_URL` | `src/constants/site.ts`                     | Public origin for metadata/canonical/OG/sitemap; fallback `https://omnipayx.io`.                                                                                          |
+| `NODE_ENV`                                                            | `src/lib/auth/session.ts`, `next.config.ts` | Marks the session cookie `secure` in production.                                                                                                                          |
 
 **Backend base URL — priority order:**
 
@@ -363,7 +363,7 @@ Managed within Pay Settings (NOT a separate route). The page reads state via `lo
 
 **Enable:**
 
-1. `begin2faSetupAction()` → `backendGet2faKey` (`GET /user/get-2fa-key`) returns `secret2FAKey` (base32); the action builds an `otpauth://` URI locally (`buildOtpauthUri`, issuer `Nextpayments`) → the QR is rendered locally with `QRCodeSVG` (the secret is not exposed to any third-party renderer).
+1. `begin2faSetupAction()` → `backendGet2faKey` (`GET /user/get-2fa-key`) returns `secret2FAKey` (base32); the action builds an `otpauth://` URI locally (`buildOtpauthUri`, issuer `OMNIPAYX`) → the QR is rendered locally with `QRCodeSVG` (the secret is not exposed to any third-party renderer).
 2. The user scans/enters the secret, submits their **current password + a 6-digit code** → `enable2faAction` → `backendEnable2fa` (`PUT /user/enable-2fa`). `USER019` (already enabled) is treated as success.
 
 **Disable:** the same form → `disable2faAction` → `backendDisable2fa` (`PUT /user/disable-2fa`), also requiring password + code.
