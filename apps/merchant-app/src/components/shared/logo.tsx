@@ -14,16 +14,16 @@ type LogoProps = {
 /** Stable gradient id — the mark may render several times per page (header,
  * footer, hero); a fixed id keeps the markup small and renders identically
  * each time, so duplicate-id paint is harmless. */
-const GRADIENT_ID = 'np-logo-gradient';
+const GRADIENT_ID = 'brand-logo-gradient';
 
 /**
- * NPMark — the "NP" monogram in a rounded-square tile filled with the
+ * MonogramMark — the brand monogram in a rounded-square tile filled with the
  * signature cyan → blue → coral → gold sweep (the only gradient the design
  * system allows besides the aurora). Drawn as SVG so it stays crisp at every
  * size and mirrors the raster favicon / OG card, which share the same stops
  * via `BRAND_GRADIENT_STOPS`.
  */
-function NPMark({ size = 22 }: { size?: number }) {
+function MonogramMark({ size = 22 }: { size?: number }) {
   return (
     <svg
       width={size}
@@ -61,7 +61,7 @@ function NPMark({ size = 22 }: { size?: number }) {
 export function Logo({ className, textClassName, iconOnly, size }: LogoProps) {
   return (
     <span className={cn('inline-flex items-center gap-2.5', className)}>
-      <NPMark size={size} />
+      <MonogramMark size={size} />
       {!iconOnly && (
         <span className={cn('text-[15px] font-medium tracking-tight', textClassName)}>
           {BRAND_NAME}

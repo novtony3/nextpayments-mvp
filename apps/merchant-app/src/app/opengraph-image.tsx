@@ -15,7 +15,7 @@ import {
 } from '@/constants/site';
 
 // Social share card (referenced by both the OpenGraph and Twitter meta tags).
-// Dark canvas with the NP tile, wordmark, and the headline fee proposition —
+// Dark canvas with the monogram tile, wordmark, and the headline fee proposition —
 // the same brand tokens the rest of the app uses, so the card never drifts.
 
 export const size = OG_IMAGE_SIZE;
