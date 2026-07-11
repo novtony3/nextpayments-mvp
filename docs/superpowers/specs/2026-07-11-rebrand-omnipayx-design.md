@@ -46,14 +46,14 @@ strings via its own i18n file), not previously branded `VNPayment`.
 
 ### 1. `apps/merchant-app/src/constants/site.ts` (SSOT)
 
-| Constant | Current | New |
-|---|---|---|
-| `BRAND_NAME` | `'VNPayment'` | `'OMNIPAYX'` |
-| `BRAND_MONOGRAM` | `'VN'` | `'OX'` |
+| Constant            | Current                   | New                      |
+| ------------------- | ------------------------- | ------------------------ |
+| `BRAND_NAME`        | `'VNPayment'`             | `'OMNIPAYX'`             |
+| `BRAND_MONOGRAM`    | `'VN'`                    | `'OX'`                   |
 | `BRAND_DESCRIPTION` | "...VNPayment gateway..." | "...OMNIPAYX gateway..." |
-| `SITE_URL` fallback | `'https://vnpayment.xyz'` | `'https://omnipayx.io'` |
-| `TWITTER_HANDLE` | `'@vnpayment'` | `'@omnipayx'` |
-| `SEO_KEYWORDS` | includes `'VNPayment'` | includes `'OMNIPAYX'` |
+| `SITE_URL` fallback | `'https://vnpayment.xyz'` | `'https://omnipayx.io'`  |
+| `TWITTER_HANDLE`    | `'@vnpayment'`            | `'@omnipayx'`            |
+| `SEO_KEYWORDS`      | includes `'VNPayment'`    | includes `'OMNIPAYX'`    |
 
 `BRAND_TAGLINE`, `BRAND_OG_SUBLINE`, `FEE_RATE`, `REFERRAL_RATE`,
 `BRAND_GRADIENT_STOPS`, `BRAND_GRADIENT_CSS`, `BRAND_BG*`,
@@ -86,12 +86,21 @@ as-is — no re-translation needed since only the brand token changes).
 
 `<title>Nextpayments Admin</title>` → `<title>OMNIPAYX Admin</title>`.
 
-### 7. `README.md`
+### 7. `apps/merchant-app/src/constants/auth.ts` (added during planning)
+
+`TWO_FA_ISSUER = 'Nextpayments'` → `'OMNIPAYX'` — the issuer label merchants
+see in Google Authenticator / 1Password when enrolling 2FA. User-facing brand
+surface found after the spec's first inventory. Affects **new enrollments
+only**: existing authenticator entries keep their old label and continue to
+validate (the issuer is display metadata; TOTP secrets are untouched).
+
+### 8. `README.md`
 
 Update the env-var reference table: the `NEXT_PUBLIC_SITE_URL` row's fallback
 `vnpayment.xyz` → `omnipayx.io`. The `NEXT_PUBLIC_API_URL` row (backend host)
 stays `api.vnpayment.xyz` — annotate it as "not yet migrated" so the README
-doesn't read as stale/wrong.
+doesn't read as stale/wrong. Also update the 2FA flow doc line that names the
+otpauth issuer (`issuer \`Nextpayments\``→`issuer \`OMNIPAYX\``) to match §7.
 
 ---
 
@@ -101,7 +110,7 @@ doesn't read as stale/wrong.
   motion, trust signals, typography hierarchy. Separate brainstorm + spec
   after this ships.
 - **`docs/branding-website-plan.md`** — the user's own planning doc for a
-  *separate, not-yet-built* marketing site repo. It references the old brand
+  _separate, not-yet-built_ marketing site repo. It references the old brand
   as historical context and a since-superseded placeholder name
   (`OmniPayStack`). Left untouched; the user may update it separately.
 - Color palette / gradient stops — explicitly kept as-is per user decision.
@@ -112,17 +121,26 @@ doesn't read as stale/wrong.
 - Backend/API service repo (not in this monorepo) — any brand strings it
   owns (emails, etc.) are out of scope here.
 - **`NEXT_PUBLIC_API_URL` / backend API domain** (`.env.example`,
-  `.env.local`, `api.vnpayment.xyz`) — explicitly **kept as-is** per the
-  user's instruction. The backend hasn't migrated to `omnipayx.io` yet; only
-  the frontend's own `SITE_URL` moves in this phase. Revisit once the backend
-  is ready to move to `api.omnipayx.io`.
+  `.env.local`, `wrangler.jsonc` vars, `postman/`, `api.vnpayment.xyz`) —
+  explicitly **kept as-is** per the user's instruction. The backend hasn't
+  migrated to `omnipayx.io` yet; only the frontend's own `SITE_URL` moves in
+  this phase. Revisit once the backend is ready to move to
+  `api.omnipayx.io`.
+- **"Nextpayments" as the internal project/monorepo name** (README title +
+  intro, `docs/API.md` title, `theme.css` header comment, `skills/`,
+  `@nextpayments/*` package scopes) — internal naming, not product brand
+  surface. Only its two user-facing occurrences change: the 2FA issuer (§7)
+  and the README line documenting it (§8).
 
 ## Verification
 
-- Grep the whole repo (excluding `node_modules`) case-insensitively for
-  `vnpayment` — expect hits only in `docs/branding-website-plan.md` (out of
-  scope) and the two `NEXT_PUBLIC_API_URL` lines in `.env.example`/`.env.local`
-  (intentionally kept — backend not yet migrated).
+- Grep the whole repo (excluding `node_modules` and build artifacts
+  `.next*`/`.open-next`/`dist`) case-insensitively for `vnpayment` — expected
+  residual hits, all intentional: the `NEXT_PUBLIC_API_URL` lines in
+  `.env.example`, `.env.local` (gitignored), and `wrangler.jsonc` (backend
+  not yet migrated); the annotated API row in `README.md`; `postman/` and
+  `docs/branding-website-plan.md` (untracked, out of scope); and this spec +
+  the implementation plan (historical text). Nothing else.
 - `pnpm --filter merchant-app typecheck && lint && format` and
   `pnpm --filter admin-dashboard typecheck && lint` (or repo-equivalent
   commands) — output gate before commit.
