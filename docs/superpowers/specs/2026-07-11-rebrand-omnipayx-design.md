@@ -14,8 +14,10 @@ final logo/monogram from Phase 1 feeds directly into it.
 ## Product decisions (confirmed)
 
 - **Brand name:** `OMNIPAYX` (all caps), replacing `VNPayment` everywhere.
-- **Domain:** `omnipayx.io`, replacing `vnpayment.xyz`. API host becomes
-  `api.omnipayx.io`, replacing `api.vnpayment.xyz`.
+- **Domain:** `omnipayx.io`, replacing `vnpayment.xyz` — for the **frontend
+  site only** (`SITE_URL`, canonical/OG/manifest URLs). The **backend API
+  host stays `api.vnpayment.xyz` for now** (user's explicit call: backend
+  hasn't moved yet, so `NEXT_PUBLIC_API_URL` is untouched in this phase).
 - **Monogram:** `OX`, replacing `VN` — rendered in the exact same rounded-square
   gradient tile (no shape/color redesign).
 - **Tagline, messaging, fee/referral copy, colors/theme:** unchanged. This is a
@@ -75,23 +77,21 @@ generically instead of hardcoding letters in prose.
 Same three keys, French copy, brand name swapped (keep rest of French wording
 as-is — no re-translation needed since only the brand token changes).
 
-### 5. `apps/merchant-app/.env.example`, `apps/merchant-app/.env.local`
-
-`NEXT_PUBLIC_API_URL=https://api.vnpayment.xyz` → `NEXT_PUBLIC_API_URL=https://api.omnipayx.io`
-
-### 6. `apps/admin-dashboard/src/i18n/locales/en.json`
+### 5. `apps/admin-dashboard/src/i18n/locales/en.json`
 
 `common.appName`: `"Nextpayments"` → `"OMNIPAYX"`. `common.appSuffix`
 (`"Admin"`) stays — renders as "OMNIPAYX Admin" via `<BrandMark>`.
 
-### 7. `apps/admin-dashboard/index.html`
+### 6. `apps/admin-dashboard/index.html`
 
 `<title>Nextpayments Admin</title>` → `<title>OMNIPAYX Admin</title>`.
 
-### 8. `README.md`
+### 7. `README.md`
 
-Update the env-var reference table: `vnpayment.xyz` → `omnipayx.io`,
-`api.vnpayment.xyz` → `api.omnipayx.io`.
+Update the env-var reference table: the `NEXT_PUBLIC_SITE_URL` row's fallback
+`vnpayment.xyz` → `omnipayx.io`. The `NEXT_PUBLIC_API_URL` row (backend host)
+stays `api.vnpayment.xyz` — annotate it as "not yet migrated" so the README
+doesn't read as stale/wrong.
 
 ---
 
@@ -111,11 +111,18 @@ Update the env-var reference table: `vnpayment.xyz` → `omnipayx.io`,
   fields — internal workspace identifiers, not user-facing brand surface.
 - Backend/API service repo (not in this monorepo) — any brand strings it
   owns (emails, etc.) are out of scope here.
+- **`NEXT_PUBLIC_API_URL` / backend API domain** (`.env.example`,
+  `.env.local`, `api.vnpayment.xyz`) — explicitly **kept as-is** per the
+  user's instruction. The backend hasn't migrated to `omnipayx.io` yet; only
+  the frontend's own `SITE_URL` moves in this phase. Revisit once the backend
+  is ready to move to `api.omnipayx.io`.
 
 ## Verification
 
 - Grep the whole repo (excluding `node_modules`) case-insensitively for
-  `vnpayment` — expect zero hits outside `docs/branding-website-plan.md`.
+  `vnpayment` — expect hits only in `docs/branding-website-plan.md` (out of
+  scope) and the two `NEXT_PUBLIC_API_URL` lines in `.env.example`/`.env.local`
+  (intentionally kept — backend not yet migrated).
 - `pnpm --filter merchant-app typecheck && lint && format` and
   `pnpm --filter admin-dashboard typecheck && lint` (or repo-equivalent
   commands) — output gate before commit.
