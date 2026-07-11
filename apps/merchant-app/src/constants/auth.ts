@@ -34,8 +34,10 @@ export const TWO_FA_CODE_PATTERN = /^\d{6}$/;
 /**
  * Issuer label encoded into the `otpauth://` URI shown in the QR code.
  * Authenticator apps group accounts under this string — keep it stable.
+ * (Rebranded with OMNIPAYX, 2026-07: pre-rebrand enrollments keep the old
+ * label in their authenticator app but continue to validate.)
  */
-export const TWO_FA_ISSUER = 'Nextpayments' as const;
+export const TWO_FA_ISSUER = 'OMNIPAYX' as const;
 
 /**
  * Simulated network latency (ms) for the UI-only phase, so loading states are

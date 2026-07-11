@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 
 import { BRAND_GRADIENT_CSS, BRAND_MONOGRAM } from '@/constants/site';
 
-// Dynamically-generated favicon — the "NP" monogram on the brand gradient.
+// Dynamically-generated favicon — the brand monogram on the brand gradient.
 // Rendered through `next/og` (not a static .ico) so it shares the exact same
 // gradient stops as the inline <Logo> via `BRAND_GRADIENT_CSS`.
 

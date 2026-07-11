@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "VNPayment",
+    "appName": "OMNIPAYX",
     "tagline": "Crypto payment gateway for businesses",
     "loading": "Loading...",
     "comingSoon": "Coming soon",
@@ -12,7 +12,7 @@
     }
   },
   "meta": {
-    "description": "Accept crypto payments on every chain with VNPayment. Integrate the gateway in minutes: 300+ coins, no KYC, one flat 0.5% fee, plus 0.1% referral rewards."
+    "description": "Accept crypto payments on every chain with OMNIPAYX. Integrate the gateway in minutes: 300+ coins, no KYC, one flat 0.5% fee, plus 0.1% referral rewards."
   },
   "nav": {
     "features": "Features",
@@ -164,7 +164,7 @@
           }
         }
       },
-      "copyright": "© 2026 VNPayment. All rights reserved."
+      "copyright": "© 2026 OMNIPAYX. All rights reserved."
     }
   },
   "auth": {
