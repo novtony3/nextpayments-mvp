@@ -329,3 +329,31 @@
 @utility focus-ring {
   @apply outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--focus-ring-offset,var(--color-bg))];
 }
+
+/* === Skeleton shimmer ===
+ * Loading-placeholder sweep used by the Skeleton primitive. Static glass
+ * fill under prefers-reduced-motion — the placeholder stays visible, only
+ * the sweep stops. */
+@keyframes np-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@utility skeleton-shimmer {
+  background-color: var(--glass-fill);
+  background-image: linear-gradient(
+    100deg,
+    transparent 35%,
+    var(--glass-highlight) 50%,
+    transparent 65%
+  );
+  background-size: 200% 100%;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: np-shimmer var(--motion-shimmer) linear infinite;
+  }
+}
