@@ -31,7 +31,7 @@ export const ToggleSwitch = React.forwardRef<HTMLButtonElement, ToggleSwitchProp
       className={cn(
         'relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full',
         'border border-[var(--glass-border)] transition-colors duration-200',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)]',
+        'focus-ring',
         'disabled:cursor-not-allowed disabled:opacity-50',
         checked ? 'bg-[var(--color-accent)]' : 'bg-[var(--glass-fill-strong)]',
         className,

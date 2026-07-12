@@ -28,7 +28,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
           'h-5 w-5 rounded-md border bg-[var(--glass-fill-strong)] backdrop-blur-md transition-colors duration-150',
           'border-[var(--color-border-strong)]',
           'peer-hover:border-[var(--color-accent)]',
-          'peer-focus-visible:border-[var(--color-accent)] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-accent-soft)]',
+          'peer-focus-visible:border-[var(--color-accent)] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-accent)]',
           'peer-checked:border-[var(--color-accent)] peer-checked:bg-[var(--color-accent)]',
           'peer-disabled:opacity-50',
           className,

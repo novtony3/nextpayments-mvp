@@ -265,7 +265,7 @@ export const Sheet = React.forwardRef<HTMLDivElement, SheetProps>(
               type="button"
               onClick={onClose}
               aria-label={closeLabel}
-              className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--color-accent-soft)] text-[var(--color-accent)] transition-colors duration-200 hover:bg-[var(--color-accent-strong)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]"
+              className="focus-ring flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--color-accent-soft)] text-[var(--color-accent)] transition-colors duration-200 [--focus-ring-offset:var(--color-surface)] hover:bg-[var(--color-accent-strong)]"
             >
               <X className="h-5 w-5" />
             </button>

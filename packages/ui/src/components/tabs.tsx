@@ -59,7 +59,7 @@ export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
               onClick={() => onValueChange(item.value)}
               className={cn(
                 '-mb-px inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors duration-200',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]',
+                'focus-ring',
                 active
                   ? 'border-[var(--color-accent)] text-[var(--color-text)]'
                   : 'border-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)]',
