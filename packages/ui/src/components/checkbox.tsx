@@ -25,7 +25,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
       <span
         aria-hidden="true"
         className={cn(
-          'h-5 w-5 rounded-md border bg-[var(--glass-fill-strong)] backdrop-blur-md transition-colors duration-150',
+          'h-5 w-5 rounded-md border bg-[var(--glass-fill-strong)] backdrop-blur-md transition-colors duration-[var(--motion-base)]',
           'border-[var(--color-border-strong)]',
           'peer-hover:border-[var(--color-accent)]',
           'peer-focus-visible:border-[var(--color-accent)] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-accent)]',
@@ -37,7 +37,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
       <Check
         aria-hidden="true"
         strokeWidth={3}
-        className="pointer-events-none absolute h-3.5 w-3.5 text-white opacity-0 transition-opacity duration-150 peer-checked:opacity-100"
+        className="pointer-events-none absolute h-3.5 w-3.5 text-white opacity-0 transition-opacity duration-[var(--motion-base)] peer-checked:opacity-100"
       />
     </span>
   ),

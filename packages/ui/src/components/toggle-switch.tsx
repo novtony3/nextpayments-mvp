@@ -30,7 +30,7 @@ export const ToggleSwitch = React.forwardRef<HTMLButtonElement, ToggleSwitchProp
       onClick={() => onCheckedChange(!checked)}
       className={cn(
         'relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full',
-        'border border-[var(--glass-border)] transition-colors duration-200',
+        'border border-[var(--glass-border)] transition-colors duration-[var(--motion-base)]',
         'focus-ring',
         'disabled:cursor-not-allowed disabled:opacity-50',
         checked ? 'bg-[var(--color-accent)]' : 'bg-[var(--glass-fill-strong)]',
@@ -42,7 +42,7 @@ export const ToggleSwitch = React.forwardRef<HTMLButtonElement, ToggleSwitchProp
         aria-hidden="true"
         className={cn(
           'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-sm',
-          'transition-transform duration-200 motion-reduce:transition-none',
+          'transition-transform duration-[var(--motion-base)] motion-reduce:transition-none',
           checked ? 'translate-x-6' : 'translate-x-1',
         )}
       />

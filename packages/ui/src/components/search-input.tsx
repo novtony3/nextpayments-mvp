@@ -23,14 +23,14 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
     <div
       className={cn(
         'group relative flex items-center rounded-full border border-[var(--glass-border)]',
-        'bg-[var(--glass-fill)] backdrop-blur-md transition-colors duration-200',
+        'bg-[var(--glass-fill)] backdrop-blur-md transition-colors duration-[var(--motion-base)]',
         'focus-within:border-[var(--color-accent)]',
         className,
       )}
     >
       <Search
         aria-hidden="true"
-        className="pointer-events-none absolute left-4 h-4 w-4 text-[var(--color-text-subtle)] transition-colors duration-200 group-focus-within:text-[var(--color-accent)]"
+        className="pointer-events-none absolute left-4 h-4 w-4 text-[var(--color-text-subtle)] transition-colors duration-[var(--motion-base)] group-focus-within:text-[var(--color-accent)]"
       />
       <input
         ref={ref}

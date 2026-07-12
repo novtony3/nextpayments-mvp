@@ -135,7 +135,7 @@ export function UserMenu({ user, onNavigate }: UserMenuProps) {
             }
           }}
           className={cn(
-            'absolute right-0 z-50 min-w-[14rem] overflow-hidden rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-fill-strong)] p-1 shadow-[0_16px_48px_-16px_rgba(0,0,0,0.5)] backdrop-blur-2xl',
+            'absolute right-0 z-50 min-w-[14rem] overflow-hidden rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-fill-strong)] p-1 shadow-[var(--shadow-elev-lg)] backdrop-blur-2xl',
             dropUp ? 'bottom-[calc(100%+0.5rem)]' : 'top-[calc(100%+0.5rem)]',
           )}
         >

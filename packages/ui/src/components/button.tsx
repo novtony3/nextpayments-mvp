@@ -27,7 +27,7 @@ Slot.displayName = 'Slot';
 const buttonVariants = cva(
   [
     'relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full',
-    'text-sm font-medium leading-none transition-all duration-200 select-none',
+    'text-sm font-medium leading-none transition-all duration-[var(--motion-base)] select-none',
     'disabled:pointer-events-none disabled:opacity-50',
     'focus-ring',
   ].join(' '),
