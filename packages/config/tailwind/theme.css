@@ -101,6 +101,41 @@
   --interaction-duration: 180ms;
   --interaction-easing: cubic-bezier(0.16, 1, 0.3, 1); /* luxury ease-out */
 
+  /* === Elevation scale ===
+   * Named `elev` (not sm/md/lg) so Tailwind's default shadow-sm/md/lg
+   * utilities keep their stock values (toggle-switch's knob uses shadow-sm).
+   * Dark values are pinned to the literals they replace — tokenizing must
+   * not change the dark theme. Light mode softens them (see light block). */
+  --shadow-elev-sm: 0 1px 2px -1px rgba(0, 0, 0, 0.4);
+  --shadow-elev-md: 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+  --shadow-elev-lg: 0 16px 48px -16px rgba(0, 0, 0, 0.5); /* = user-menu dropdown today */
+  --shadow-overlay-up: 0 -20px 60px -20px rgba(0, 0, 0, 0.6); /* = bottom Sheet today */
+
+  /* === Type scale ===
+   * Role-named sizes matching current real usage; generates text-display,
+   * text-title, … utilities. Adoption happens per-area (Phase 2 C/D/E).
+   * Heading recipe: page h1 = text-title + font-semibold; micro-labels =
+   * text-micro + uppercase tracking-wider. */
+  --text-display-xl: 72px; /* landing hero headline */
+  --text-display: 44px; /* landing section titles */
+  --text-title: 24px; /* dashboard/auth page h1 */
+  --text-lede: 17px; /* hero/section subtitles */
+  --text-body: 15px; /* default copy */
+  --text-caption: 13px; /* secondary copy, header nav */
+  --text-micro: 11px; /* uppercase micro-labels */
+  --container-content: 1120px; /* standard section max-width (max-w-content) */
+
+  /* === Motion scale ===
+   * Extends the interaction pair above. Consumed as arbitrary values, e.g.
+   * `duration-[var(--motion-base)]`. --motion-overlay documents the Sheet's
+   * JS travel constant (SHEET_TRANSITION_MS). */
+  --motion-fast: 120ms; /* hover/focus feedback */
+  --motion-base: var(--interaction-duration); /* standard transitions */
+  --motion-slow: 300ms; /* entrances, reveals */
+  --motion-slower: 500ms; /* ambient fades (Card glow) */
+  --motion-overlay: 440ms; /* sheet/drawer travel */
+  --motion-shimmer: 1.8s; /* skeleton shimmer loop */
+
   /* === Typography === */
   --font-sans:
     'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
@@ -172,6 +207,13 @@
     --glass-fill-strong: color-mix(in oklab, white 78%, transparent);
     --glass-border: color-mix(in oklab, #1f1f1f 12%, transparent);
     --glass-highlight: color-mix(in oklab, white 50%, transparent);
+
+    /* Elevation reads lighter on a light canvas — raw dark-theme blacks
+     * cast unnaturally heavy shadows on #f0f4f9. */
+    --shadow-elev-sm: 0 1px 2px -1px rgba(0, 0, 0, 0.25);
+    --shadow-elev-md: 0 8px 24px -12px rgba(0, 0, 0, 0.3);
+    --shadow-elev-lg: 0 16px 48px -16px rgba(0, 0, 0, 0.3);
+    --shadow-overlay-up: 0 -20px 60px -20px rgba(0, 0, 0, 0.35);
   }
 }
 
@@ -273,5 +315,45 @@
   &:hover {
     background-color: color-mix(in oklab, var(--color-danger) 14%, transparent);
     color: var(--color-danger);
+  }
+}
+
+/* === Focus ring ===
+ * THE focus treatment for interactive controls (Button's recipe,
+ * generalized). Offset color defaults to the page canvas via the
+ * --focus-ring-offset variable; components that sit on a surface override it
+ * per-instance with the arbitrary-property class
+ * `[--focus-ring-offset:var(--color-surface)]`.
+ * Exception: Checkbox keeps a `peer-focus-visible:` variant of the same
+ * ring (its native input is sr-only, so the ring renders on a sibling). */
+@utility focus-ring {
+  @apply outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--focus-ring-offset,var(--color-bg))];
+}
+
+/* === Skeleton shimmer ===
+ * Loading-placeholder sweep used by the Skeleton primitive. Static glass
+ * fill under prefers-reduced-motion — the placeholder stays visible, only
+ * the sweep stops. */
+@keyframes np-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@utility skeleton-shimmer {
+  background-color: var(--glass-fill);
+  background-image: linear-gradient(
+    100deg,
+    transparent 35%,
+    var(--glass-highlight) 50%,
+    transparent 65%
+  );
+  background-size: 200% 100%;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: np-shimmer var(--motion-shimmer) linear infinite;
   }
 }

@@ -33,7 +33,7 @@ export const ActionIcon = React.forwardRef<HTMLButtonElement, ActionIconProps>(
       type="button"
       className={cn(
         'inline-flex shrink-0 items-center justify-center rounded-lg text-[var(--color-text-muted)]',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]',
+        'focus-ring [--focus-ring-offset:var(--color-surface)]',
         'disabled:cursor-not-allowed disabled:opacity-50',
         size === 'sm' ? 'h-8 w-8' : 'h-9 w-9',
         'action-icon',

@@ -25,6 +25,8 @@ export interface SheetProps {
  * frosted-glass surface (the GPU spends extra time on the shadow rasterize
  * per frame) — anything shorter felt clipped/janky.
  */
+/** Sheet travel duration. Keep in sync with `--motion-overlay` in theme.css —
+ * the value lives in TS because JS timers (unmount, height animation) need it. */
 export const SHEET_TRANSITION_MS = 440;
 
 /**
@@ -248,7 +250,7 @@ export const Sheet = React.forwardRef<HTMLDivElement, SheetProps>(
           }}
           className={cn(
             'relative flex max-h-[90vh] w-full flex-col rounded-t-3xl border-t border-[var(--glass-border)]',
-            'bg-[var(--color-surface)] shadow-[0_-20px_60px_-20px_rgba(0,0,0,0.6)] sm:max-w-2xl',
+            'bg-[var(--color-surface)] shadow-[var(--shadow-overlay-up)] sm:max-w-2xl',
             'transform-gpu transition-transform',
             className,
           )}
@@ -265,7 +267,7 @@ export const Sheet = React.forwardRef<HTMLDivElement, SheetProps>(
               type="button"
               onClick={onClose}
               aria-label={closeLabel}
-              className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--color-accent-soft)] text-[var(--color-accent)] transition-colors duration-200 hover:bg-[var(--color-accent-strong)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]"
+              className="focus-ring flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--color-accent-soft)] text-[var(--color-accent)] transition-colors duration-[var(--motion-base)] [--focus-ring-offset:var(--color-surface)] hover:bg-[var(--color-accent-strong)]"
             >
               <X className="h-5 w-5" />
             </button>

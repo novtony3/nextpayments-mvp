@@ -30,7 +30,7 @@ export const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>
     <div
       className={cn(
         'group relative inline-flex items-center rounded-full border border-[var(--glass-border)]',
-        'bg-[var(--glass-fill)] backdrop-blur-md transition-colors duration-200',
+        'bg-[var(--glass-fill)] backdrop-blur-md transition-colors duration-[var(--motion-base)]',
         'focus-within:border-[var(--color-accent)]',
         className,
       )}
@@ -52,7 +52,7 @@ export const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>
       </select>
       <ChevronDown
         aria-hidden="true"
-        className="pointer-events-none absolute right-4 h-4 w-4 text-[var(--color-text-subtle)] transition-colors duration-200 group-focus-within:text-[var(--color-accent)]"
+        className="pointer-events-none absolute right-4 h-4 w-4 text-[var(--color-text-subtle)] transition-colors duration-[var(--motion-base)] group-focus-within:text-[var(--color-accent)]"
       />
     </div>
   ),

@@ -3,6 +3,7 @@
 import * as React from 'react';
 
 import { cn } from '../lib/utils';
+import { Skeleton } from './skeleton';
 
 export type DataTableColumn<Row> = {
   /** Stable key + React key for the column. */
@@ -26,13 +27,21 @@ export interface DataTableProps<Row> {
   minWidthClassName?: string;
   /** Extra classes for the scroll wrapper. */
   className?: string;
+  /** Render skeleton rows instead of data (wins over `empty`). */
+  loading?: boolean;
+  /** How many skeleton rows `loading` renders. */
+  loadingRows?: number;
+  /** Rendered full-width when `rows` is empty and not loading
+   * (e.g. `<EmptyState title={…} />`). Omitted → today's bare table. */
+  empty?: React.ReactNode;
 }
 
 /**
  * Themed, horizontally-scrollable data table — one source of truth for the
  * dashboard list tables (orders, transactions, downline, commissions). Columns
  * are declarative `{ header, render }`; the caller owns the surrounding Card
- * shell, the empty/error states, and any pager below. Framework-agnostic:
+ * shell, any pager below; pass `empty` / `loading` for the built-in empty and
+ * skeleton states (or omit both for the legacy bare table). Framework-agnostic:
  * headers are passed already-localized.
  */
 export function DataTable<Row>({
@@ -41,6 +50,9 @@ export function DataTable<Row>({
   getRowKey,
   minWidthClassName,
   className,
+  loading = false,
+  loadingRows = 5,
+  empty,
 }: DataTableProps<Row>) {
   return (
     <div className={cn('overflow-x-auto', className)}>
@@ -54,19 +66,37 @@ export function DataTable<Row>({
             ))}
           </tr>
         </thead>
-        <tbody className="text-[var(--color-text)]">
-          {rows.map((row, index) => (
-            <tr
-              key={getRowKey(row, index)}
-              className="row-interactive border-t border-[var(--color-border)] align-middle"
-            >
-              {columns.map((col) => (
-                <td key={col.key} className={cn('px-4 py-3', col.cellClassName)}>
-                  {col.render(row, index)}
-                </td>
-              ))}
+        <tbody className="text-[var(--color-text)]" aria-busy={loading || undefined}>
+          {loading ? (
+            Array.from({ length: loadingRows }, (_, index) => (
+              <tr key={index} className="border-t border-[var(--color-border)] align-middle">
+                {columns.map((col) => (
+                  <td key={col.key} className={cn('px-4 py-3', col.cellClassName)}>
+                    <Skeleton className="h-4 w-full max-w-32" />
+                  </td>
+                ))}
+              </tr>
+            ))
+          ) : rows.length === 0 && empty !== undefined ? (
+            <tr className="border-t border-[var(--color-border)]">
+              <td colSpan={columns.length} className="px-4 py-6">
+                {empty}
+              </td>
             </tr>
-          ))}
+          ) : (
+            rows.map((row, index) => (
+              <tr
+                key={getRowKey(row, index)}
+                className="row-interactive border-t border-[var(--color-border)] align-middle"
+              >
+                {columns.map((col) => (
+                  <td key={col.key} className={cn('px-4 py-3', col.cellClassName)}>
+                    {col.render(row, index)}
+                  </td>
+                ))}
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>

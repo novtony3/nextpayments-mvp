@@ -55,7 +55,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         ref={setRefs}
         onMouseMove={handleMouseMove}
         className={cn(
-          'group relative isolate overflow-hidden rounded-3xl bg-[var(--color-surface)] transition-colors duration-300',
+          'group relative isolate overflow-hidden rounded-3xl bg-[var(--color-surface)] transition-colors duration-[var(--motion-slow)]',
           glow && 'hover:bg-[var(--color-surface-elevated)]',
           className,
         )}
@@ -64,7 +64,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         {glow && (
           <span
             aria-hidden
-            className="pointer-events-none absolute inset-0 -z-10 opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100"
+            className="pointer-events-none absolute inset-0 -z-10 opacity-0 transition-opacity duration-[var(--motion-slower)] ease-out group-hover:opacity-100"
             style={{
               background:
                 'radial-gradient(280px circle at var(--card-gx, 50%) var(--card-gy, 0px), color-mix(in oklab, var(--color-aurora) 24%, transparent), transparent 72%)',
