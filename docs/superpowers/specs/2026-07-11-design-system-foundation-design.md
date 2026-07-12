@@ -22,25 +22,28 @@ app surfaces); Gemini design system and messaging unchanged.
 ### 1.1 Elevation scale
 
 Today zero `--shadow-*` tokens exist; shared components hardcode raw black
-shadows that read too heavy in light mode. Add to the dark root block:
+shadows that read too heavy in light mode. Add to the dark root block —
+named `elev` (not `sm`/`md`/`lg`) so Tailwind's stock `shadow-sm/md/lg`
+utilities keep their default values (the toggle-switch knob uses `shadow-sm`):
 
 ```css
---shadow-sm: 0 1px 2px -1px rgba(0, 0, 0, 0.4);
---shadow-md: 0 8px 24px -12px rgba(0, 0, 0, 0.5);
---shadow-lg: 0 20px 60px -20px rgba(0, 0, 0, 0.6);
---shadow-overlay-up: 0 -20px 60px -20px rgba(0, 0, 0, 0.6);
+--shadow-elev-sm: 0 1px 2px -1px rgba(0, 0, 0, 0.4);
+--shadow-elev-md: 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+--shadow-elev-lg: 0 16px 48px -16px rgba(0, 0, 0, 0.5); /* = user-menu dropdown today */
+--shadow-overlay-up: 0 -20px 60px -20px rgba(0, 0, 0, 0.6); /* = bottom Sheet today */
 ```
 
 and light-mode overrides (inside the existing light block) at roughly 60% of
-the dark alpha (0.25/0.3/0.35/0.35). Values for `lg`/`overlay-up` match the
-Sheet's current dark literal, so the dark theme is pixel-identical; the light
-theme intentionally softens.
+the dark alpha (0.25/0.3/0.3/0.35). `elev-lg` matches the user-menu dropdown's
+current literal and `overlay-up` matches the Sheet's, so the dark theme is
+pixel-identical; the light theme intentionally softens.
 
 **Migrated consumers (this sub-project only):** `packages/ui` Sheet panel
 (`shadow-[0_-20px_60px_-20px_rgba(0,0,0,0.6)]` → `shadow-[var(--shadow-overlay-up)]`)
-and the merchant user-menu dropdown (`rgba(0,0,0,0.5)` literal →
-`var(--shadow-lg)`). Landing's intentional art shadows (hero card, pricing,
-CTA banner) migrate in sub-project E; dashboard leftovers in C.
+and the merchant user-menu dropdown (`shadow-[0_16px_48px_-16px_rgba(0,0,0,0.5)]`
+literal → `shadow-[var(--shadow-elev-lg)]`). Landing's intentional art shadows
+(hero card, pricing, CTA banner) migrate in sub-project E; dashboard leftovers
+in C.
 
 ### 1.2 Type scale + container
 
@@ -72,29 +75,41 @@ existing names stay as-is (they are the "base" tier; no alias churn):
 --motion-fast: 120ms; /* hover/focus feedback */
 --motion-base: var(--interaction-duration); /* standard transitions */
 --motion-slow: 300ms; /* entrances, reveals */
+--motion-slower: 500ms; /* ambient fades (Card glow) */
 --motion-overlay: 440ms; /* sheet/drawer travel (= Sheet's current constant) */
+--motion-shimmer: 1.8s; /* skeleton shimmer loop */
 ```
 
-**Migrated consumers:** `packages/ui` Button/IconButton/ActionIcon/Tabs etc.
-swap hardcoded `duration-200`/`duration-300` for `duration-[var(--motion-base)]`;
-Sheet's `SHEET_TRANSITION_MS = 440` stays in TS (it drives JS timing) but
-gains a comment tying it to `--motion-overlay`.
+**Migrated consumers:** every `duration-*` literal in `packages/ui` maps onto
+the scale so the tier unifies without a perceptible change — `duration-150`
+and `duration-200` → `duration-[var(--motion-base)]` (150/200 → 180ms is
+imperceptible), `duration-300` → `duration-[var(--motion-slow)]`,
+`duration-500` → `duration-[var(--motion-slower)]`. Sheet's
+`SHEET_TRANSITION_MS = 440` stays in TS (it drives JS timing) but gains a
+comment tying it to `--motion-overlay`.
 
 ### 1.4 Focus-ring standard
 
-One utility, Button's current recipe generalized:
+One utility, Button's current recipe generalized, with a per-surface offset
+override variable (`--focus-ring-offset`, defaulting to the page canvas):
 
 ```css
 @utility focus-ring {
-  @apply outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)];
+  @apply outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--focus-ring-offset,var(--color-bg))];
 }
 ```
 
-**Migrated consumers:** every focusable `packages/ui` component (Button,
-IconButton, ActionIcon, Checkbox, ToggleSwitch, Tabs, SelectField,
-SearchInput, Sheet close button, pagination controls) uses `focus-ring`
-instead of its private variant. App-local controls (auth TextField,
-PasswordToggle, landing nav links) adopt it in D/E.
+**Migrated consumers:** the focusable `packages/ui` components that carry
+their own `focus-visible:ring` recipe today — Button, ActionIcon,
+ToggleSwitch, Tabs, and the Sheet close button — use `focus-ring` instead.
+Components rendered on a surface (ActionIcon, Sheet close) override the offset
+per-instance with `[--focus-ring-offset:var(--color-surface)]`. Two sanctioned
+exceptions: **Checkbox** keeps a `peer-focus-visible:` variant of the same
+accent ring (its native input is sr-only, so the ring must render on a
+sibling), and **SearchInput/SelectField** keep their `focus-within` container
+treatment (an intentional form-field pattern, not a ring — left as-is).
+App-local controls (auth TextField, PasswordToggle, landing nav links) adopt
+`focus-ring` in D/E.
 
 ## 2. `packages/ui` primitives
 
@@ -106,8 +121,8 @@ PasswordToggle, landing nav links) adopt it in D/E.
 <Skeleton className="h-4 w-32" /> // rounded, glass-tinted, shimmer
 ```
 
-Glass-fill base (`--color-glass-fill`) with a slow shimmer sweep using
-`--motion-slow`-family timing; static (no shimmer) under
+Glass-fill base (`--glass-fill`) with a shimmer sweep timed by the
+`--motion-shimmer` token; static (no shimmer) under
 `prefers-reduced-motion`. `aria-hidden` — skeletons are decorative; the
 loading region's container owns the `aria-busy` announcement. No preset
 variants (YAGNI) — consumers size via className; DataTable composes its own
@@ -116,9 +131,10 @@ rows from it (§2.3).
 ### 2.2 `Notice` gains `success` tone
 
 Add `success` to the tone map using the existing `--color-success` token,
-mirroring how `danger`/`warning` derive their soft fills. Unlocks shared
-success confirmations (withdrawal submitted, integration created) that
-today have no sanctioned surface.
+mirroring how `danger`/`warning` drive the leading icon and its color (Notice
+has no per-tone soft fill — the surface is a shared `--glass-fill` Card).
+Unlocks shared success confirmations (withdrawal submitted, integration
+created) that today have no sanctioned surface.
 
 ### 2.3 `DataTable` built-in loading/empty
 
@@ -160,12 +176,17 @@ bare header rows / plain-`<p>` errors; C migrates the dashboard callers.
 && build`, prettier on touched files. Merchant `next build` only if the
   parallel workerd fix has landed on dev (it is broken pre-existing —
   task_8ae14fae); otherwise dev-server compile of the QA page stands in.
-- QA page preview walk: dark + light, reduced-motion on/off; tab through all
-  primitives to see one consistent focus ring; Sheet open/close unchanged in
-  dark, softer shadow in light; Skeleton shimmers (and doesn't under
-  reduced-motion).
-- Grep gates: no `duration-200|duration-300|duration-500` left in `packages/ui`; no raw
-  `rgba(0,0,0` shadows left in `packages/ui`; `focus-visible:ring` private
-  recipes replaced by `focus-ring` (one definition).
+- QA page preview walk: dark + light; tab through the full sampler (Button,
+  IconButton, ToggleSwitch, Checkbox, ActionIcon, Tabs, and a Sheet's close
+  button) to see one consistent focus ring; open a Sheet — unchanged in dark,
+  softer shadow in light; Skeleton shimmers, and is static when
+  `prefers-reduced-motion` is emulated (the shimmer sits under a
+  `no-preference` media query — confirm in code + emulate if the preview
+  supports it).
+- Grep gates: no `duration-150|duration-200|duration-300|duration-500` left in
+  `packages/ui`; no raw `rgba(0,0,0` shadows left in `packages/ui`;
+  `focus-visible:ring` reduced to the single sanctioned Checkbox
+  `peer-focus-visible:` variant (all other private recipes replaced by the
+  `focus-ring` utility).
 - Visual regression sanity: landing + dashboard home before/after in dark
   mode look identical (screenshots).
