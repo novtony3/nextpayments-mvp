@@ -1,11 +1,11 @@
 ---
 name: nextpayments-conventions
-description: Nextpayments project rules — invoke when writing/editing any code in this monorepo (apps/merchant-app, packages/ui, packages/config). Covers the no-hardcoding rule, Gemini design system, i18n, locale-safe routing, and file/naming conventions defined by the user and PLAN.md.
+description: Nextpayments project rules — invoke when writing/editing any code in this monorepo (apps/merchant-app, packages/ui, packages/config). Covers the no-hardcoding rule, Gemini design system, i18n, locale-safe routing, and file/naming conventions defined by the user and the design-system specs under docs/superpowers/specs/.
 ---
 
 # Nextpayments Project Conventions
 
-Apply these on every change in this repo. They consolidate user-defined rules and PLAN.md §4, §11, §12.
+Apply these on every change in this repo. They consolidate user-defined rules, packages/config/tailwind/theme.css (the token source of truth), and docs/superpowers/specs/2026-07-11-design-system-foundation-design.md.
 
 ## 1. No hardcoding (hard rule)
 
@@ -21,10 +21,11 @@ placeholder text, magic numbers.
 
 ## 2. Design system (Gemini Desktop)
 
-- Monochrome + single accent. The aurora **gradient is reserved for the logo mark and explicit hero moments only** (PLAN §4.2). Buttons/CTAs use `primary` (frosted Gemini-blue) or `outline` — not `gradient` — unless it's a designated hero CTA.
+- Monochrome + single accent. The aurora **gradient is reserved for the logo mark and explicit hero moments only** (see theme.css "Single accent token" note). Buttons/CTAs use `primary` (frosted Gemini-blue) or `outline` — not `gradient` — unless it's a designated hero CTA.
 - Use design tokens for every color/radius. The deep-blue ambient is the shared `--color-aurora` token; the flowing-water glow is the reusable `<BlueAccent>` (`intensity` + `color` props) — reuse it, don't reimplement.
 - Dark is default; everything must also work in light. Use theme tokens, never `text-white`/raw hex.
 - Calm motion: long eased loops, honor `prefers-reduced-motion`.
+- Foundation tokens are mandatory where they exist: elevation via `--shadow-elev-*`/`--shadow-overlay-up` (no raw black box-shadows), timing via `--motion-*` (no `duration-<number>` literals in shared components), focus via the `focus-ring` utility (surface components override `--focus-ring-offset`), loading via the `Skeleton` primitive.
 
 ## 3. i18n
 
