@@ -78,6 +78,13 @@ export const SITE_URL = (
 /** Twitter/X handle for the `twitter:site` / `twitter:creator` tags. */
 export const TWITTER_HANDLE = '@omnipayx';
 
+/** Public support mailbox — the only contact channel we expose today (the
+ * footer "Contact" link and the coming-soon page both open it). */
+export const CONTACT_EMAIL = 'tech@omnipayx.io';
+
+/** `mailto:` target for {@link CONTACT_EMAIL}. */
+export const CONTACT_MAILTO = `mailto:${CONTACT_EMAIL}`;
+
 /** Search keywords for the document metadata. */
 export const SEO_KEYWORDS = [
   'crypto payment gateway',

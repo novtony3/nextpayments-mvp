@@ -768,6 +768,14 @@
     "ctaHome": "Retour à l'accueil",
     "ctaDashboard": "Aller au tableau de bord"
   },
+  "comingSoon": {
+    "badge": "EN DÉVELOPPEMENT",
+    "title": "Bientôt disponible",
+    "subtitle": "Cette page est encore en construction. Elle arrive très bientôt — en attendant, tout ce qu'il faut pour accepter les paiements crypto est déjà en ligne.",
+    "ctaHome": "Retour à l'accueil",
+    "ctaContact": "Nous contacter",
+    "contactPrompt": "Besoin plus tôt ? Écrivez-nous à"
+  },
   "paySettings": {
     "security": {
       "changePassword": {
