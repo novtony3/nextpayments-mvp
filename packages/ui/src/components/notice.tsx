@@ -1,12 +1,12 @@
 'use client';
 
 import * as React from 'react';
-import { AlertTriangle, Info } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Info } from 'lucide-react';
 
 import { cn } from '../lib/utils';
 import { Card } from './card';
 
-export type NoticeTone = 'info' | 'danger' | 'warning';
+export type NoticeTone = 'info' | 'success' | 'danger' | 'warning';
 
 export interface NoticeProps {
   /** Severity — drives the default icon and its color. Defaults to `info`. */
@@ -19,12 +19,14 @@ export interface NoticeProps {
 
 const TONE_ICON: Record<NoticeTone, React.ComponentType<{ className?: string }>> = {
   info: Info,
+  success: CheckCircle2,
   danger: AlertTriangle,
   warning: AlertTriangle,
 };
 
 const TONE_ICON_CLASS: Record<NoticeTone, string> = {
   info: 'text-[var(--color-text-subtle)]',
+  success: 'text-[var(--color-success)]',
   danger: 'text-[var(--color-danger)]',
   warning: 'text-[var(--color-warning)]',
 };
