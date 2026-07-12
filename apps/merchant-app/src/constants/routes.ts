@@ -5,6 +5,9 @@
  */
 export const ROUTES = {
   HOME: '/',
+  /** Placeholder page for sections we haven't shipped yet (docs, API reference,
+   * blog, legal pages, …). Every unbuilt marketing link points here. */
+  COMING_SOON: '/coming-soon',
   LOGIN: '/login',
   REGISTER: '/register',
   FORGOT_PASSWORD: '/forgot-password',

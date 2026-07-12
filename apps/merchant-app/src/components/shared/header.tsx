@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 
 import { cn } from '@nextpayments/ui/lib/utils';
 
+import { HEADER_LINKS } from '@/constants/navigation';
 import { Link } from '@/i18n/routing';
 import type { HeaderUser } from '@/lib/auth/types';
 import { AuthControls } from '@/components/auth/auth-controls';
@@ -14,10 +15,14 @@ import { LanguageSwitcher } from './language-switcher';
 import { Logo } from './logo';
 import { ThemeToggle } from './theme-toggle';
 
-const NAV_KEYS = ['features', 'coins', 'pricing', 'docs'] as const;
-
 /** Scroll past this (px) collapses the bar into the floating pill. */
 const SCROLL_COLLAPSE_THRESHOLD_PX = 24;
+
+const DESKTOP_LINK_CLASS =
+  'rounded-full px-3 py-1.5 text-[13px] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text)]';
+
+const MOBILE_LINK_CLASS =
+  'border-b border-[var(--color-border)] py-5 text-2xl font-medium text-[var(--color-text)] transition-colors hover:text-[var(--color-accent)]';
 
 type HeaderProps = {
   /** Session identity resolved server-side in the marketing layout, so the
@@ -69,15 +74,17 @@ export function Header({ initialUser }: HeaderProps) {
         </Link>
 
         <nav className="hidden items-center gap-0.5 md:flex">
-          {NAV_KEYS.map((key) => (
-            <a
-              key={key}
-              href={`#${key}`}
-              className="rounded-full px-3 py-1.5 text-[13px] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text)]"
-            >
-              {t(key)}
-            </a>
-          ))}
+          {HEADER_LINKS.map((link) =>
+            link.kind === 'route' ? (
+              <Link key={link.key} href={link.href} className={DESKTOP_LINK_CLASS}>
+                {t(link.key)}
+              </Link>
+            ) : (
+              <a key={link.key} href={link.href} className={DESKTOP_LINK_CLASS}>
+                {t(link.key)}
+              </a>
+            ),
+          )}
         </nav>
 
         <div className="hidden items-center gap-1 md:flex">
@@ -100,16 +107,27 @@ export function Header({ initialUser }: HeaderProps) {
       {mobileOpen && (
         <div className="fixed inset-0 z-40 flex flex-col bg-[color-mix(in_oklab,var(--color-bg)_94%,transparent)] px-6 pb-10 pt-24 backdrop-blur-2xl md:hidden">
           <nav className="flex flex-col">
-            {NAV_KEYS.map((key) => (
-              <a
-                key={key}
-                href={`#${key}`}
-                onClick={() => setMobileOpen(false)}
-                className="border-b border-[var(--color-border)] py-5 text-2xl font-medium text-[var(--color-text)] transition-colors hover:text-[var(--color-accent)]"
-              >
-                {t(key)}
-              </a>
-            ))}
+            {HEADER_LINKS.map((link) =>
+              link.kind === 'route' ? (
+                <Link
+                  key={link.key}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={MOBILE_LINK_CLASS}
+                >
+                  {t(link.key)}
+                </Link>
+              ) : (
+                <a
+                  key={link.key}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={MOBILE_LINK_CLASS}
+                >
+                  {t(link.key)}
+                </a>
+              ),
+            )}
           </nav>
 
           <div className="mt-auto flex items-center gap-2 pt-8">

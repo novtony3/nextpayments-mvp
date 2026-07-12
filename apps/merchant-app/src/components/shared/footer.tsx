@@ -1,14 +1,12 @@
 import { Github, Twitter } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
+import { FOOTER_COLUMNS } from '@/constants/navigation';
+import { Link } from '@/i18n/routing';
 import { Logo } from './logo';
 
-const COLUMNS = [
-  { key: 'product', items: ['features', 'pricing', 'coins', 'widget'] },
-  { key: 'developers', items: ['docs', 'api', 'sdk', 'status'] },
-  { key: 'company', items: ['about', 'blog', 'careers', 'contact'] },
-  { key: 'legal', items: ['terms', 'privacy', 'cookies'] },
-] as const;
+/** Shared look for every column link (internal, anchor, or mailto alike). */
+const LINK_CLASS = 'text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)]';
 
 export function Footer() {
   const t = useTranslations('landing.footer');
@@ -42,22 +40,28 @@ export function Footer() {
             </div>
           </div>
 
-          {COLUMNS.map((column) => (
+          {FOOTER_COLUMNS.map((column) => (
             <div key={column.key}>
               <h3 className="text-[13px] font-medium text-[var(--color-text)]">
                 {t(`columns.${column.key}.title`)}
               </h3>
               <ul className="mt-4 space-y-2.5">
-                {column.items.map((item) => (
-                  <li key={item}>
-                    <a
-                      href="#"
-                      className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
-                    >
-                      {t(`columns.${column.key}.items.${item}`)}
-                    </a>
-                  </li>
-                ))}
+                {column.items.map((item) => {
+                  const label = t(`columns.${column.key}.items.${item.key}`);
+                  return (
+                    <li key={item.key}>
+                      {item.kind === 'route' ? (
+                        <Link href={item.href} className={LINK_CLASS}>
+                          {label}
+                        </Link>
+                      ) : (
+                        <a href={item.href} className={LINK_CLASS}>
+                          {label}
+                        </a>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}
