@@ -63,8 +63,12 @@ export function HeroVisual() {
           />
 
           <div>
-            <p className="font-mono text-base tracking-[0.18em] text-white/90">{HERO_CARD.NUMBER}</p>
-            <p className="mt-2 text-xs uppercase tracking-[0.2em] text-white/55">{t('cardLabel')}</p>
+            <p className="font-mono text-base tracking-[0.18em] text-white/90">
+              {HERO_CARD.NUMBER}
+            </p>
+            <p className="mt-2 text-xs uppercase tracking-[0.2em] text-white/55">
+              {t('cardLabel')}
+            </p>
           </div>
         </div>
       </div>
