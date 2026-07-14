@@ -711,11 +711,11 @@
         },
         "delete": {
           "warningTitle": "This is permanent",
-          "warningBody": "Deleting '{name}' will revoke all of its API keys and disable any clients that use them.",
-          "confirmLabel": "Type '{name}' to confirm",
+          "warningBody": "Deleting {name} will revoke all of its API keys and disable any clients that use them.",
+          "confirmLabel": "Type {name} to confirm",
           "delete": "Delete integration",
           "deleting": "Deleting…",
-          "deleted": "Integration '{name}' deleted."
+          "deleted": "Integration {name} deleted."
         }
       }
     },

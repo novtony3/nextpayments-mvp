@@ -141,21 +141,40 @@ function SettingsPanel({
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
+  // Baseline = last-saved values. The form is "dirty" only when a field differs
+  // from it, so Save is disabled until something actually changes — and
+  // re-disables after a successful save (prevents redundant submits).
+  const [baseline, setBaseline] = useState({
+    name: integration.name ?? '',
+    siteUrl: integration.siteUrl ?? '',
+    ipnUrl: integration.ipnUrl ?? '',
+    isActive: integration.isActive !== false,
+  });
+  const isDirty =
+    name !== baseline.name ||
+    siteUrl !== baseline.siteUrl ||
+    ipnUrl !== baseline.ipnUrl ||
+    isActive !== baseline.isActive;
+
   const save = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    if (!isDirty || isPending) return;
     if (!name.trim()) {
       setError(t('errors.nameRequired'));
       return;
     }
     startTransition(async () => {
+      const trimmedName = name.trim();
       const result = await updateIntegrationAction(integrationId, {
-        name: name.trim(),
+        name: trimmedName,
         siteUrl,
         ipnUrl,
         isActive,
       });
       if (result.ok) {
+        setName(trimmedName);
+        setBaseline({ name: trimmedName, siteUrl, ipnUrl, isActive });
         toast.success(t('manage.settings.saved'));
         router.refresh();
       } else {
@@ -211,7 +230,7 @@ function SettingsPanel({
         </p>
       )}
 
-      <Button type="submit" loading={isPending} fullWidth>
+      <Button type="submit" loading={isPending} disabled={!isDirty} fullWidth>
         {isPending ? t('manage.settings.saving') : t('manage.settings.save')}
       </Button>
     </form>
