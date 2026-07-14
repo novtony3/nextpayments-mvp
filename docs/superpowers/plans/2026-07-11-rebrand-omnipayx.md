@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - Brand name: `OMNIPAYX` (all caps). Monogram: `OX`. Frontend domain: `https://omnipayx.io`. Twitter/X: `@omnipayx`.
-- **Backend API domain stays `https://api.vnpayment.xyz`** — do NOT touch `NEXT_PUBLIC_API_URL` in `.env.example`, `.env.local`, `wrangler.jsonc`, or `postman/` (user's explicit call: backend not yet migrated).
+- **Backend API domain was out of scope in this phase** — `NEXT_PUBLIC_API_URL` untouched in `.env.example`, `.env.local`, `wrangler.jsonc`, and `postman/` (user's explicit call at the time: backend not yet migrated). _(Superseded 2026-07-15: backend migrated to `https://api.omnipayx.io`.)_
 - Colors/theme/gradient stops unchanged. Tagline (`Crypto Payment Gateway`), OG subline, fee copy (`0.5%` / `0.1%`) unchanged. No messaging rewrites — only the brand token inside existing copy changes.
 - Branch: `tai/chore/rebrand-omnipayx` (already exists, based on `dev`, holds the spec commits). Never commit on `dev`/`main`.
 - Validation gate GREEN before every commit: `pnpm --filter merchant-app typecheck` + `lint`, prettier on touched files, i18n parity (en = fr key sets). `pnpm --filter admin-dashboard typecheck` + `lint` when admin files change.
@@ -491,13 +491,13 @@ Public origin for metadata/canonical/OG/sitemap; fallback `https://omnipayx.io`.
 The third cell currently reads:
 
 ```
-Hosted backend when `API_PROXY_TARGET` is not set. `.env.local`/`.env.example` set `https://api.vnpayment.xyz`.
+Hosted backend when `API_PROXY_TARGET` is not set. `.env.local`/`.env.example` set `https://api.omnipayx.io`.
 ```
 
 becomes
 
 ```
-Hosted backend when `API_PROXY_TARGET` is not set. `.env.local`/`.env.example` set `https://api.vnpayment.xyz` (legacy domain — backend not yet migrated to omnipayx.io).
+Hosted backend when `API_PROXY_TARGET` is not set. `.env.local`/`.env.example` set `https://api.omnipayx.io` (legacy domain at the time — the backend has since migrated).
 ```
 
 Keep the table's column pipes aligned per the file's existing style (the surrounding rows are padded with spaces; re-pad if the row width changes — prettier formats markdown tables on `--write`, so running prettier below settles alignment).
@@ -541,8 +541,8 @@ git diff --cached --stat   # exactly 1 file
 git commit -m "docs(readme): point site domain at omnipayx.io; mark API domain legacy
 
 Also update the documented 2FA otpauth issuer to OMNIPAYX (matches
-TWO_FA_ISSUER). API domain row kept on api.vnpayment.xyz, annotated
-as legacy — backend not yet migrated.
+TWO_FA_ISSUER). API domain row kept on the legacy domain, annotated
+as legacy — backend not yet migrated at the time.
 
 Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 ```
