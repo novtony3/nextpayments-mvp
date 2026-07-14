@@ -15,9 +15,9 @@ final logo/monogram from Phase 1 feeds directly into it.
 
 - **Brand name:** `OMNIPAYX` (all caps), replacing `VNPayment` everywhere.
 - **Domain:** `omnipayx.io`, replacing `vnpayment.xyz` — for the **frontend
-  site only** (`SITE_URL`, canonical/OG/manifest URLs). The **backend API
-  host stays `api.vnpayment.xyz` for now** (user's explicit call: backend
-  hasn't moved yet, so `NEXT_PUBLIC_API_URL` is untouched in this phase).
+  site only** (`SITE_URL`, canonical/OG/manifest URLs). The backend API host
+  was left on the legacy domain in this phase. _(Superseded 2026-07-15: the
+  backend migrated — `NEXT_PUBLIC_API_URL` now points at `api.omnipayx.io`.)_
 - **Monogram:** `OX`, replacing `VN` — rendered in the exact same rounded-square
   gradient tile (no shape/color redesign).
 - **Tagline, messaging, fee/referral copy, colors/theme:** unchanged. This is a
@@ -98,8 +98,8 @@ validate (the issuer is display metadata; TOTP secrets are untouched).
 
 Update the env-var reference table: the `NEXT_PUBLIC_SITE_URL` row's fallback
 `vnpayment.xyz` → `omnipayx.io`. The `NEXT_PUBLIC_API_URL` row (backend host)
-stays `api.vnpayment.xyz` — annotate it as "not yet migrated" so the README
-doesn't read as stale/wrong. Also update the 2FA flow doc line that names the
+kept the legacy domain at the time, annotated "not yet migrated" _(superseded
+2026-07-15: now `api.omnipayx.io`)_. Also update the 2FA flow doc line that names the
 otpauth issuer (`issuer \`Nextpayments\``→`issuer \`OMNIPAYX\``) to match §7.
 
 ---
@@ -121,11 +121,10 @@ otpauth issuer (`issuer \`Nextpayments\``→`issuer \`OMNIPAYX\``) to match §7.
 - Backend/API service repo (not in this monorepo) — any brand strings it
   owns (emails, etc.) are out of scope here.
 - **`NEXT_PUBLIC_API_URL` / backend API domain** (`.env.example`,
-  `.env.local`, `wrangler.jsonc` vars, `postman/`, `api.vnpayment.xyz`) —
-  explicitly **kept as-is** per the user's instruction. The backend hasn't
-  migrated to `omnipayx.io` yet; only the frontend's own `SITE_URL` moves in
-  this phase. Revisit once the backend is ready to move to
-  `api.omnipayx.io`.
+  `.env.local`, `wrangler.jsonc` vars, `postman/`) — explicitly **kept as-is**
+  in this phase per the user's instruction; only the frontend's own `SITE_URL`
+  moved. _(Superseded 2026-07-15: the backend migrated and every config now
+  points at `api.omnipayx.io`.)_
 - **"Nextpayments" as the internal project/monorepo name** (README title +
   intro, `docs/API.md` title, `theme.css` header comment, `skills/`,
   `@nextpayments/*` package scopes) — internal naming, not product brand
