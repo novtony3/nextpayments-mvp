@@ -28,11 +28,16 @@ export const INTEGRATIONS_PAGE_SIZE = 10 as const;
 /** URL search-param key driving the server list fetch. */
 export const INTEGRATIONS_PARAM = { PAGE: 'page' } as const;
 
+/** Fallback when {@link INTEGRATION_API_URL} has no env override. */
+export const DEFAULT_INTEGRATION_API_URL = 'https://api.omnipayx.io' as const;
+
 /**
  * Public API URL shown in the completed view (the URL clients of the
- * integration will call). Placeholder until the backend exposes a definitive
- * value — keep here so call sites don't hardcode it. */
-export const INTEGRATION_API_URL = 'https://api.nextpayments.io' as const;
+ * integration will call). Overridable via `NEXT_PUBLIC_INTEGRATION_API_URL`
+ * (see `.env.example`) — dot access on `process.env` is required so Next can
+ * inline the value into client bundles at build time. */
+export const INTEGRATION_API_URL: string =
+  process.env.NEXT_PUBLIC_INTEGRATION_API_URL ?? DEFAULT_INTEGRATION_API_URL;
 
 /** Default label sent to `POST /integrations/:id/api-keys` when the sheet
  * auto-creates an initial key right after the integration itself. */
