@@ -509,7 +509,7 @@ merchant-app talks to **a single external "crypto-payment" backend**. **No Graph
 
 #### Backend-only (documented, not called by the FE)
 
-`POST /fund/notify`, `POST /fund/confirm-withdrawal` (wallet webhook, IP-restricted), `POST /webhooks/wallet` (header `X-Webhook-Secret`). `INTEGRATION_API_URL = 'https://api.nextpayments.io'` is a **placeholder**.
+`POST /fund/notify`, `POST /fund/confirm-withdrawal` (wallet webhook, IP-restricted), `POST /webhooks/wallet` (header `X-Webhook-Secret`). `INTEGRATION_API_URL` reads `NEXT_PUBLIC_INTEGRATION_API_URL` (default `https://api.omnipayx.io`).
 
 > **Contract documentation:** `docs/API.md` (306 lines, authoritative). The reference source of origin is the Postman collection `postman/crypto-payment-be.postman_collection.json`. **Note:** `docs/API.md` §5 still lists Fund & Affiliate as "not wired" — **stale relative to the code** (the code already has full clients + UI for Fund and Affiliate).
 
